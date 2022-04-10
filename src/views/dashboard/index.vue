@@ -94,9 +94,38 @@ export default {
         establishDays: 7,
         birthday: '2022-04-01 19:13'
       },
-      logInfo: {},
-      visitFields: ['ip', 'visit'],
-      visitInfo: [],
+      logInfo: {
+        todayIp: '1',
+        todayVisitCount: '3',
+        totalVisitCount: '1126'
+      },
+      visitFields: ['visit'],
+      visitInfo: [
+        {
+          type: "04-10",
+          visit: 422
+        },
+        {
+          type: "04-11",
+          visit: 123
+        },
+        {
+          type: "04-12",
+          visit: 3213
+        },
+        {
+          type: "04-13",
+          visit: 3213
+        },
+        {
+          type: "04-14",
+          visit: 311
+        },
+        {
+          type: "04-15",
+          visit: 321
+        }
+        ],
       indicator: <a-icon type="loading" style="font-size: 24px" spin/>
     }
   },
@@ -108,18 +137,7 @@ export default {
   },
   methods: {
     initLogInfo() {
-      this.logInfo = {
-        todayIp: '1',
-        todayVisitCount: '3',
-        totalVisitCount: '1126'
-      }
-      this.visitInfo = [{
-        ip: '1',
-        tian: "2022-04-10",
-        type: "04-10",
-        visit: '3'
-      }]
-    },
+    }
   }
 }
 </script>
