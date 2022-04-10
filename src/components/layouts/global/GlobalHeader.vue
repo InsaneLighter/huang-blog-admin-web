@@ -1,5 +1,5 @@
 <template>
-  <transition name="showHeader">
+  <div>
     <a-layout-header style="background: #fff; padding: 0">
       <a-icon
           class="trigger"
@@ -8,21 +8,24 @@
       />
       <user-menu class="header-right" :theme="$store.state.app.theme"/>
     </a-layout-header>
-  </transition>
+    <page-view></page-view>
+  </div>
 </template>
 <script>
 import UserMenu from "./UserMenu";
+import PageView from "@/components/tools/PageView";
+
 export default {
   name: 'GlobalHeader',
   components: {
+    PageView,
     UserMenu
   },
   data() {
-    return {
-    };
+    return {};
   },
   methods: {
-    toggle(){
+    toggle() {
       this.$store.dispatch('app/ToggleSidebar');
     }
   }

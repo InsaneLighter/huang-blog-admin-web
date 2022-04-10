@@ -39,9 +39,7 @@ export default {
 }
 
 #global_content {
-  margin: 24px 16px;
-  padding: 24px;
-  background: #fff;
-  minHeight: 800px
+  padding: 15px;
+  background: #f0f2f5;
 }
 </style>

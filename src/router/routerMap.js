@@ -6,13 +6,16 @@ export const routerMap = [
         path: '/',
         component: Layout,
         redirect: '/dashboard',
+        meta: {
+            title: '首页'
+        },
         children: [
             {
                 path: '/dashboard',
                 name: 'Dashboard',
                 component: (resolve) => require(['@/views/dashboard'], resolve),
                 meta: {
-                    title: '首页1',
+                    title: '仪表盘',
                     icon: 'home'
                 }
             },
@@ -32,6 +35,15 @@ export const routerMap = [
                         component: (resolve) => require(['@/views/dashboard/Page1'], resolve),
                         meta: {
                             title: '页面二',
+                            icon: 'meh'
+                        }
+                    },
+                    {
+                        path: '/page1/page5',
+                        name: 'Page5',
+                        component: (resolve) => require(['@/views/dashboard/Page1'], resolve),
+                        meta: {
+                            title: '页面五',
                             icon: 'meh'
                         }
                     }
