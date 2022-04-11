@@ -16,8 +16,29 @@ export const routerMap = [
                 component: (resolve) => require(['@/views/dashboard'], resolve),
                 meta: {
                     title: '仪表盘',
-                    icon: 'home'
+                    icon: 'meh'
                 }
+            },
+            {
+                path: '/doc',
+                name: 'Doc',
+                component: BlankLayout,
+                meta: {
+                    title: '文章',
+                    icon: 'meh'
+                },
+                redirect: '/doc/list',
+                children: [
+                    {
+                        path: '/doc/list',
+                        name: 'DocList',
+                        component: (resolve) => require(['@/views/doc'], resolve),
+                        meta: {
+                            title: '所有文章',
+                            icon: 'meh'
+                        }
+                    }
+                ]
             },
             {
                 path: '/page1',

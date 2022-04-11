@@ -3,7 +3,11 @@
                   :theme="$store.state.app.theme"
                   :trigger="null"
                   :collapsible="false">
-    <div class="logo">{{$store.state.settings.title}}</div>
+    <div class="logo">
+      <a href="javascript:void(0)" @click="$router.push('/')">
+        {{$store.state.settings.title}}
+      </a>
+    </div>
     <a-menu
         mode="inline"
         :inline-collapsed="$store.state.app.sidebar.open"
@@ -110,11 +114,18 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
   .logo {
     font-size: 20px;
     text-align: center;
     height: 40px;
     line-height: 40px;
+
+    a {
+      color: black;
+    }
+    a:hover {
+      color: #1890ff
+    }
   }
 </style>
