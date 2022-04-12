@@ -1,9 +1,9 @@
 {
-  "name": "basic-struct-web",
+  "name": "huang-blog-admin-web",
   "version": "0.1.0",
   "author": "Huang",
   "email": "mail@huanghong.top",
-  "description": "basic web struct",
+  "description": "huang-blog-admin-web",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

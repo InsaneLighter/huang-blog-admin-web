@@ -54,7 +54,6 @@
         <router-link :to="{ name: 'PostWrite' }">
           <a-button icon="plus" type="primary">写文章</a-button>
         </router-link>
-        <a-button icon="delete" style="margin-left: 10px" @click="recyclePostModalVisible = true"> 回收站</a-button>
       </div>
 
       <div>
