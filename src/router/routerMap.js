@@ -97,19 +97,19 @@ export const routerMap = [
         path: '/403',
         name: '403',
         component: (resolve) => require(['@/views/exception/403'], resolve),
-        meta: { title: 'NotAuthorized' },
+        meta: { title: 'NotAuthorized' }
     },
     {
         path: '/404',
         name: '404',
         component: (resolve) => require(['@/views/exception/404'], resolve),
-        meta: { title: 'NotFound'},
+        meta: { title: 'NotFound'}
     },
     {
         path: '/500',
         name: '500',
         component: (resolve) => require(['@/views/exception/500'], resolve),
-        meta: { title: 'ServerWrong'},
+        meta: { title: 'ServerWrong'}
     },
     //以上路由均不匹配则重定向入404页面
     {
