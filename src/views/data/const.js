@@ -8,42 +8,27 @@ export const articleList = {
                 "id": 3,
                 "title": "Title",
                 "status": "DRAFT",
-                "slug": "titlealign",
-                "editorType": "MARKDOWN",
-                "updateTime": 1648100707351,
                 "createTime": 1648100414235,
-                "editTime": 1648100707233,
-                "metaKeywords": null,
-                "metaDescription": null,
-                "fullPath": "/archives/titlealign",
-                "summary": "组件keep-alivekeep-alive是vue内置的一个组件，而这个组件的作用就是能够缓存不活动的组件，一般情况下，组件进行切换的时候",
-                "thumbnail": "",
                 "visits": 100,
-                "disallowComment": false,
-                "password": "",
-                "template": "",
                 "topPriority": 1,
                 "likes": 0,
-                "wordCount": 460,
-                "inProgress": true,
-                "commentCount": 0,
-                "tags": [],
+                "tags": [
+                    {
+                        color: "#158cff",
+                        createTime: 1648101508497,
+                        id: 1,
+                        name: "666"
+                    }
+                ],
                 "categories": [
                     {
                         "id": 1,
                         "name": "默认分类",
-                        "slug": "default",
                         "description": "这是你的默认分类，如不需要，删除即可。",
-                        "thumbnail": "",
                         "parentId": 0,
-                        "password": null,
                         "createTime": 1648038642849,
-                        "fullPath": "/categories/default",
-                        "priority": 0
                     }
                 ],
-                "metas": {},
-                "topped": true
             },
             {
                 "id": 4,

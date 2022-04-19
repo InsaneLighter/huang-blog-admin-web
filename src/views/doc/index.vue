@@ -5,8 +5,10 @@
         <a-form layout="inline">
           <a-row :gutter="48">
             <a-col :md="6" :sm="24">
-              <a-form-item label="关键词：">
-                <a-input v-model="list.params.keyword" @keyup.enter="handleQuery()"/>
+              <a-form-item label="标题：">
+                <a-input v-model="list.params.title"
+                         placeholder="请输入文章标题"
+                         @keyup.enter="handleQuery()"/>
               </a-form-item>
             </a-col>
             <a-col :md="6" :sm="24">
@@ -26,13 +28,13 @@
             <a-col :md="6" :sm="24">
               <a-form-item label="分类：">
                 <a-select
-                    v-model="list.params.status"
+                    v-model="list.params.categoryId"
                     allowClear
                     placeholder="请选择分类"
-                    @change="handleChangeQueryStatus"
+                    @change="handleChangeQueryCategoryId"
                 >
-                  <a-select-option v-for="category in categories" :key="category" :value="category">
-                    {{ category }}
+                  <a-select-option v-for="category in categories" :key="category.id" :value="category.id">
+                    {{ category.name }}
                   </a-select-option>
                 </a-select>
               </a-form-item>
@@ -166,7 +168,7 @@
                 okText="确定"
                 @confirm="handleChangeStatus(post.id, postStatuses.PUBLISHED.value)"
             >
-              <a-button class="!p-0" type="link">还原</a-button>
+              <a-button class="operate" type="link">还原</a-button>
             </a-popconfirm>
 
             <a-divider type="vertical"/>
@@ -192,7 +194,7 @@
                 okText="确定"
                 @confirm="handleDelete(post.id)"
             >
-              <a-button class="!p-0" type="link">删除</a-button>
+              <a-button class="operate" type="link">删除</a-button>
             </a-popconfirm>
 
             <a-divider type="vertical"/>
@@ -225,14 +227,15 @@
 
 <script>
 import { articleList } from '../data/const'
+import docApi from '@/api/doc/index'
+import categoryApi from '@/api/category/index'
+import PostTag from '@/components/postTag'
 export default {
   name: 'articleList',
-  components: {},
+  components: {
+    PostTag
+  },
   props: {
-    defaultStatuses: {
-      type: Array,
-      default: () => []
-    },
     defaultPageSize: {
       type: Number,
       default: 10
@@ -344,14 +347,12 @@ export default {
         data: [],
         loading: false,
         total: 0,
-        hasPrevious: false,
-        hasNext: false,
         params: {
           page: 0,
           size: 10,
-          keyword: undefined,
+          title: undefined,
           categoryId: undefined,
-          statuses: []
+          status: []
         },
         selected: {}
       },
@@ -372,7 +373,6 @@ export default {
     }
   },
   created() {
-    this.list.params.statuses = this.defaultStatuses
     this.list.params.size = this.defaultPageSize
     this.handleListCategories()
     this.handleListPosts()
@@ -386,13 +386,9 @@ export default {
         if (enableLoading) {
           this.list.loading = true
         }
-        // const response = await apiClient.post.list(this.list.params)
-        const  response = articleList;
-        this.list.data = response.data.content
-        this.list.total = response.data.total
-        this.list.hasPrevious = response.data.hasPrevious
-        this.list.hasNext = response.data.hasNext
-        console.log(this.list);
+        const response = await docApi.page(this.list.params);
+        this.list.data = response.data.list
+        this.list.total = response.data.totalCount
       } catch (error) {
         this.$message.error(error)
       } finally {
@@ -405,12 +401,9 @@ export default {
      */
     async handleListCategories() {
       try {
-        // const response = await apiClient.category.list({sort: [], more: true})
-        this.categories = [
-          '分类1',
-          '分类2',
-          '分类3'
-        ]
+        const response = await categoryApi.queryAll()
+        console.log(response)
+        this.categories = response.data.list
       } catch (error) {
         this.$message.error(error)
       } finally {
@@ -449,9 +442,8 @@ export default {
      * Reset query params
      */
     handleResetParam() {
-      this.list.params.keyword = undefined
+      this.list.params.title = undefined
       this.list.params.categoryId = undefined
-      this.list.params.statuses = this.defaultStatuses
       this.list.params.status = undefined
       this.selectedRowKeys = []
       this.handlePageChange(1)
@@ -465,15 +457,20 @@ export default {
 
     handleChangeQueryStatus(status) {
       if (status) {
-        this.list.params.statuses = [status]
         this.list.params.status = status
       } else {
-        this.list.params.statuses = this.defaultStatuses
         this.list.params.status = undefined
       }
       this.handleQuery()
     },
-
+    handleChangeQueryCategoryId(categoryId) {
+      if (categoryId) {
+        this.list.params.categoryId = categoryId
+      } else {
+        this.list.params.categoryId = this.undefined
+      }
+      this.handleQuery()
+    },
     async handleChangeStatus(postId, status) {
       try {
         // await apiClient.post.updateStatusById(postId, status)
@@ -646,7 +643,7 @@ export default {
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
-
+  padding-bottom: 2rem;
   .ant-pagination-options-size-changer.ant-select {
     margin: 0;
   }
