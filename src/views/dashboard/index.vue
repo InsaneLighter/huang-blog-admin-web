@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 1rem">
     <a-row :gutter="24">
       <a-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
         <analysis-card :number="statisticsData.postCount" title="文章">

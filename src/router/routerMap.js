@@ -16,7 +16,8 @@ export const routerMap = [
                 component: (resolve) => require(['@/views/dashboard'], resolve),
                 meta: {
                     title: '仪表盘',
-                    icon: 'meh'
+                    icon: 'meh',
+                    hideHead: false
                 }
             },
             {
@@ -35,7 +36,18 @@ export const routerMap = [
                         component: (resolve) => require(['@/views/doc'], resolve),
                         meta: {
                             title: '所有文章',
-                            icon: 'meh'
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    },
+                    {
+                        path: '/doc/edit',
+                        name: 'DocEdit',
+                        component: (resolve) => require(['@/views/doc/edit'], resolve),
+                        meta: {
+                            title: '写文章',
+                            icon: 'meh',
+                            hideHead: true
                         }
                     }
                 ]

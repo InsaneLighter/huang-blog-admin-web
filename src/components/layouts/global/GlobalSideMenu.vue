@@ -1,11 +1,12 @@
 <template>
-  <a-layout-sider v-model="$store.state.app.sidebar.open"
+  <a-layout-sider class="side"
+                  v-model="$store.state.app.sidebar.open"
                   :theme="$store.state.app.theme"
                   :trigger="null"
                   :collapsible="false">
     <div class="logo">
       <a href="javascript:void(0)" @click="$router.push('/')">
-        {{$store.state.settings.title}}
+        {{ $store.state.settings.title }}
       </a>
     </div>
     <a-menu
@@ -19,38 +20,38 @@
       <template v-for="item in list">
         <a-menu-item v-if="!item.children" :key="item.path">
           <router-link :to="item.path">
-            <a-icon :type="item.meta.icon" />
+            <a-icon :type="item.meta.icon"/>
             <span>{{ item.meta.title }}</span>
           </router-link>
         </a-menu-item>
-        <sub-menu v-else :key="item.path" :menu-info="item" />
+        <sub-menu v-else :key="item.path" :menu-info="item"/>
       </template>
     </a-menu>
   </a-layout-sider>
 </template>
 
 <script>
-import { Menu } from 'ant-design-vue';
-import { routerMap } from "@/router/routerMap";
+import {Menu} from 'ant-design-vue';
+import {routerMap} from "@/router/routerMap";
 
 const SubMenu = {
   template: `
-      <a-sub-menu :key="menuInfo.path" v-bind="$props" v-on="$listeners">
-        <span slot="title">
-            <a-icon :type="menuInfo.meta.icon" />
+    <a-sub-menu :key="menuInfo.path" v-bind="$props" v-on="$listeners">
+    <span slot="title">
+            <a-icon :type="menuInfo.meta.icon"/>
             <span>{{ menuInfo.meta.title }}</span>
         </span>
-        <template v-for="item in menuInfo.children">
-          <a-menu-item v-if="!item.children" :key="item.path">
-            <router-link :to="item.path">
-              <a-icon :type="item.meta.icon" />
-              <span>{{ item.meta.title }}</span>
-            </router-link>
-          </a-menu-item>
-          <sub-menu v-else :key="item.path" :menu-info="item" />
-        </template>
-      </a-sub-menu>
-    `,
+    <template v-for="item in menuInfo.children">
+      <a-menu-item v-if="!item.children" :key="item.path">
+        <router-link :to="item.path">
+          <a-icon :type="item.meta.icon"/>
+          <span>{{ item.meta.title }}</span>
+        </router-link>
+      </a-menu-item>
+      <sub-menu v-else :key="item.path" :menu-info="item"/>
+    </template>
+    </a-sub-menu>
+  `,
   name: 'SubMenu',
   isSubMenu: true,
   props: {
@@ -68,41 +69,41 @@ export default {
   },
   data() {
     return {
-      openKeys: [this.$route.path.substring(0,this.$route.path.substring(1).indexOf("/")+1)],
+      openKeys: [this.$route.path.substring(0, this.$route.path.substring(1).indexOf("/") + 1)],
       rootSubmenuKeys: routerMap.find(item => item.path === '/').children.map(item => item.path),
       cachedOpenKeys: []
     }
   },
   computed: {
-    list(){
+    list() {
       return routerMap.find(item => item.path === '/').children
     },
-    collapse(){
+    collapse() {
       return this.$store.state.app.sidebar.open
     },
-    menuSelected(){
+    menuSelected() {
       return this.$route.path
     }
   },
   watch: {
-    collapse: function (val){
-      if(val){
+    collapse: function (val) {
+      if (val) {
         this.cachedOpenKeys = this.openKeys
         this.openKeys = []
-      }else {
+      } else {
         this.openKeys = this.cachedOpenKeys
       }
     },
     menuSelected: function (val) {
       let rootChildren = routerMap.find(item => item.path === '/').children;
-      let hasNoChildrenNodes = rootChildren.filter( item => item.children == null ).map( item => item.path )
-      if(hasNoChildrenNodes.includes(val)){
+      let hasNoChildrenNodes = rootChildren.filter(item => item.children == null).map(item => item.path)
+      if (hasNoChildrenNodes.includes(val)) {
         this.openKeys = []
       }
     }
   },
   methods: {
-    onOpenChange(openKeys){
+    onOpenChange(openKeys) {
       const latestOpenKey = openKeys.find(key => !this.openKeys.includes(key))
       if (!this.rootSubmenuKeys.includes(latestOpenKey)) {
         this.openKeys = openKeys
@@ -115,17 +116,26 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .logo {
-    font-size: 20px;
-    text-align: center;
-    height: 40px;
-    line-height: 40px;
+.side {
+  border-right: 1px solid #e8e8e8;;
+}
 
-    a {
-      color: black;
-    }
-    a:hover {
-      color: #1890ff
-    }
+.ant-menu-inline {
+  border-right: 0px
+}
+
+.logo {
+  font-size: 20px;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+
+  a {
+    color: black;
   }
+
+  a:hover {
+    color: #1890ff
+  }
+}
 </style>

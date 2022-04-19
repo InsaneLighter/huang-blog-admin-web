@@ -4,11 +4,15 @@ import router from './router'
 import './router/router-permission'
 import store from './store'
 
-//引入ant design vue
+//ant design vue
 import Antd from 'ant-design-vue';
 import 'ant-design-vue/dist/antd.css';
 
+//数据图形化显示
 import Viser from 'viser-vue'
+
+//md
+import './utils/md'
 
 Vue.use(Antd)
 Vue.use(Viser)

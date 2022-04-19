@@ -1,7 +1,13 @@
 <template>
-  <div class="page-header">
-    <a-page-header :breadcrumb="{ props: { routes: breadList } }" :sub-title="subTitle" :title="title">
+  <div v-if="!$route.meta.hideHead" class="page-header mt1">
+    <a-page-header v-if="!$route.meta.hideHead" :breadcrumb="{ props: { routes: breadList } }" :sub-title="subTitle"
+                   :title="title">
       <slot></slot>
+    </a-page-header>
+  </div>
+  <div v-else class="page-header">
+    <a-page-header v-if="showHead" :breadcrumb="{ props: { routes: breadList } }" :sub-title="subTitle" :title="title">
+      <slot slot="extra" name="extra"></slot>
     </a-page-header>
   </div>
 </template>
@@ -19,6 +25,10 @@ export default {
       default: null
     },
     affix: {
+      type: Boolean,
+      default: false
+    },
+    showHead: {
       type: Boolean,
       default: false
     }
@@ -49,11 +59,14 @@ export default {
 </script>
 
 <style lang="less" scoped>
+.mt1 {
+  margin-top: 1px;
+}
+
 .page-header {
   background: #fff;
   padding: 0 24px 0;
   border-bottom: 1px solid #e8e8e8;
-  margin-top: 2px;
 
   .ant-page-header {
     padding: 16px 0px;

@@ -39,7 +39,6 @@ export default {
 }
 
 #global_content {
-  padding: 15px;
   background: #f0f2f5;
 }
 </style>

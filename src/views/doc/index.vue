@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding: 1rem">
     <a-card :bodyStyle="{ padding: '16px' }" :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
@@ -53,7 +53,7 @@
       </div>
 
       <div style="margin-bottom: 10px">
-        <router-link :to="{ name: 'PostWrite' }">
+        <router-link :to="{ name: 'DocEdit' }">
           <a-button icon="plus" type="primary">写文章</a-button>
         </router-link>
       </div>
