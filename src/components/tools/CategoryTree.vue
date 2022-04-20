@@ -1,15 +1,17 @@
 <template>
-  <a-tree
-    v-if="!categories.loading"
-    :checkedKeys="categoryIds"
-    :treeData.sync="categories.data"
-    checkStrictly
-    checkable
-    defaultExpandAll
-    showLine
-    @check="onCheck"
-  >
-  </a-tree>
+  <div>
+    <a-tree
+        v-if="!categories.loading"
+        :checkedKeys="categoryIds"
+        :treeData.sync="categories.data"
+        checkStrictly
+        checkable
+        showLine
+        @check="onCheck"
+    >
+    </a-tree>
+    <a-spin v-else/>
+  </div>
 </template>
 
 <script>
