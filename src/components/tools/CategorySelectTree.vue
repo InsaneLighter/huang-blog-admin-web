@@ -48,7 +48,7 @@ export default {
         return this.categoryId.toString()
       },
       set(value) {
-        this.$emit('update:categoryId', value ? value : 0)
+        this.$emit('update:categoryId', value ? value : '0')
       }
     }
   },
@@ -78,7 +78,6 @@ export default {
           treeData.push(current)
         }
       })
-
       return treeData
     }
   }

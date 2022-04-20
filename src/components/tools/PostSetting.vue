@@ -6,6 +6,7 @@
       :maskClosable="false"
       :width="680"
       destroyOnClose
+      class="modal"
   >
     <template #title>
       {{ modalTitle }}
@@ -13,14 +14,17 @@
     </template>
 
     <div class="card-container">
-      <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }" labelAlign="left">
+      <a-form :label-col="{ span: 4 }"
+              :wrapper-col="{ span: 20 }"
+              labelAlign="left"
+      >
         <a-form-item label="文章标题">
           <a-input v-model="form.model.title"/>
         </a-form-item>
-        <a-form-item label="分类目录">
+        <a-form-item label="分类">
           <a-space direction="vertical">
             <category-tree ref="categoryTree"
-                           v-model="form.model.categoryIds" />
+                           v-model="form.model.categoryIds"/>
             <a-button type="dashed" @click="categoryCreateModalVisible = true">新增</a-button>
           </a-space>
         </a-form-item>
@@ -84,7 +88,7 @@
       <a-button :disabled="loading" @click="modalVisible = false">关闭</a-button>
     </template>
 
-    <CategoryCreate :visible.sync="categoryCreateModalVisible" @close="onCategoryCreateModalClose" />
+    <CategoryCreate :visible.sync="categoryCreateModalVisible" @close="onCategoryCreateModalClose"/>
   </a-modal>
 </template>
 <script>
@@ -277,9 +281,7 @@ export default {
     async handleSave() {
       try {
         this.form.saving = true
-
         const {status} = this.form.model
-
         if (!status) {
           this.form.model.status = this.postStatuses.PUBLISHED.value
         }
@@ -287,7 +289,6 @@ export default {
         await this.handleCreateOrUpdate()
       } catch (e) {
         this.form.saveErrored = true
-        this.$message.error('Failed to save post', e)
       } finally {
         setTimeout(() => {
           this.form.saving = false
@@ -303,7 +304,6 @@ export default {
         await this.handleCreateOrUpdate()
       } catch (e) {
         this.form.publishErrored = true
-        this.$message.error('Failed to publish post', e)
       } finally {
         setTimeout(() => {
           this.form.publishing = false
@@ -319,7 +319,6 @@ export default {
         await this.handleCreateOrUpdate()
       } catch (e) {
         this.form.draftSaveErrored = true
-        this.$message.error('Failed to save draft post', e)
       } finally {
         setTimeout(() => {
           this.form.draftSaving = false

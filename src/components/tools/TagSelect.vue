@@ -13,9 +13,9 @@
 </template>
 
 <script>
-// import apiClient from '@/utils/api-client'
-import axios from 'axios'
-
+import tagApi from '@/api/tag/index'
+import axios from "axios";
+import {add} from "../../api/tag";
 export default {
   name: 'TagSelect',
   model: {
@@ -72,27 +72,22 @@ export default {
   },
   methods: {
     handleListTags(callback) {
-      /*apiClient.tag.list({ sort: 'name,asc', more: true }).then(response => {
-        this.tags = response.data
+      tagApi.queryAll().then(response => {
+        this.tags = response.data.list
         if (callback) {
           callback()
         }
-      })*/
+      })
     },
     handleChange() {
       const tagNamesToCreate = this.selectedTagNames.filter(tagName => !this.tagNameMap[tagName])
-
-      this.$message.debug('Tag names to create', tagNamesToCreate)
-
       if (!tagNamesToCreate.length) {
         const tagIds = this.selectedTagNames.map(tagName => this.tagNameMap[tagName].id)
         this.$emit('change', tagIds)
         return
       }
 
-      const createPromises = tagNamesToCreate.map(tagName => {
-        // apiClient.tag.create({ name: tagName })
-      })
+      const createPromises = tagNamesToCreate.map(tagName => tagApi.add({ name: tagName }))
 
       axios.all(createPromises).then(
         axios.spread(() => {
