@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import './router/router-permission'
 import store from './store'
+import './assets/css/global.css'
 
 //ant design vue
 import Antd from 'ant-design-vue';
