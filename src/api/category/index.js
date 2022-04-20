@@ -18,7 +18,7 @@ export function page(data) {
 
 export function add(data) {
     return service({
-        url: 'api/category',
+        url: 'api/category/save',
         method: 'post',
         data
     })

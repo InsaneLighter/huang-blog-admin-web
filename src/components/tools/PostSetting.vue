@@ -18,7 +18,11 @@
           <a-input v-model="form.model.title"/>
         </a-form-item>
         <a-form-item label="分类目录">
-          <TagSelect v-model="form.model.tagIds"/>
+          <a-space direction="vertical">
+            <category-tree ref="categoryTree"
+                           v-model="form.model.categoryIds" />
+            <a-button type="dashed" @click="categoryCreateModalVisible = true">新增</a-button>
+          </a-space>
         </a-form-item>
         <a-form-item label="标签">
           <TagSelect v-model="form.model.tagIds"/>
@@ -36,7 +40,6 @@
         </a-form-item>
         <a-form-item label="发表时间：">
           <a-date-picker
-              :defaultValue="null"
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="选择文章发表时间"
               showTime
@@ -80,12 +83,16 @@
       ></ReactiveButton>
       <a-button :disabled="loading" @click="modalVisible = false">关闭</a-button>
     </template>
+
+    <CategoryCreate :visible.sync="categoryCreateModalVisible" @close="onCategoryCreateModalClose" />
   </a-modal>
 </template>
 <script>
 // components
 import ReactiveButton from '@/components/tools/ReactiveButton'
 import TagSelect from '@/components/tools/TagSelect'
+import CategoryTree from '@/components/tools/CategoryTree'
+import CategoryCreate from '@/components/tools/CategoryCreate'
 
 // libs
 import {datetimeFormat} from '@/utils/datetime'
@@ -94,7 +101,9 @@ export default {
   name: 'PostSetting',
   components: {
     ReactiveButton,
-    TagSelect
+    TagSelect,
+    CategoryTree,
+    CategoryCreate
   },
   props: {
     visible: {
@@ -338,7 +347,7 @@ export default {
       try {
         // const response = await apiClient.theme.listCustomPostTemplates()
 
-        this.templates = response.data
+        // this.templates = response.data
       } catch (error) {
         this.$message.error(error)
       }
@@ -371,7 +380,7 @@ export default {
     },
 
     onCategoryCreateModalClose() {
-      // this.$refs.categoryTree.handleListCategories()
+      this.$refs.categoryTree.handleListCategories()
     }
   }
 }

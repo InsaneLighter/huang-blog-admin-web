@@ -402,7 +402,6 @@ export default {
     async handleListCategories() {
       try {
         const response = await categoryApi.queryAll()
-        console.log(response)
         this.categories = response.data.list
       } catch (error) {
         this.$message.error(error)
