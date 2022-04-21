@@ -40,7 +40,7 @@ service.interceptors.response.use(
                 const errorMsg = JSON.parse(reader.result).message
                 notification.error({
                     message: errorMsg,
-                    duration: 5000
+                    duration: 1
                 })
             }
         } else {
@@ -51,7 +51,7 @@ service.interceptors.response.use(
                 if (error.toString().indexOf('Error: timeout') !== -1) {
                     notification.error({
                         message: '网络请求超时',
-                        duration: 5000
+                        duration: 1
                     })
                     return Promise.reject(error)
                 }
@@ -70,14 +70,14 @@ service.interceptors.response.use(
                     if (errorMsg !== undefined) {
                         notification.error({
                             message: errorMsg,
-                            duration: 5000
+                            duration: 1
                         })
                     }
                 }
             } else {
                 notification.error({
                     message: '接口请求失败',
-                    duration: 5000
+                    duration: 1
                 })
             }
         }
