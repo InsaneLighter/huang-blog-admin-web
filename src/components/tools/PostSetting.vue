@@ -44,6 +44,7 @@
         </a-form-item>
         <a-form-item label="发表时间：">
           <a-date-picker
+              :defaultValue="createTimeDefaultValue"
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="选择文章发表时间"
               showTime
@@ -101,6 +102,8 @@ import CategoryCreate from '@/components/tools/CategoryCreate'
 // libs
 import {datetimeFormat} from '@/utils/datetime'
 
+import contentApi from '@/api/content/index'
+
 export default {
   name: 'PostSetting',
   components: {
@@ -136,12 +139,6 @@ export default {
           status: 'success',
           text: '已发布'
         },
-        INTIMATE: {
-          value: 'INTIMATE',
-          color: 'blue',
-          status: 'success',
-          text: '私密'
-        },
         DRAFT: {
           value: 'DRAFT',
           color: 'yellow',
@@ -152,7 +149,7 @@ export default {
           value: 'RECYCLE',
           color: 'red',
           status: 'error',
-          text: '回收站'
+          text: '待回收'
         }
       },
       form: {
@@ -186,7 +183,8 @@ export default {
         const date = new Date(this.form.model.createTime)
         return datetimeFormat(date, 'YYYY-MM-DD HH:mm:ss')
       }
-      return datetimeFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
+      this.form.model.createTime = datetimeFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
+      return this.form.model.createTime
     },
     topPriority: {
       get() {
@@ -260,17 +258,25 @@ export default {
       if (!this.form.model.title) {
         this.$notification['error']({
           message: '提示',
+          duration: 1,
           description: '文章标题不能为空！'
         })
         throw new Error('文章标题不能为空！')
       }
-
-      this.form.model.keepRaw = true
+      if (!this.form.model.originContent || !this.form.model.content) {
+        this.$notification['error']({
+          message: '提示',
+          duration: 1,
+          description: '文章内容不能为空！'
+        })
+        throw new Error('文章内容不能为空！')
+      }
       try {
         if (this.hasId) {
-          // await apiClient.post.update(this.form.model.id, this.form.model)
+          console.log(this.form.model)
+          await contentApi.update(this.form.model)
         } else {
-          // await apiClient.post.create(this.form.model)
+          await contentApi.add(this.form.model)
         }
       } catch (error) {
         this.$message.error(error)

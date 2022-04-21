@@ -19,8 +19,8 @@
                     placeholder="请选择文章状态"
                     @change="handleChangeQueryStatus"
                 >
-                  <a-select-option v-for="status in Object.keys(normalPostStatuses)" :key="status" :value="status">
-                    {{ normalPostStatuses[status].text }}
+                  <a-select-option v-for="status in Object.keys(postStatuses)" :key="status" :value="status">
+                    {{ postStatuses[status].text }}
                   </a-select-option>
                 </a-select>
               </a-form-item>
@@ -56,6 +56,26 @@
         <router-link :to="{ name: 'DocEdit' }">
           <a-button icon="plus" type="primary">写文章</a-button>
         </router-link>
+        <a-space style="margin-left: 0.5rem">
+          <slot name="operator-before"/>
+          <a-dropdown v-if="selectedRowKeys.length">
+            <template #overlay>
+              <a-menu>
+                <a-menu-item @click="handleChangeStatusInBatch(postStatuses.PUBLISHED.value)">发布</a-menu-item>
+                <a-menu-item @click="handleChangeStatusInBatch(postStatuses.DRAFT.value)">转为草稿</a-menu-item>
+                <a-menu-item @click="handleChangeStatusInBatch(postStatuses.RECYCLE.value)">删除</a-menu-item>
+                <a-menu-item @click="handleDeleteInBatch">
+                  永久删除
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <a-button>
+              批量操作
+              <a-icon type="down"/>
+            </a-button>
+          </a-dropdown>
+          <slot name="operator-after"/>
+        </a-space>
       </div>
 
       <div>
@@ -92,7 +112,7 @@
               />
             </a-tooltip>
             <a-tooltip
-                v-if="[postStatuses.PUBLISHED.value, postStatuses.INTIMATE.value].includes(record.status)"
+                v-if="[postStatuses.PUBLISHED.value].includes(record.status)"
                 :title="'点击访问【' + text + '】'"
                 placement="top"
             >
@@ -128,9 +148,9 @@
             <post-tag v-for="(tag, index) in tags" :key="index" :tag="tag" style="margin-bottom: 8px"/>
           </template>
           <!--访问-->
-          <template #visits="visits">
+          <template #visit="visit">
             <a-badge
-                :count="visits"
+                :count="visit"
                 :numberStyle="{ backgroundColor: '#00e0ff' }"
                 :overflowCount="9999"
                 :showZero="true"
@@ -150,7 +170,7 @@
           <template #action="text, post">
             <a-button
                 v-if="
-                [postStatuses.PUBLISHED.value, postStatuses.DRAFT.value, postStatuses.INTIMATE.value].includes(
+                [postStatuses.PUBLISHED.value, postStatuses.DRAFT.value].includes(
                   post.status
                 )
               "
@@ -175,11 +195,11 @@
 
             <a-popconfirm
                 v-if="
-                [postStatuses.PUBLISHED.value, postStatuses.DRAFT.value, postStatuses.INTIMATE.value].includes(
+                [postStatuses.PUBLISHED.value, postStatuses.DRAFT.value].includes(
                   post.status
                 )
               "
-                :title="'确定要删除【' + post.title + '】文章？'"
+                :title="'确定要删除【' + (post.title.length > 15 ? post.title.substring(0,15) + '...':post.title) + '】文章？'"
                 cancelText="取消"
                 okText="确定"
                 @confirm="handleChangeStatus(post.id, postStatuses.RECYCLE.value)"
@@ -226,10 +246,11 @@
 </template>
 
 <script>
-import { articleList } from '../data/const'
-import docApi from '@/api/doc/index'
+import {articleList} from '../data/const'
+import postApi from '@/api/post/index'
 import categoryApi from '@/api/category/index'
 import PostTag from '@/components/postTag'
+
 export default {
   name: 'articleList',
   components: {
@@ -247,38 +268,12 @@ export default {
   },
   data() {
     return {
-      normalPostStatuses: {
-        PUBLISHED: {
-          value: 'PUBLISHED',
-          color: 'green',
-          status: 'success',
-          text: '已发布'
-        },
-        INTIMATE: {
-          value: 'INTIMATE',
-          color: 'blue',
-          status: 'success',
-          text: '私密'
-        },
-        DRAFT: {
-          value: 'DRAFT',
-          color: 'yellow',
-          status: 'warning',
-          text: '草稿'
-        }
-      },
       postStatuses: {
         PUBLISHED: {
           value: 'PUBLISHED',
           color: 'green',
           status: 'success',
           text: '已发布'
-        },
-        INTIMATE: {
-          value: 'INTIMATE',
-          color: 'blue',
-          status: 'success',
-          text: '私密'
         },
         DRAFT: {
           value: 'DRAFT',
@@ -290,7 +285,7 @@ export default {
           value: 'RECYCLE',
           color: 'red',
           status: 'error',
-          text: '回收站'
+          text: '待回收'
         }
       },
       columns: [
@@ -299,48 +294,48 @@ export default {
           dataIndex: 'title',
           ellipsis: true,
           align: 'center',
-          scopedSlots: { customRender: 'postTitle' }
+          scopedSlots: {customRender: 'postTitle'}
         },
         {
           title: '状态',
           dataIndex: 'status',
           width: '150px',
           align: 'center',
-          scopedSlots: { customRender: 'status' }
+          scopedSlots: {customRender: 'status'}
         },
         {
           title: '分类',
           dataIndex: 'categories',
           width: '250px',
           align: 'center',
-          scopedSlots: { customRender: 'categories' }
+          scopedSlots: {customRender: 'categories'}
         },
         {
           title: '标签',
           dataIndex: 'tags',
           width: '250px',
           align: 'center',
-          scopedSlots: { customRender: 'tags' }
+          scopedSlots: {customRender: 'tags'}
         },
         {
           title: '访问',
           width: '100px',
-          dataIndex: 'visits',
+          dataIndex: 'visit',
           align: 'center',
-          scopedSlots: { customRender: 'visits' }
+          scopedSlots: {customRender: 'visit'}
         },
         {
           title: '发布时间',
           dataIndex: 'createTime',
           width: '200px',
           align: 'center',
-          scopedSlots: { customRender: 'createTime' }
+          scopedSlots: {customRender: 'createTime'}
         },
         {
           title: '操作',
           width: '200px',
           align: 'center',
-          scopedSlots: { customRender: 'action' }
+          scopedSlots: {customRender: 'action'}
         }
       ],
       list: {
@@ -386,7 +381,7 @@ export default {
         if (enableLoading) {
           this.list.loading = true
         }
-        const response = await docApi.page(this.list.params);
+        const response = await postApi.page(this.list.params);
         this.list.data = response.data.list
         this.list.total = response.data.totalCount
       } catch (error) {
@@ -410,12 +405,11 @@ export default {
     },
 
     handleEditClick(post) {
-      this.$router.push({name: 'PostEdit', query: {postId: post.id}})
+      this.$router.push({name: 'DocEdit', query: {postId: post.id}})
     },
 
     onSelectionChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
-      console.log(`SelectedRowKeys: ${selectedRowKeys}`)
     },
 
     /**
@@ -430,7 +424,6 @@ export default {
      * Handle page size change
      */
     handlePageSizeChange(current, size) {
-      console.log(`Current: ${current}, PageSize: ${size}`)
       this.list.params.page = 0
       this.list.params.size = size
       this.handleListPosts()
@@ -472,7 +465,7 @@ export default {
     },
     async handleChangeStatus(postId, status) {
       try {
-        // await apiClient.post.updateStatusById(postId, status)
+        await postApi.updateStatus({id: postId, status: status})
         this.$message.success('操作成功！')
       } catch (e) {
         this.$message.error('Failed to change post status', e)
@@ -494,7 +487,7 @@ export default {
         cancelText: '取消',
         onOk: async () => {
           try {
-            // await apiClient.post.updateStatusInBatch(this.selectedRowKeys, status)
+            await postApi.updateStatusInBatch({ids: this.selectedRowKeys, status: status})
             this.selectedRowKeys = []
             this.$message.success('操作成功！')
           } catch (e) {
@@ -508,7 +501,7 @@ export default {
 
     async handleDelete(postId) {
       try {
-        // await apiClient.post.delete(postId)
+        await postApi.del(postId)
         this.$message.success('删除成功！')
       } catch (e) {
         this.$message.error('Failed to delete post', e)
@@ -530,32 +523,8 @@ export default {
         cancelText: '取消',
         onOk: async () => {
           try {
-            // await apiClient.post.deleteInBatch(this.selectedRowKeys)
+            await postApi.del(this.selectedRowKeys)
             this.selectedRowKeys = []
-            this.$message.success('删除成功！')
-          } catch (e) {
-            this.$message.error('Failed to delete posts in batch', e)
-          } finally {
-            await this.handleListPosts()
-          }
-        }
-      })
-    },
-
-    async handleDeleteCurrentPage() {
-      if (!this.list.data.length) {
-        this.$message.info('当前页没有文章')
-        return
-      }
-      this.$confirm({
-        title: '提示',
-        content: '确定删除当前页的所有文章吗？',
-        okText: '确定',
-        cancelText: '取消',
-        onOk: async () => {
-          try {
-            const postIds = this.list.data.map(post => post.id)
-            // await apiClient.post.deleteInBatch(postIds)
             this.$message.success('删除成功！')
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
@@ -579,12 +548,6 @@ export default {
         this.postSettingLoading = false
       }
     },
-
-    handleOpenPostComments(post) {
-      this.list.selected = post
-      this.postCommentVisible = true
-    },
-
     handlePreview(postId) {
       /*apiClient.post.getPreviewLinkById(postId).then(response => {
         window.open(response, '_blank')
@@ -643,6 +606,7 @@ export default {
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
   padding-bottom: 2rem;
+
   .ant-pagination-options-size-changer.ant-select {
     margin: 0;
   }

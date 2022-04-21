@@ -7,6 +7,7 @@
         checkStrictly
         checkable
         showLine
+        defaultExpandAll
         @check="onCheck"
     >
     </a-tree>

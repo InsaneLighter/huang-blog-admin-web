@@ -20,7 +20,7 @@
           <a-input v-model="postToStage.title" placeholder="请输入文章标题" size="large"/>
         </div>
         <div id="editor">
-          <v-md-editor v-model="content"
+          <v-md-editor v-model="postToStage.originContent"
                        height="40rem"
                        mode="editable"
                        :disabled-menus="[]"
@@ -48,6 +48,7 @@ import {datetimeFormat} from '@/utils/datetime'
 //保存重复提示 利用debounce解决
 import debounce from 'lodash.debounce'
 
+import postApi from '@/api/post/index'
 export default {
   name: "edit",
   components: {
@@ -59,8 +60,7 @@ export default {
       postSettingVisible: false,
       postToStage: {},
       contentChanges: 0,
-      previewSaving: false,
-      content: ''
+      previewSaving: false
     }
   },
   beforeRouteEnter(to, from, next) {
@@ -68,8 +68,8 @@ export default {
     const postId = to.query.postId
     next(async vm => {
       if (postId) {
-        // const { data } = await apiClient.post.get(Number(postId))
-        // vm.postToStage = data
+        const { data } = await postApi.get(postId)
+        vm.postToStage = data
       }
     })
   },
@@ -116,7 +116,7 @@ export default {
         try {
           /*const {data} = await apiClient.post.updateDraftById(
               this.postToStage.id,
-              this.postToStage.originalContent,
+              this.postToStage.originContent,
               this.postToStage.content,
               true
           )
@@ -147,8 +147,6 @@ export default {
       }
       // Create the post
       try {
-        this.postToStage.keepRaw = true
-
         // const { data } = await apiClient.post.create(this.postToStage)
         // this.postToStage = data
         this.handleRestoreSavedStatus()
@@ -172,7 +170,7 @@ export default {
         // Update the post content
         /*const { data } = await apiClient.post.updateDraftById(
             this.postToStage.id,
-            this.postToStage.originalContent,
+            this.postToStage.originContent,
             this.postToStage.content,
             true
         )
@@ -200,9 +198,9 @@ export default {
     handleRestoreSavedStatus() {
       this.contentChanges = 0
     },
-    onContentChange(originalContent, renderContent) {
+    onContentChange(originContent, renderContent) {
       this.contentChanges++
-      this.postToStage.originalContent = originalContent
+      this.postToStage.originContent = originContent
       this.postToStage.content = renderContent
     },
     onPostSavedCallback() {
