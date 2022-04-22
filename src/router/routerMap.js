@@ -28,10 +28,10 @@ export const routerMap = [
                     title: '文章',
                     icon: 'meh'
                 },
-                redirect: '/doc/list',
+                redirect: '/doc/post',
                 children: [
                     {
-                        path: '/doc/list',
+                        path: '/doc/post',
                         name: 'DocList',
                         component: (resolve) => require(['@/views/doc'], resolve),
                         meta: {
@@ -48,6 +48,16 @@ export const routerMap = [
                             title: '写文章',
                             icon: 'meh',
                             hideHead: true
+                        }
+                    },
+                    {
+                        path: '/doc/category',
+                        name: 'DocCategory',
+                        component: (resolve) => require(['@/views/doc/CategoryList'], resolve),
+                        meta: {
+                            title: '分类',
+                            icon: 'meh',
+                            hideHead: false
                         }
                     }
                 ]

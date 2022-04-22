@@ -46,19 +46,31 @@ export default {
       try {
         this.categories.loading = true
         const response = await categoryApi.queryAll()
-        this.categories.data = this.convertDataToTree(response.data.list)
+        const treeData = []
+        this.setExtraData(treeData, (response.data.list)[0])
+        this.categories.data = treeData
       } catch (error) {
         this.$message.error(error)
       } finally {
         this.categories.loading = false
       }
     },
-
+    setExtraData(treeData, node) {
+      node = {...node, key: node.id, title: node.name}
+      treeData.push(node)
+      if (node && node.children && node.children.length > 0) {
+        const tempArr = node.children
+        node.children = []
+        tempArr.forEach(item => {
+          this.setExtraData(node.children, item)
+        })
+      }
+    },
     convertDataToTree(categories) {
       const hashMap = {}
       const treeData = []
       categories.forEach(
-        category => (hashMap[category.id] = { ...category, key: category.id, title: category.name, children: [] })
+          category => (hashMap[category.id] = {...category, key: category.id, title: category.name, children: []})
       )
       categories.forEach(category => {
         const current = hashMap[category.id]

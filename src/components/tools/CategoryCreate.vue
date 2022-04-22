@@ -66,6 +66,9 @@ export default {
             { required: true, message: '* 分类名称不能为空', trigger: ['change'] },
             { max: 255, message: '* 分类名称的字符长度不能超过 255', trigger: ['change'] }
           ],
+          parentId: [
+            { required: true, message: '* 父分类不能为空', trigger: ['change'] }
+          ],
           description: [{ max: 100, message: '* 分类描述的字符长度不能超过 100', trigger: ['change'] }]
         }
       }
@@ -82,6 +85,9 @@ export default {
     }
   },
   created() {
+    this.handleListCategories()
+  },
+  mounted() {
     this.handleListCategories()
   },
   watch: {

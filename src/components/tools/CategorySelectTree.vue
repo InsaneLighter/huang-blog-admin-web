@@ -1,12 +1,12 @@
 <template>
   <a-tree-select
-    :allowClear="true"
-    :treeData="categoryTreeData"
-    :treeDataSimpleMode="true"
-    v-model="categoryIdString"
-    placeholder="请选择上级目录，默认为顶级目录"
-    treeDefaultExpandAll
-    @change="handleChange"
+      :allowClear="true"
+      :treeData="categoryTreeData"
+      :treeDataSimpleMode="true"
+      v-model="categoryIdString"
+      placeholder="请选择上级目录，默认为顶级目录"
+      treeDefaultExpandAll
+      @change="handleChange"
   >
   </a-tree-select>
 </template>
@@ -22,29 +22,22 @@ export default {
     },
     categories: {
       type: Array,
-      required: false,
+      required: true,
       default: () => []
-    },
-    root: {
-      type: Object,
-      required: false,
-      default: () => {
-        return {
-          id: 0,
-          title: '根目录',
-          value: '0',
-          pId: -1
-        }
-      }
     }
   },
   computed: {
     categoryTreeData() {
-      console.log([...this.convertDataToTree(this.categories)])
-      return this.categories.length > 0? [...this.convertDataToTree(this.categories)] : [this.root, ...this.convertDataToTree(this.categories)]
+      let treeData = []
+      this.setExtraData(treeData, this.categories[0])
+      return treeData
     },
     categoryIdString: {
       get() {
+        const temp = this.categoryId.toString()
+        if(!temp || temp === ''){
+          this.$emit('update:categoryId', '0')
+        }
         return this.categoryId.toString()
       },
       set(value) {
@@ -56,19 +49,29 @@ export default {
     handleChange() {
       this.$emit('change')
     },
-
+    setExtraData(treeData, node) {
+      node = {...node, key: node.id, title: node.name,value: node.id}
+      treeData.push(node)
+      if (node && node.children && node.children.length > 0) {
+        const tempArr = node.children
+        node.children = []
+        tempArr.forEach(item => {
+          this.setExtraData(node.children, item)
+        })
+      }
+    },
     convertDataToTree(categories) {
       const hashMap = {}
       const treeData = []
       categories.forEach(
-        category =>
-          (hashMap[category.id] = {
-            ...category,
-            title: category.name,
-            value: category.id.toString(),
-            pId: category.parentId,
-            children: []
-          })
+          category =>
+              (hashMap[category.id] = {
+                ...category,
+                title: category.name,
+                value: category.id.toString(),
+                pId: category.parentId,
+                children: []
+              })
       )
       categories.forEach(category => {
         const current = hashMap[category.id]
