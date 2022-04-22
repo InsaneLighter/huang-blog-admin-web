@@ -342,6 +342,7 @@ export default {
         this.form.publishErrored = false
       } else {
         this.savedCallback && this.savedCallback()
+        this.modalVisible = false
       }
     },
 

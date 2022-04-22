@@ -79,7 +79,6 @@
       </div>
 
       <div>
-        <!-- Desktop -->
         <a-table
             :columns="columns"
             :dataSource="list.data"
@@ -242,19 +241,32 @@
         </div>
       </div>
     </a-card>
+
+    <PostSetting
+        :loading="postSettingLoading"
+        :post="list.selected"
+        :savedCallback="onPostSavedCallback"
+        :visible.sync="postSettingVisible"
+        @onClose="list.selected = {}"
+    >
+      <template #extraFooter>
+        <a-button :disabled="selectPreviousButtonDisabled" @click="handleSelectPrevious"> 上一篇</a-button>
+        <a-button :disabled="selectNextButtonDisabled" @click="handleSelectNext"> 下一篇</a-button>
+      </template>
+    </PostSetting>
   </div>
 </template>
 
 <script>
-import {articleList} from '../data/const'
 import postApi from '@/api/post/index'
 import categoryApi from '@/api/category/index'
 import PostTag from '@/components/postTag'
-
+import PostSetting from "@/components/tools/PostSetting";
 export default {
   name: 'articleList',
   components: {
-    PostTag
+    PostTag,
+    PostSetting
   },
   props: {
     defaultPageSize: {
@@ -365,6 +377,14 @@ export default {
         size: this.list.params.size,
         total: this.list.total
       }
+    },
+    selectPreviousButtonDisabled() {
+      const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
+      return index === 0 && !this.list.hasPrevious
+    },
+    selectNextButtonDisabled() {
+      const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
+      return index === this.list.data.length - 1 && !this.list.hasNext
     }
   },
   created() {
@@ -424,7 +444,7 @@ export default {
      * Handle page size change
      */
     handlePageSizeChange(current, size) {
-      this.list.params.page = 0
+      this.list.params.page = 1
       this.list.params.size = size
       this.handleListPosts()
 
@@ -539,9 +559,8 @@ export default {
       try {
         this.postSettingVisible = true
         this.postSettingLoading = true
-
-        // const {data} = await apiClient.post.get(post.id)
-        // this.list.selected = data
+        const { data } = await postApi.get(post.id)
+        this.list.selected = data
       } catch (e) {
         this.$message.error('Failed to open post settings', e)
       } finally {
@@ -552,6 +571,53 @@ export default {
       /*apiClient.post.getPreviewLinkById(postId).then(response => {
         window.open(response, '_blank')
       })*/
+    },
+    onPostSavedCallback() {
+      this.handleListPosts(false)
+    },
+    /**
+     * Select previous post
+     */
+    async handleSelectPrevious() {
+      const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
+      if (index > 0) {
+        this.postSettingLoading = true
+        const response = await postApi.get(this.list.data[index - 1].id)
+        this.list.selected = response.data
+        this.postSettingLoading = false
+        return
+      }
+      if (index === 0 && this.list.hasPrevious) {
+        this.list.params.page--
+        await this.handleListPosts()
+        this.postSettingLoading = true
+        const response = await postApi.get(this.list.data[this.list.data.length - 1].id)
+        this.list.selected = response.data
+        this.postSettingLoading = false
+      }
+    },
+
+    /**
+     * Select next post
+     */
+    async handleSelectNext() {
+      const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
+      if (index < this.list.data.length - 1) {
+        this.postSettingLoading = true
+        const response = await postApi.get(this.list.data[index + 1].id)
+        this.list.selected = response.data
+        this.postSettingLoading = false
+        return
+      }
+      if (index === this.list.data.length - 1 && this.list.hasNext) {
+        this.list.params.page++
+        await this.handleListPosts()
+
+        this.postSettingLoading = true
+        const response = await postApi.get(this.list.data[0].id)
+        this.list.selected = response.data
+        this.postSettingLoading = false
+      }
     }
   }
 }
