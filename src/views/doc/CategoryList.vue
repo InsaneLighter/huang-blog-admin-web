@@ -25,20 +25,20 @@
           :loading="list.loading"
           :pagination="false"
           :rowKey="category => category.id"
-          defaultExpandedRowKeys="[0]"
+          :defaultExpandedRowKeys="defaultExpandedRowKeys"
           :rowSelection="{
             selectedRowKeys: selectedRowKeys,
-            onChange: onSelectionChange
+            onChange: onSelectionChange,
+            getCheckboxProps:onGetCheckboxProps
           }">
-
-        <span slot="action" slot-scope="text, record">
-<!--          <a @click="handleEdit(record)">编辑</a>-->
+        <span v-if="record.id !== '0'" slot="action" slot-scope="text, record">
+          <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical"/>
-          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record)">
+          <a-popconfirm title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
           <a-divider type="vertical"/>
-          <!--          <a @click="handleAddSub(record)">添加下级</a>-->
+          <a @click="handleAddSub(record)">添加下级</a>
         </span>
       </a-table>
     </div>
@@ -90,7 +90,8 @@ export default {
         },
         selected: {}
       },
-      selectedRowKeys: []
+      selectedRowKeys: [],
+      defaultExpandedRowKeys: ['0']
     }
   },
   computed: {
@@ -124,6 +125,9 @@ export default {
     onSelectionChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
+    onGetCheckboxProps(record) {
+      return {props: {disabled: record.id === '0'}}
+    },
     /**
      * Handle page change
      */
@@ -143,9 +147,14 @@ export default {
     },
     async handleAdd() {
     },
-    async handleDelete(postId) {
+    async handleDelete(categoryId) {
       try {
-        await categoryApi.del(postId)
+        const response = await categoryApi.queryByIds(categoryId);
+        if (response.data.list.length > 0) {
+          this.$message.warning("存在文章使用到该分类！")
+          return
+        }
+        await categoryApi.del(categoryId)
         this.$message.success('删除成功！')
       } catch (e) {
         this.$message.error('Failed to delete post', e)
@@ -167,16 +176,27 @@ export default {
         cancelText: '取消',
         onOk: async () => {
           try {
+            const response = await categoryApi.queryByIds(this.selectedRowKeys);
+            if (response.data.list.length > 0) {
+              this.$message.warning("存在文章使用到该分类！")
+              return
+            }
             await categoryApi.del(this.selectedRowKeys)
-            this.selectedRowKeys = []
             this.$message.success('删除成功！')
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
           } finally {
+            this.selectedRowKeys = []
             await this.loadData()
           }
         }
       })
+    },
+    handleEdit(record) {
+
+    },
+    handleAddSub(record) {
+
     }
   }
 }
