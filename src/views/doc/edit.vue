@@ -87,6 +87,8 @@ export default {
       this.$confirm({
         title: '当前页面数据未保存，确定要离开吗？',
         content: () => <div style="color:red;">如果离开当面页面，你的数据很可能会丢失！</div>,
+        okText: '确定',
+        cancelText: '取消',
         onOk() {
           next()
         },
@@ -147,6 +149,8 @@ export default {
       if (!this.postToStage.originContent) {
         this.$confirm({
           title: '当前文章没有数据，确认保存吗？',
+          okText: '确定',
+          cancelText: '取消',
           onOk() {
             return new Promise((resolve, reject) => {
               self.handleCreateContent(resolve)

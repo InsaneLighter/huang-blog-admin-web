@@ -1,5 +1,5 @@
 <template>
-  <a-modal v-model="modalVisible" :afterClose="onClose" :width="512" destroyOnClose title="新建分类">
+  <a-modal v-model="modalVisible" :afterClose="onClose" :width="512" destroyOnClose :title="title">
     <a-form-model
       ref="categoryForm"
       :label-col="{ span: 4 }"
@@ -11,7 +11,7 @@
       <a-form-model-item help="* 页面上所显示的名称" label="名称：" prop="name">
         <a-input ref="nameInput" v-model="form.model.name" />
       </a-form-model-item>
-      <a-form-model-item label="上级目录：" prop="parentId">
+      <a-form-model-item label="上级目录：" prop="parentId" v-if="!operate">
         <category-select-tree :categories="list.data" :categoryId.sync="form.model.parentId" />
       </a-form-model-item>
       <a-form-model-item label="描述：" prop="description">
@@ -28,7 +28,7 @@
         text="保存"
         type="primary"
         @callback="handleSavedCallback"
-        @click="handleCreate"
+        @click="handleSave"
       ></ReactiveButton>
       <a-button @click="modalVisible = false">关闭</a-button>
     </template>
@@ -49,6 +49,18 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    title: {
+      type: String,
+      default: ''
+    },
+    operate: {
+      type: Boolean,
+      default: false
+    },
+    record: {
+      type: Object,
+      default: undefined
     }
   },
   data() {
@@ -94,6 +106,11 @@ export default {
           this.$refs.nameInput.focus()
         })
       }
+    },
+    record(value){
+      if (this.title === '编辑分类') {
+        this.form.model = this.record
+      }
     }
   },
   methods: {
@@ -137,6 +154,39 @@ export default {
     onClose() {
       this.$emit('close')
       this.form.model = {}
+    },
+    handleSave(){
+      switch (this.title) {
+        case '新增分类':
+          this.handleCreate()
+          break
+        case '编辑分类':
+          this.handleEdit()
+          break
+        case '添加子分类':
+          this.handleAddSub()
+      }
+    },
+    handleEdit(){
+      this.$refs.categoryForm.validate(async valid => {
+        if (valid) {
+          try {
+            this.form.saving = true
+            await categoryApi.edit(this.form.model)
+          } catch (e) {
+            this.form.errored = true
+            this.$message.error('Failed to create category', e)
+          } finally {
+            setTimeout(() => {
+              this.form.saving = false
+            }, 400)
+          }
+        }
+      })
+    },
+    handleAddSub(){
+      this.form.model.parentId = this.record.id
+      this.handleCreate()
     }
   }
 }

@@ -3,7 +3,7 @@
 
     <!-- 操作按钮区域 -->
     <div class="table-operator">
-      <a-button @click="handleAdd" type="primary" icon="plus">新增</a-button>
+      <a-button @click="handleAdd" style="margin-bottom: 1rem" type="primary" icon="plus">新增</a-button>
       <a-dropdown v-if="selectedRowKeys.length > 0">
         <a-menu slot="overlay">
           <a-menu-item key="1" @click="handleDeleteInBatch">
@@ -44,6 +44,11 @@
     </div>
 
     <!--    <category ref="modalForm" @ok="modalFormOk"></category>-->
+    <CategoryCreate :operate="operate"
+                    :record="record"
+                    :title="categoryTitle"
+                    :visible.sync="categoryCreateModalVisible"
+                    @close="onCategoryCreateModalClose"/>
   </a-card>
 </template>
 
@@ -51,11 +56,13 @@
 
 // import Category from '@components/category'
 import categoryApi from '@/api/category/index'
+import CategoryCreate from "@/components/tools/CategoryCreate"
 
 export default {
   name: "CategoryList",
   components: {
     // Category
+    CategoryCreate
   },
   data() {
     return {
@@ -91,20 +98,14 @@ export default {
         selected: {}
       },
       selectedRowKeys: [],
-      defaultExpandedRowKeys: ['0']
+      defaultExpandedRowKeys: ['0'],
+      categoryCreateModalVisible: false,
+      operate: false,
+      record: {},
+      categoryTitle: ''
     }
   },
-  computed: {
-    pagination() {
-      return {
-        page: this.list.params.page + 1,
-        size: this.list.params.size,
-        total: this.list.total
-      }
-    },
-  },
   created() {
-    this.list.params.size = this.defaultPageSize
     this.loadData()
   },
   methods: {
@@ -120,6 +121,7 @@ export default {
         this.$message.error(error)
       } finally {
         this.list.loading = false
+        this.selectedRowKeys = []
       }
     },
     onSelectionChange(selectedRowKeys) {
@@ -128,30 +130,18 @@ export default {
     onGetCheckboxProps(record) {
       return {props: {disabled: record.id === '0'}}
     },
-    /**
-     * Handle page change
-     */
-    handlePageChange(page = 1) {
-      this.list.params.page = page - 1
+    onCategoryCreateModalClose() {
       this.loadData()
-    },
-
-    /**
-     * Handle page size change
-     */
-    handlePageSizeChange(current, size) {
-      this.list.params.page = 1
-      this.list.params.size = size
-      this.loadData()
-
-    },
-    async handleAdd() {
     },
     async handleDelete(categoryId) {
       try {
         const response = await categoryApi.queryByIds(categoryId);
         if (response.data.list.length > 0) {
           this.$message.warning("存在文章使用到该分类！")
+          return
+        }
+        if(!response.hasChildren){
+          this.$message.warning("选中分类含子节点！")
           return
         }
         await categoryApi.del(categoryId)
@@ -162,7 +152,6 @@ export default {
         await this.loadData()
       }
     },
-
     async handleDeleteInBatch() {
       if (this.selectedRowKeys.length <= 0) {
         this.$message.info('请至少选择一项！')
@@ -171,7 +160,7 @@ export default {
 
       this.$confirm({
         title: '提示',
-        content: '确定删除所选的文章吗？',
+        content: '确定删除所选的分类吗？',
         okText: '确定',
         cancelText: '取消',
         onOk: async () => {
@@ -181,22 +170,36 @@ export default {
               this.$message.warning("存在文章使用到该分类！")
               return
             }
+            if(!response.hasChildren){
+              this.$message.warning("选中分类含子节点！")
+              return
+            }
             await categoryApi.del(this.selectedRowKeys)
             this.$message.success('删除成功！')
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
           } finally {
-            this.selectedRowKeys = []
             await this.loadData()
           }
         }
       })
     },
+    handleAdd(){
+      this.categoryCreateModalVisible = true
+      this.operate = false
+      this.categoryTitle = "新增分类"
+    },
     handleEdit(record) {
-
+      this.categoryCreateModalVisible = true
+      this.operate = true
+      this.categoryTitle = "编辑分类"
+      this.record = record
     },
     handleAddSub(record) {
-
+      this.categoryCreateModalVisible = true
+      this.operate = true
+      this.record = record
+      this.categoryTitle = "添加子分类"
     }
   }
 }

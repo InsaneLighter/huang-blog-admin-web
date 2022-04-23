@@ -89,7 +89,9 @@
       <a-button :disabled="loading" @click="modalVisible = false">关闭</a-button>
     </template>
 
-    <CategoryCreate :visible.sync="categoryCreateModalVisible" @close="onCategoryCreateModalClose"/>
+    <CategoryCreate :visible.sync="categoryCreateModalVisible"
+                    :title="'新增分类'"
+                    @close="onCategoryCreateModalClose"/>
   </a-modal>
 </template>
 <script>

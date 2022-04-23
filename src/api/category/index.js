@@ -44,7 +44,7 @@ export function del(ids) {
 
 export function edit(data) {
     return service({
-        url: 'api/category',
+        url: 'api/category/update',
         method: 'put',
         data
     })
