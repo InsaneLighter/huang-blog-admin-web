@@ -26,6 +26,11 @@ export default {
       default: () => []
     }
   },
+  watch: {
+    categories(value){ //n为新值,o为旧值;
+      console.log(value)
+    }
+  },
   computed: {
     categoryTreeData() {
       let treeData = []
@@ -34,16 +39,15 @@ export default {
     },
     categoryIdString: {
       get() {
-        const temp = this.categoryId.toString()
-        if(!temp || temp === ''){
-          this.$emit('update:categoryId', '0')
-        }
         return this.categoryId.toString()
       },
       set(value) {
         this.$emit('update:categoryId', value ? value : '0')
       }
     }
+  },
+  created() {
+    this.$emit('update:categoryId', this.categoryId.toString() ? this.categoryId.toString() : '0')
   },
   methods: {
     handleChange() {

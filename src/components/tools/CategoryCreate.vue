@@ -12,7 +12,7 @@
         <a-input ref="nameInput" v-model="form.model.name" />
       </a-form-model-item>
       <a-form-model-item label="上级目录：" prop="parentId">
-        <category-select-tree :categories="list.data" :category-id.sync="form.model.parentId" />
+        <category-select-tree :categories="list.data" :categoryId.sync="form.model.parentId" />
       </a-form-model-item>
       <a-form-model-item label="描述：" prop="description">
         <a-input v-model="form.model.description" :autoSize="{ minRows: 3 }" type="textarea" />
@@ -87,9 +87,6 @@ export default {
   created() {
     this.handleListCategories()
   },
-  mounted() {
-    this.handleListCategories()
-  },
   watch: {
     modalVisible(value) {
       if (value) {
@@ -134,10 +131,12 @@ export default {
       } else {
         this.form.model = {}
         this.modalVisible = false
+        this.handleListCategories()
       }
     },
     onClose() {
       this.$emit('close')
+      this.form.model = {}
     }
   }
 }
