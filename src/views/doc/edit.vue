@@ -49,6 +49,8 @@ import {datetimeFormat} from '@/utils/datetime'
 import debounce from 'lodash.debounce'
 
 import postApi from '@/api/post/index'
+import contentApi from '@/api/content/index'
+
 export default {
   name: "edit",
   components: {
@@ -68,7 +70,7 @@ export default {
     const postId = to.query.postId
     next(async vm => {
       if (postId) {
-        const { data } = await postApi.get(postId)
+        const {data} = await postApi.get(postId)
         vm.postToStage = data
       }
     })
@@ -112,20 +114,17 @@ export default {
   methods: {
     handleSaveDraft: debounce(async function () {
       if (this.postToStage.id) {
-        // Update the post content
         try {
-          /*const {data} = await apiClient.post.updateDraftById(
-              this.postToStage.id,
-              this.postToStage.originContent,
-              this.postToStage.content,
-              true
-          )
-          this.postToStage.inProgress = data.inProgress
+          await contentApi.update({
+            id: this.postToStage.id,
+            originContent: this.postToStage.originContent,
+            content: this.postToStage.content
+          })
           this.handleRestoreSavedStatus()
           this.$message.success({
             content: '内容已保存',
-            duration: 0.5
-          })*/
+            duration: 1
+          })
         } catch (e) {
           this.$message.error('Failed to update post content', e)
         }
@@ -140,21 +139,37 @@ export default {
         this.handleSaveDraft()
       }
     },
-
     async handleCreatePost() {
+      const self = this
       if (!this.postToStage.title) {
         this.postToStage.title = datetimeFormat(new Date(), 'YYYY-MM-DD-HH-mm-ss')
       }
+      if (!this.postToStage.originContent) {
+        this.$confirm({
+          title: '当前文章没有数据，确认保存吗？',
+          onOk() {
+            return new Promise((resolve, reject) => {
+              self.handleCreateContent(resolve)
+            }).catch(() => console.log('文章保存失败!'))
+          },
+          onCancel() {
+          }
+        })
+      }
+
+    },
+    handleCreateContent(resolve) {
+      resolve()
       // Create the post
       try {
-        // const { data } = await apiClient.post.create(this.postToStage)
-        // this.postToStage = data
+        contentApi.add({
+          title: this.postToStage.title,
+          originContent: this.postToStage.originContent,
+          content: this.postToStage.content
+        })
         this.handleRestoreSavedStatus()
-
         // add params to url
-        const path = this.$router.history.current.path
-        this.$router.push({path, query: {postId: this.postToStage.id}}).catch(err => err)
-
+        this.$router.push({name: 'DocList'})
         this.$message.success({
           content: '文章已创建',
           duration: 1
@@ -163,7 +178,6 @@ export default {
         this.$message.error('Failed to create post: ' + e.toString())
       }
     },
-
     async handlePreviewClick() {
       this.previewSaving = true
       if (this.postToStage.id) {

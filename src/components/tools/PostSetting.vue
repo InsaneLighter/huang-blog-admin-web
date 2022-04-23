@@ -197,27 +197,6 @@ export default {
         this.$set(this.form.model, 'topPriority', value ? 1 : 0)
       }
     },
-    fullPath() {
-      const {post_permalink_type, archives_prefix, blog_url, path_suffix: path_suffix = ''} = this.options
-      const {slug: slug = '{slug}', createTime: createTime = new Date(), id: id = '{id}'} = this.form.model
-
-      switch (post_permalink_type) {
-        case 'DEFAULT':
-          return `${blog_url}/${archives_prefix}/${slug}${path_suffix}`
-        case 'YEAR':
-          return `${blog_url}${datetimeFormat(createTime, '/YYYY/')}${slug}${path_suffix}`
-        case 'DATE':
-          return `${blog_url}${datetimeFormat(createTime, '/YYYY/MM/')}${slug}${path_suffix}`
-        case 'DAY':
-          return `${blog_url}${datetimeFormat(createTime, '/YYYY/MM/DD/')}${slug}${path_suffix}`
-        case 'ID':
-          return `${blog_url}/?p=${id}`
-        case 'ID_SLUG':
-          return `${blog_url}/${archives_prefix}/${id}${path_suffix}`
-        default:
-          return ''
-      }
-    },
     hasId() {
       return !!this.form.model.id
     },
@@ -234,10 +213,6 @@ export default {
     modalVisible(value) {
       if (value) {
         this.form.model = Object.assign({}, this.post)
-
-        if (!this.form.model.slug && !this.form.model.id) {
-          // this.handleGenerateSlug()
-        }
       }
     },
     post: {
@@ -273,7 +248,6 @@ export default {
       }
       try {
         if (this.hasId) {
-          console.log(this.form.model)
           await contentApi.update(this.form.model)
         } else {
           await contentApi.add(this.form.model)
