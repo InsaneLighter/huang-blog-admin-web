@@ -1,5 +1,12 @@
 <template>
-  <a-card title="磁盘监控">
+  <a-card :bordered="false">
+    <a-alert type="info" :showIcon="true">
+      <div slot="message">
+        上次更新时间：{{ this.time }}
+        <a-divider type="vertical"/>
+        <a @click="handleClickUpdate">立即更新</a>
+      </div>
+    </a-alert>
     <a-skeleton v-if="loading" active/>
     <a-row v-else>
       <template v-if="diskInfo && diskInfo.length>0">
@@ -15,6 +22,7 @@
 import DashChart from '@/components/tools/DashChart'
 import ARow from 'ant-design-vue/es/grid/Row'
 import redisApi from '@/api/redis/index'
+import moment from "moment";
 
 export default {
   name: 'DiskMonitoring',
@@ -24,22 +32,33 @@ export default {
   },
   data() {
     return {
+      time: '',
       loading: true,
       description: '磁盘监控',
       //数据集
-      diskInfo: []
+      diskInfo: [],
+      strokeColor: {
+        '0%': '#108ee9',
+        '100%': '#87d068',
+      }
     }
   },
   created() {
-    this.loading = true
-    redisApi.queryDiskInfo().then((res) => {
-      if (res.code === 1) {
-        for (let i = 0; i < res.data.length; i++) {
-          res.data[i].restPPT = res.data[i].restPPT / 10;
+    this.loadDiskInfo()
+  },
+  methods: {
+    handleClickUpdate() {
+      this.loadDiskInfo()
+    },
+    loadDiskInfo() {
+      this.loading = true
+      this.time = moment().format('YYYY年MM月DD日 HH时mm分ss秒')
+      redisApi.queryDiskInfo().then((res) => {
+        if (res.code === 1) {
+          this.diskInfo = res.data;
         }
-        this.diskInfo = res.data;
-      }
-    }).finally(() => this.loading = false)
+      }).finally(() => this.loading = false)
+    }
   }
 }
 </script>
