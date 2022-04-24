@@ -103,6 +103,17 @@ export const routerMap = [
                         }
                     },
                     {
+                        path: '/monitor/sql',
+                        name: 'SQL',
+                        component: (resolve) => require(['@/components/layouts/global/IframePageView'], resolve),
+                        meta: {
+                            title: 'SQL监控',
+                            icon: 'meh',
+                            hideHead: false,
+                            url: 'api/druid/behind/'
+                        }
+                    },
+                    {
                         path: '/monitor/redis',
                         name: 'Redis',
                         component: (resolve) => require(['@/views/monitor/RedisInfo'], resolve),
@@ -117,7 +128,7 @@ export const routerMap = [
                         name: 'Disk',
                         component: (resolve) => require(['@/views/monitor/DiskMonitoring'], resolve),
                         meta: {
-                            title: '磁盘监控',
+                            title: 'Disk监控',
                             icon: 'meh',
                             hideHead: false
                         }
