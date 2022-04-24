@@ -1,7 +1,6 @@
 <template>
   <a-skeleton active :loading="loading" :paragraph="{rows: 17}">
     <a-card :bordered="false">
-
       <a-alert type="info" :showIcon="true">
         <div slot="message">
           上次更新时间：{{ this.time }}
@@ -9,7 +8,6 @@
           <a @click="handleClickUpdate">立即更新</a>
         </div>
       </a-alert>
-
       <a-table
           rowKey="id"
           size="middle"

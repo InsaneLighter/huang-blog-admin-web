@@ -15,7 +15,10 @@
     <a-row
         class="row"
         :gutter="12">
-      <a-col :span="24">
+      <a-col :span="24" v-if="loading" style="text-align: center;">
+        <a-spin style="margin-top: 5rem"/>
+      </a-col>
+      <a-col :span="24" v-else>
         <div class="title">
           <a-input v-model="postToStage.title" placeholder="请输入文章标题" size="large"/>
         </div>
@@ -59,6 +62,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       postSettingVisible: false,
       postToStage: {},
       contentChanges: 0,
@@ -117,6 +121,7 @@ export default {
     handleSaveDraft: debounce(async function () {
       if (this.postToStage.id) {
         try {
+          this.loading = true
           await contentApi.update({
             id: this.postToStage.id,
             originContent: this.postToStage.originContent,
@@ -129,9 +134,12 @@ export default {
           })
         } catch (e) {
           this.$message.error('Failed to update post content', e)
+        }finally {
+          this.loading = false
         }
       } else {
-        await this.handleCreatePost()
+        //TODO 文章保存一分钟之内次数不能超过5次
+        this.handleCreatePost()
       }
     }, 300),
     onRegisterSaveShortcut(e) {
@@ -141,7 +149,7 @@ export default {
         this.handleSaveDraft()
       }
     },
-    async handleCreatePost() {
+    handleCreatePost() {
       const self = this
       if (!this.postToStage.title) {
         this.postToStage.title = datetimeFormat(new Date(), 'YYYY-MM-DD-HH-mm-ss')
@@ -152,34 +160,45 @@ export default {
           okText: '确定',
           cancelText: '取消',
           onOk() {
+            self.loading = true
             return new Promise((resolve, reject) => {
               self.handleCreateContent(resolve)
-            }).catch(() => console.log('文章保存失败!'))
+            }).catch(() => this.$message.error('文章保存失败!')).finally(() => {
+              self.loading = false
+            })
           },
           onCancel() {
           }
         })
+      }else {
+        this.handleCreateContent()
       }
 
     },
     handleCreateContent(resolve) {
-      resolve()
+      if(resolve){
+        resolve()
+      }
       // Create the post
       try {
+        this.loading = true
         contentApi.add({
           title: this.postToStage.title,
           originContent: this.postToStage.originContent,
           content: this.postToStage.content
+        }).then(res => {
+          this.loading = false
+          this.$router.push({name: 'DocList'})
         })
         this.handleRestoreSavedStatus()
-        // add params to url
-        this.$router.push({name: 'DocList'})
         this.$message.success({
           content: '文章已创建',
           duration: 1
         })
       } catch (e) {
         this.$message.error('Failed to create post: ' + e.toString())
+      }finally {
+        this.loading = false
       }
     },
     async handlePreviewClick() {

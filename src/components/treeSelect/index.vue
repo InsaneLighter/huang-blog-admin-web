@@ -198,8 +198,6 @@
               }
             }
             this.treeData = [...res.result]
-          }else{
-            console.log("数根节点查询结果-else",res)
           }
         })
       },
