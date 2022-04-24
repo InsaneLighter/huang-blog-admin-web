@@ -63,6 +63,68 @@ export const routerMap = [
                 ]
             },
             {
+                path: '/monitor',
+                name: 'Monitor',
+                component: BlankLayout,
+                meta: {
+                    title: '监控',
+                    icon: 'meh'
+                },
+                redirect: '/monitor/system',
+                children: [
+                    {
+                        path: '/monitor/system',
+                        name: 'System',
+                        component: (resolve) => require(['@/views/monitor/SystemInfo'], resolve),
+                        meta: {
+                            title: '系统监控',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    },
+                    {
+                        path: '/monitor/tomcat',
+                        name: 'Tomcat',
+                        component: (resolve) => require(['@/views/monitor/TomcatInfo'], resolve),
+                        meta: {
+                            title: 'Tomcat监控',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    },
+                    {
+                        path: '/monitor/jvm',
+                        name: 'JVM',
+                        component: (resolve) => require(['@/views/monitor/JvmInfo'], resolve),
+                        meta: {
+                            title: 'JVM监控',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    },
+                    {
+                        path: '/monitor/redis',
+                        name: 'Redis',
+                        component: (resolve) => require(['@/views/monitor/RedisInfo'], resolve),
+                        meta: {
+                            title: 'Redis监控',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    },
+                    {
+                        path: '/monitor/disk',
+                        name: 'Disk',
+                        component: (resolve) => require(['@/views/monitor/DiskMonitoring'], resolve),
+                        meta: {
+                            title: '磁盘监控',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    }
+                ]
+            },
+            {
                 path: '/page1',
                 name: 'Page1',
                 component: BlankLayout,
@@ -119,19 +181,19 @@ export const routerMap = [
         path: '/403',
         name: '403',
         component: (resolve) => require(['@/views/exception/403'], resolve),
-        meta: { title: 'NotAuthorized' }
+        meta: {title: 'NotAuthorized'}
     },
     {
         path: '/404',
         name: '404',
         component: (resolve) => require(['@/views/exception/404'], resolve),
-        meta: { title: 'NotFound'}
+        meta: {title: 'NotFound'}
     },
     {
         path: '/500',
         name: '500',
         component: (resolve) => require(['@/views/exception/500'], resolve),
-        meta: { title: 'ServerWrong'}
+        meta: {title: 'ServerWrong'}
     },
     //以上路由均不匹配则重定向入404页面
     {
