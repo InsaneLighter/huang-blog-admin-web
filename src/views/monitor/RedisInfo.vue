@@ -182,8 +182,12 @@ export default {
     loadRedisInfo() {
       this.tableLoading = true
       this.time = moment().format('YYYY年MM月DD日 HH时mm分ss秒')
-      redisApi.getRedisInfo().then((res) => {
-        this.redisInfo = res.data
+      redisApi.getRedisInfo().then((response) => {
+        if (response.code === 1) {
+          this.redisInfo = response.data
+        } else {
+          this.$message.error(response.msg)
+        }
       }).finally(() => {
         this.tableLoading = false
       })

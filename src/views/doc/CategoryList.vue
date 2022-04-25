@@ -114,9 +114,14 @@ export default {
         if (enableLoading) {
           this.list.loading = true
         }
-        const response = await categoryApi.queryAll(this.list.params);
-        this.list.total = response.data.totalCount
-        this.list.data = response.data.list
+        await categoryApi.queryAll(this.list.params).then(response => {
+          if (response.code === 1) {
+            this.list.total = response.data.totalCount
+            this.list.data = response.data.list
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
       } catch (error) {
         this.$message.error(error)
       } finally {
@@ -134,18 +139,33 @@ export default {
       this.loadData()
     },
     async handleDelete(categoryId) {
+      let flag = true
       try {
-        const response = await categoryApi.queryByIds(categoryId);
-        if (response.data.list.length > 0) {
-          this.$message.warning("存在文章使用到该分类！")
-          return
+        await categoryApi.queryByIds(categoryId).then(response => {
+          if (response.code === 1) {
+            if (response.data.list.length > 0) {
+              this.$message.warning("存在文章使用到该分类！")
+              flag = false
+              return
+            }
+            if (!response.hasChildren) {
+              this.$message.warning("选中分类含子节点！")
+              flag = false
+            }
+          } else {
+            this.$message.error(response.msg)
+          }
+        })
+        if (flag) {
+          categoryApi.del(categoryId).then(response => {
+            if (response.code === 1) {
+              this.$message.success('删除成功！')
+
+            } else {
+              this.$message.error(response.msg)
+            }
+          })
         }
-        if(!response.hasChildren){
-          this.$message.warning("选中分类含子节点！")
-          return
-        }
-        await categoryApi.del(categoryId)
-        this.$message.success('删除成功！')
       } catch (e) {
         this.$message.error('Failed to delete post', e)
       } finally {
@@ -153,6 +173,7 @@ export default {
       }
     },
     async handleDeleteInBatch() {
+      let flag = true
       if (this.selectedRowKeys.length <= 0) {
         this.$message.info('请至少选择一项！')
         return
@@ -165,17 +186,31 @@ export default {
         cancelText: '取消',
         onOk: async () => {
           try {
-            const response = await categoryApi.queryByIds(this.selectedRowKeys);
-            if (response.data.list.length > 0) {
-              this.$message.warning("存在文章使用到该分类！")
-              return
+            const response = await categoryApi.queryByIds(this.selectedRowKeys).then(response => {
+              if (response.code === 1) {
+                if (response.data.list.length > 0) {
+                  this.$message.warning("存在文章使用到该分类！")
+                  flag = false
+                  return
+                }
+                if (!response.hasChildren) {
+                  this.$message.warning("选中分类含子节点！")
+                  flag = false
+                }
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+            if (flag) {
+              categoryApi.del(this.selectedRowKeys).then(response => {
+                if (response.code === 1) {
+                  this.$message.success('删除成功！')
+
+                } else {
+                  this.$message.error(response.msg)
+                }
+              })
             }
-            if(!response.hasChildren){
-              this.$message.warning("选中分类含子节点！")
-              return
-            }
-            await categoryApi.del(this.selectedRowKeys)
-            this.$message.success('删除成功！')
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
           } finally {
@@ -184,7 +219,7 @@ export default {
         }
       })
     },
-    handleAdd(){
+    handleAdd() {
       this.categoryCreateModalVisible = true
       this.operate = false
       this.categoryTitle = "新增分类"

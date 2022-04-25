@@ -401,9 +401,15 @@ export default {
         if (enableLoading) {
           this.list.loading = true
         }
-        const response = await postApi.page(this.list.params);
-        this.list.data = response.data.list
-        this.list.total = response.data.totalCount
+        await postApi.page(this.list.params).then(response => {
+          if(response.code === 1){
+            this.list.data = response.data.list
+            this.list.total = response.data.totalCount
+          }else {
+            this.$message.error(response.msg)
+          }
+        });
+
       } catch (error) {
         this.$message.error(error)
       } finally {
@@ -416,11 +422,15 @@ export default {
      */
     async handleListCategories() {
       try {
-        const response = await categoryApi.queryAll()
-        this.categories = response.data.list
+        await categoryApi.queryAll().then(response => {
+          if(response.code === 1){
+            this.categories = response.data.list
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       } catch (error) {
         this.$message.error(error)
-      } finally {
       }
     },
 
@@ -485,8 +495,13 @@ export default {
     },
     async handleChangeStatus(postId, status) {
       try {
-        await postApi.updateStatus({id: postId, status: status})
-        this.$message.success('操作成功！')
+        await postApi.updateStatus({id: postId, status: status}).then(response => {
+          if(response.code === 1){
+            this.$message.success('操作成功！')
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       } catch (e) {
         this.$message.error('Failed to change post status', e)
       } finally {
@@ -507,9 +522,14 @@ export default {
         cancelText: '取消',
         onOk: async () => {
           try {
-            await postApi.updateStatusInBatch({ids: this.selectedRowKeys, status: status})
-            this.selectedRowKeys = []
-            this.$message.success('操作成功！')
+            await postApi.updateStatusInBatch({ids: this.selectedRowKeys, status: status}).then(response => {
+              if(response.code === 1){
+                this.selectedRowKeys = []
+                this.$message.success('操作成功！')
+              }else {
+                this.$message.error(response.msg)
+              }
+            })
           } catch (e) {
             this.$message.error('Failed to change status in batch', e)
           } finally {
@@ -521,8 +541,13 @@ export default {
 
     async handleDelete(postId) {
       try {
-        await postApi.del(postId)
-        this.$message.success('删除成功！')
+        await postApi.del(postId).then(response => {
+          if(response.code === 1){
+            this.$message.success('删除成功！')
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       } catch (e) {
         this.$message.error('Failed to delete post', e)
       } finally {
@@ -543,9 +568,14 @@ export default {
         cancelText: '取消',
         onOk: async () => {
           try {
-            await postApi.del(this.selectedRowKeys)
-            this.selectedRowKeys = []
-            this.$message.success('删除成功！')
+            await postApi.del(this.selectedRowKeys).then(response => {
+              if(response.code === 1){
+                this.selectedRowKeys = []
+                this.$message.success('删除成功！')
+              }else {
+                this.$message.error(response.msg)
+              }
+            })
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
           } finally {
@@ -559,8 +589,13 @@ export default {
       try {
         this.postSettingVisible = true
         this.postSettingLoading = true
-        const { data } = await postApi.get(post.id)
-        this.list.selected = data
+        await postApi.get(post.id).then(response => {
+          if(response.code === 1){
+            this.list.selected = response.data
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       } catch (e) {
         this.$message.error('Failed to open post settings', e)
       } finally {
@@ -579,21 +614,33 @@ export default {
      * Select previous post
      */
     async handleSelectPrevious() {
+      let flag = true
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
       if (index > 0) {
         this.postSettingLoading = true
-        const response = await postApi.get(this.list.data[index - 1].id)
-        this.list.selected = response.data
-        this.postSettingLoading = false
-        return
+        const response = await postApi.get(this.list.data[index - 1].id).then(response => {
+          if(response.code === 1){
+            this.list.selected = response.data
+            this.postSettingLoading = false
+            flag = false
+            return
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       }
-      if (index === 0 && this.list.hasPrevious) {
+      if (index === 0 && this.list.hasPrevious && flag) {
         this.list.params.page--
         await this.handleListPosts()
         this.postSettingLoading = true
-        const response = await postApi.get(this.list.data[this.list.data.length - 1].id)
-        this.list.selected = response.data
-        this.postSettingLoading = false
+        const response = await postApi.get(this.list.data[this.list.data.length - 1].id).then(response => {
+          if(response.code === 1){
+            this.list.selected = response.data
+            this.postSettingLoading = false
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       }
     },
 
@@ -604,19 +651,27 @@ export default {
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
       if (index < this.list.data.length - 1) {
         this.postSettingLoading = true
-        const response = await postApi.get(this.list.data[index + 1].id)
-        this.list.selected = response.data
-        this.postSettingLoading = false
-        return
+        await postApi.get(this.list.data[index + 1].id).then(response => {
+          if(response.code === 1){
+            this.list.selected = response.data
+            this.postSettingLoading = false
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       }
       if (index === this.list.data.length - 1 && this.list.hasNext) {
         this.list.params.page++
         await this.handleListPosts()
-
         this.postSettingLoading = true
-        const response = await postApi.get(this.list.data[0].id)
-        this.list.selected = response.data
-        this.postSettingLoading = false
+        await postApi.get(this.list.data[0].id).then(response => {
+          if(response.code === 1){
+            this.list.selected = response.data
+            this.postSettingLoading = false
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       }
     }
   }

@@ -74,8 +74,13 @@ export default {
     const postId = to.query.postId
     next(async vm => {
       if (postId) {
-        const {data} = await postApi.get(postId)
-        vm.postToStage = data
+        const {data} = await postApi.get(postId).then(response => {
+          if(response.code === 1){
+            vm.postToStage = response.data
+          }else {
+            this.$message.error(response.msg)
+          }
+        })
       }
     })
   },
@@ -126,11 +131,16 @@ export default {
             id: this.postToStage.id,
             originContent: this.postToStage.originContent,
             content: this.postToStage.content
-          })
-          this.handleRestoreSavedStatus()
-          this.$message.success({
-            content: '内容已保存',
-            duration: 1
+          }).then(response => {
+            if(response.code === 1){
+              this.handleRestoreSavedStatus()
+              this.$message.success({
+                content: '内容已保存',
+                duration: 1
+              })
+            }else {
+              this.$message.error(response.msg)
+            }
           })
         } catch (e) {
           this.$message.error('Failed to update post content', e)
@@ -186,14 +196,18 @@ export default {
           title: this.postToStage.title,
           originContent: this.postToStage.originContent,
           content: this.postToStage.content
-        }).then(res => {
-          this.loading = false
-          this.$router.push({name: 'DocList'})
-        })
-        this.handleRestoreSavedStatus()
-        this.$message.success({
-          content: '文章已创建',
-          duration: 1
+        }).then(response => {
+          if(response.code === 1){
+            this.loading = false
+            this.$router.push({name: 'DocList'})
+            this.handleRestoreSavedStatus()
+            this.$message.success({
+              content: '文章已创建',
+              duration: 1
+            })
+          }else {
+            this.$message.error(response.msg)
+          }
         })
       } catch (e) {
         this.$message.error('Failed to create post: ' + e.toString())
