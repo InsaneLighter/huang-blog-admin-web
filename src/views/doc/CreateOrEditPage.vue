@@ -74,7 +74,7 @@ export default {
     const postId = to.query.postId
     next(async vm => {
       if (postId) {
-        const {data} = await postApi.get(postId).then(response => {
+        await postApi.get(postId).then(response => {
           if(response.code === 1){
             vm.postToStage = response.data
           }else {
@@ -199,8 +199,8 @@ export default {
         }).then(response => {
           if(response.code === 1){
             this.loading = false
-            this.$router.push({name: 'DocList'})
             this.handleRestoreSavedStatus()
+            this.$router.push({name: 'DocList'})
             this.$message.success({
               content: '文章已创建',
               duration: 1

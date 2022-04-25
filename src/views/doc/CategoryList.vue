@@ -155,17 +155,17 @@ export default {
           } else {
             this.$message.error(response.msg)
           }
+        }).then(res => {
+          if (flag) {
+            categoryApi.del(categoryId).then(response => {
+              if (response.code === 1) {
+                this.$message.success('删除成功！')
+              } else {
+                this.$message.error(response.msg)
+              }
+            })
+          }
         })
-        if (flag) {
-          categoryApi.del(categoryId).then(response => {
-            if (response.code === 1) {
-              this.$message.success('删除成功！')
-
-            } else {
-              this.$message.error(response.msg)
-            }
-          })
-        }
       } catch (e) {
         this.$message.error('Failed to delete post', e)
       } finally {
@@ -200,17 +200,17 @@ export default {
               } else {
                 this.$message.error(response.msg)
               }
+            }).then(res => {
+              if (flag) {
+                categoryApi.del(this.selectedRowKeys).then(response => {
+                  if (response.code === 1) {
+                    this.$message.success('删除成功！')
+                  } else {
+                    this.$message.error(response.msg)
+                  }
+                })
+              }
             })
-            if (flag) {
-              categoryApi.del(this.selectedRowKeys).then(response => {
-                if (response.code === 1) {
-                  this.$message.success('删除成功！')
-
-                } else {
-                  this.$message.error(response.msg)
-                }
-              })
-            }
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
           } finally {

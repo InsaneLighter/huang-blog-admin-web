@@ -240,14 +240,6 @@ export default {
         })
         throw new Error('文章标题不能为空！')
       }
-      if (!this.form.model.originContent || !this.form.model.content) {
-        this.$notification['error']({
-          message: '提示',
-          duration: 1,
-          description: '文章内容不能为空！'
-        })
-        throw new Error('文章内容不能为空！')
-      }
       try {
         if (this.hasId) {
           await contentApi.update(this.form.model)
