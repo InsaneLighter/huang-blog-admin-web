@@ -35,7 +35,7 @@
   </a-modal>
 </template>
 <script>
-import CategorySelectTree from '@/components/tools/CategorySelectTree'
+import CategorySelectTree from '@/components/category/CategorySelectTree'
 import ReactiveButton from '@/components/tools/ReactiveButton'
 import categoryApi from '@/api/category/index'
 

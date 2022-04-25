@@ -98,8 +98,8 @@
 // components
 import ReactiveButton from '@/components/tools/ReactiveButton'
 import TagSelect from '@/components/tools/TagSelect'
-import CategoryTree from '@/components/tools/CategoryTree'
-import CategoryCreate from '@/components/tools/CategoryCreate'
+import CategoryTree from '@/components/category/CategoryTree'
+import CategoryCreate from '@/components/category/CategoryCreate'
 
 // libs
 import {datetimeFormat} from '@/utils/datetime'

@@ -32,7 +32,7 @@
 </template>
 <script>
 import moment from 'moment'
-import AreaChartTy from '@/components/tools/AreaChartTy'
+import AreaChartTy from '@/components/chart/AreaChartTy'
 import redisApi from '@/api/redis/index'
 
 export default {

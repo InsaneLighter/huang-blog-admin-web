@@ -43,7 +43,7 @@ export const routerMap = [
                     {
                         path: '/doc/edit',
                         name: 'DocEdit',
-                        component: (resolve) => require(['@/views/doc/edit'], resolve),
+                        component: (resolve) => require(['@/views/doc/CreateOrEditPage'], resolve),
                         meta: {
                             title: '写文章',
                             icon: 'meh',

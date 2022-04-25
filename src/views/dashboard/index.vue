@@ -74,7 +74,7 @@
 
 <script>
 import AnalysisCard from '@/components/tools/AnalysisCard'
-import LineChartMulti from '@/components/tools/LineChartMulti'
+import LineChartMulti from '@/components/chart/LineChartMulti'
 import HeadInfo from '@/components/tools/HeadInfo'
 
 export default {

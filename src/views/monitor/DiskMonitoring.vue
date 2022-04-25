@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import DashChart from '@/components/tools/DashChart'
+import DashChart from '@/components/chart/DashChart'
 import ARow from 'ant-design-vue/es/grid/Row'
 import redisApi from '@/api/redis/index'
 import moment from "moment";

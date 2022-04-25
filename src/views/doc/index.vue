@@ -260,10 +260,10 @@
 <script>
 import postApi from '@/api/post/index'
 import categoryApi from '@/api/category/index'
-import PostTag from '@/components/postTag'
+import PostTag from '@/components/tools/PostTag'
 import PostSetting from "@/components/tools/PostSetting";
 export default {
-  name: 'articleList',
+  name: 'DocList',
   components: {
     PostTag,
     PostSetting
@@ -380,11 +380,11 @@ export default {
     },
     selectPreviousButtonDisabled() {
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      return index === 0 && !this.list.hasPrevious
+      return Index === 0 && !this.list.hasPrevious
     },
     selectNextButtonDisabled() {
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      return index === this.list.data.length - 1 && !this.list.hasNext
+      return Index === this.list.data.length - 1 && !this.list.hasNext
     }
   },
   created() {
@@ -616,9 +616,9 @@ export default {
     async handleSelectPrevious() {
       let flag = true
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      if (index > 0) {
+      if (Index > 0) {
         this.postSettingLoading = true
-        const response = await postApi.get(this.list.data[index - 1].id).then(response => {
+        const response = await postApi.get(this.list.data[Index - 1].id).then(response => {
           if(response.code === 1){
             this.list.selected = response.data
             this.postSettingLoading = false
@@ -629,7 +629,7 @@ export default {
           }
         })
       }
-      if (index === 0 && this.list.hasPrevious && flag) {
+      if (Index === 0 && this.list.hasPrevious && flag) {
         this.list.params.page--
         await this.handleListPosts()
         this.postSettingLoading = true
@@ -649,9 +649,9 @@ export default {
      */
     async handleSelectNext() {
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      if (index < this.list.data.length - 1) {
+      if (Index < this.list.data.length - 1) {
         this.postSettingLoading = true
-        await postApi.get(this.list.data[index + 1].id).then(response => {
+        await postApi.get(this.list.data[Index + 1].id).then(response => {
           if(response.code === 1){
             this.list.selected = response.data
             this.postSettingLoading = false
@@ -660,7 +660,7 @@ export default {
           }
         })
       }
-      if (index === this.list.data.length - 1 && this.list.hasNext) {
+      if (Index === this.list.data.length - 1 && this.list.hasNext) {
         this.list.params.page++
         await this.handleListPosts()
         this.postSettingLoading = true

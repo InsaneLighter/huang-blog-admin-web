@@ -55,7 +55,7 @@ import postApi from '@/api/post/index'
 import contentApi from '@/api/content/index'
 
 export default {
-  name: "edit",
+  name: "CreateOrEditPage",
   components: {
     PageView,
     PostSetting
