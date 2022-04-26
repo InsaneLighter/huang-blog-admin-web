@@ -21,6 +21,16 @@ export const routerMap = [
                 }
             },
             {
+                path: '/attachment',
+                name: 'Attachment',
+                component: (resolve) => require(['@/views/attachment/AttachmentList'], resolve),
+                meta: {
+                    title: '附件',
+                    icon: 'meh',
+                    hideHead: false
+                }
+            },
+            {
                 path: '/doc',
                 name: 'Doc',
                 component: BlankLayout,
@@ -52,10 +62,20 @@ export const routerMap = [
                     },
                     {
                         path: '/doc/category',
-                        name: 'DocCategory',
+                        name: 'Category',
                         component: (resolve) => require(['@/views/doc/CategoryList'], resolve),
                         meta: {
                             title: '分类',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    },
+                    {
+                        path: '/doc/tag',
+                        name: 'Tag',
+                        component: (resolve) => require(['@/views/doc/TagList'], resolve),
+                        meta: {
+                            title: '标签',
                             icon: 'meh',
                             hideHead: false
                         }

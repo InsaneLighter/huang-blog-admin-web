@@ -379,12 +379,18 @@ export default {
       }
     },
     selectPreviousButtonDisabled() {
-      const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      return Index === 0 && !this.list.hasPrevious
+      if(this.list.data){
+        return this.list.data.findIndex(post => post.id === this.list.selected.id) === 0
+      }else {
+        return true
+      }
     },
     selectNextButtonDisabled() {
-      const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      return Index === this.list.data.length - 1 && !this.list.hasNext
+      if(this.list.data){
+        return this.list.data.findIndex(post => post.id === this.list.selected.id) === this.list.data.length - 1
+      }else {
+        return true
+      }
     }
   },
   created() {
@@ -616,9 +622,9 @@ export default {
     async handleSelectPrevious() {
       let flag = true
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      if (Index > 0) {
+      if ( index > 0) {
         this.postSettingLoading = true
-        const response = await postApi.get(this.list.data[Index - 1].id).then(response => {
+        await postApi.get(this.list.data[index - 1].id).then(response => {
           if(response.code === 1){
             this.list.selected = response.data
             this.postSettingLoading = false
@@ -629,7 +635,7 @@ export default {
           }
         })
       }
-      if (Index === 0 && this.list.hasPrevious && flag) {
+      if (index === 0 && this.list.hasPrevious && flag) {
         this.list.params.page--
         await this.handleListPosts()
         this.postSettingLoading = true
@@ -649,9 +655,9 @@ export default {
      */
     async handleSelectNext() {
       const index = this.list.data.findIndex(post => post.id === this.list.selected.id)
-      if (Index < this.list.data.length - 1) {
+      if ( index < this.list.data.length - 1) {
         this.postSettingLoading = true
-        await postApi.get(this.list.data[Index + 1].id).then(response => {
+        await postApi.get(this.list.data[ index + 1].id).then(response => {
           if(response.code === 1){
             this.list.selected = response.data
             this.postSettingLoading = false
@@ -660,7 +666,7 @@ export default {
           }
         })
       }
-      if (Index === this.list.data.length - 1 && this.list.hasNext) {
+      if ( index === this.list.data.length - 1 && this.list.hasNext) {
         this.list.params.page++
         await this.handleListPosts()
         this.postSettingLoading = true

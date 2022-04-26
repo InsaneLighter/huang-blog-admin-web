@@ -32,7 +32,6 @@ service.interceptors.response.use(
         return response.data
     },
     error => {
-        debugger
         // 兼容blob下载出错json提示
         if (error.response.data instanceof Blob && error.response.data.type.toLowerCase().indexOf('json') !== -1) {
             const reader = new FileReader()

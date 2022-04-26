@@ -1,8 +1,15 @@
-import { service, transformGetData } from '@/utils/request'
+import {service, transformGetData} from '@/utils/request'
 
 export function queryAll() {
     return service({
         url: 'api/tag/queryAll',
+        method: 'get'
+    })
+}
+
+export function queryByIds(ids) {
+    return service({
+        url: 'api/tag/queryByIds?ids=' + ids,
         method: 'get'
     })
 }
@@ -25,8 +32,11 @@ export function add(data) {
 }
 
 export function del(ids) {
+    if (typeof ids === "string") {
+        ids = Array.of(ids);
+    }
     return service({
-        url: 'api/tag',
+        url: 'api/tag/delete',
         method: 'delete',
         data: ids
     })
@@ -34,10 +44,10 @@ export function del(ids) {
 
 export function edit(data) {
     return service({
-        url: 'api/tag',
+        url: 'api/tag/update',
         method: 'put',
         data
     })
 }
 
-export default {queryAll, page, add, edit, del}
+export default {queryAll, queryByIds, page, add, edit, del}

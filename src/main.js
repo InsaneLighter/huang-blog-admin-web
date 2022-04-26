@@ -15,8 +15,16 @@ import Viser from 'viser-vue'
 //md
 import './utils/md'
 
+//clipboard
+import VueClipboard from 'vue-clipboard2'
+
+import Contextmenu from 'vue-contextmenujs'
+
+
 Vue.use(Antd)
 Vue.use(Viser)
+Vue.use(VueClipboard)
+Vue.use(Contextmenu)
 
 //设置为 false 以阻止 vue 在启动时生成生产提示
 Vue.config.productionTip = false
