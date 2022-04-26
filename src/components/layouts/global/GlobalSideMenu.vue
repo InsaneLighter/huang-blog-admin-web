@@ -24,49 +24,30 @@
             <span>{{ item.meta.title }}</span>
           </router-link>
         </a-menu-item>
-        <sub-menu v-else :key="item.path" :menu-info="item"/>
+        <a-sub-menu v-else :key="item.path" v-bind="$props" v-on="$listeners">
+          <span slot="title">
+              <a-icon :type="item.meta.icon"/>
+              <span>{{ item.meta.title }}</span>
+          </span>
+          <template v-for="item in item.children">
+            <a-menu-item v-if="!item.children" :key="item.path">
+              <router-link :to="item.path">
+                <a-icon :type="item.meta.icon"/>
+                <span>{{ item.meta.title }}</span>
+              </router-link>
+            </a-menu-item>
+            <sub-menu v-else :key="item.path" :menu-info="item"/>
+          </template>
+        </a-sub-menu>
       </template>
     </a-menu>
   </a-layout-sider>
 </template>
 
 <script>
-import {Menu} from 'ant-design-vue';
 import {routerMap} from "@/router/routerMap";
-
-const SubMenu = {
-  template: `
-    <a-sub-menu :key="menuInfo.path" v-bind="$props" v-on="$listeners">
-    <span slot="title">
-            <a-icon :type="menuInfo.meta.icon"/>
-            <span>{{ menuInfo.meta.title }}</span>
-        </span>
-    <template v-for="item in menuInfo.children">
-      <a-menu-item v-if="!item.children" :key="item.path">
-        <router-link :to="item.path">
-          <a-icon :type="item.meta.icon"/>
-          <span>{{ item.meta.title }}</span>
-        </router-link>
-      </a-menu-item>
-      <sub-menu v-else :key="item.path" :menu-info="item"/>
-    </template>
-    </a-sub-menu>
-  `,
-  name: 'SubMenu',
-  isSubMenu: true,
-  props: {
-    ...Menu.SubMenu.props,
-    menuInfo: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-};
 export default {
   name: "GlobalSideMenu",
-  components: {
-    SubMenu,
-  },
   data() {
     return {
       openKeys: [this.$route.path.substring(0, this.$route.path.substring(1).indexOf("/") + 1)],
