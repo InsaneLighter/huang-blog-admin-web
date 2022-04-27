@@ -7,16 +7,12 @@
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
         <a-menu-item key="0">
-          <router-link :to="{ name: 'Dashboard' }">
+          <router-link :to="{ name: 'Profile' }">
             <a-icon type="user"/>
             <span>个人中心</span>
           </router-link>
         </a-menu-item>
-        <a-menu-item key="1" @click="updatePassword">
-          <a-icon type="setting"/>
-          <span>密码修改</span>
-        </a-menu-item>
-        <a-menu-item key="2" @click="handleLogout">
+        <a-menu-item key="1" @click="handleLogout">
           <a-icon type="logout" />
           <span>退出登录</span>
         </a-menu-item>
@@ -27,6 +23,8 @@
 
 <script>
 import HeaderComment from "./HeaderComment";
+import {logout} from "@/api/login";
+import {removeToken} from "@/utils/auth";
 export default {
   name: "UserMenu",
   components: {
@@ -35,10 +33,14 @@ export default {
   computed: {},
   methods: {
     handleLogout() {
-      this.$message.info("注销")
-    },
-    updatePassword(){
-      this.$message.info("修改密码")
+      logout().then(response => {
+        if(response.code === 1){
+          removeToken()
+          location.reload()
+        }else {
+          this.$message.error(response.msg)
+        }
+      })
     }
   }
 }

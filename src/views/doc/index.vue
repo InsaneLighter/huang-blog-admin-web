@@ -629,7 +629,6 @@ export default {
             this.list.selected = response.data
             this.postSettingLoading = false
             flag = false
-            return
           }else {
             this.$message.error(response.msg)
           }
@@ -639,7 +638,7 @@ export default {
         this.list.params.page--
         await this.handleListPosts()
         this.postSettingLoading = true
-        const response = await postApi.get(this.list.data[this.list.data.length - 1].id).then(response => {
+        await postApi.get(this.list.data[this.list.data.length - 1].id).then(response => {
           if(response.code === 1){
             this.list.selected = response.data
             this.postSettingLoading = false

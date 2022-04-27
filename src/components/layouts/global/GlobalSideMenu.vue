@@ -46,6 +46,7 @@
 
 <script>
 import {routerMap} from "@/router/routerMap";
+
 export default {
   name: "GlobalSideMenu",
   data() {
@@ -61,9 +62,6 @@ export default {
     },
     collapse() {
       return this.$store.state.app.sidebar.open
-    },
-    menuSelected() {
-      return this.$route.path
     }
   },
   watch: {

@@ -1,70 +1,72 @@
 <template>
-  <a-row :gutter="12" style="padding: 1rem">
-    <a-col :lg="10" :md="10" :sm="24" :xl="10" :xs="24" class="pb-3">
-      <a-card :bodyStyle="{ padding: '16px' }" :title="title">
-        <a-form-model ref="tagForm" :model="form.model" :rules="form.rules" layout="horizontal">
-          <a-form-model-item help="* 页面上所显示的名称" label="名称：" prop="name">
-            <a-input v-model="form.model.name"/>
-          </a-form-model-item>
-          <a-form-model-item label="颜色：" prop="color">
-            <a-input v-model="form.model.color">
-              <template #addonAfter>
-                <verte v-model="form.model.color" model="hex" picker="square" style="cursor: pointer"></verte>
-              </template>
-            </a-input>
-          </a-form-model-item>
-          <a-form-model-item>
-            <ReactiveButton
-                v-if="!isUpdateMode"
-                :errored="form.errored"
-                :loading="form.saving"
-                erroredText="保存失败"
-                loadedText="保存成功"
-                text="保存"
-                type="primary"
-                @callback="handleSavedCallback"
-                @click="handleCreateOrUpdateTag"
-            ></ReactiveButton>
-            <a-button-group v-else>
+  <div style="padding: 1rem">
+    <a-row :gutter="12">
+      <a-col :lg="10" :md="10" :sm="24" :xl="10" :xs="24" class="pb-3">
+        <a-card :bodyStyle="{ padding: '16px' }" :title="title">
+          <a-form-model ref="tagForm" :model="form.model" :rules="form.rules" layout="horizontal">
+            <a-form-model-item help="* 页面上所显示的名称" label="名称：" prop="name">
+              <a-input v-model="form.model.name"/>
+            </a-form-model-item>
+            <a-form-model-item label="颜色：" prop="color">
+              <a-input v-model="form.model.color">
+                <template #addonAfter>
+                  <verte v-model="form.model.color" model="hex" picker="square" style="cursor: pointer"></verte>
+                </template>
+              </a-input>
+            </a-form-model-item>
+            <a-form-model-item>
               <ReactiveButton
+                  v-if="!isUpdateMode"
                   :errored="form.errored"
                   :loading="form.saving"
-                  erroredText="更新失败"
-                  loadedText="更新成功"
-                  text="更新"
+                  erroredText="保存失败"
+                  loadedText="保存成功"
+                  text="保存"
                   type="primary"
                   @callback="handleSavedCallback"
                   @click="handleCreateOrUpdateTag"
               ></ReactiveButton>
-              <a-button type="dashed" @click="form.model = {}">返回添加</a-button>
-            </a-button-group>
-            <a-popconfirm
-                v-if="isUpdateMode"
-                :title="'你确定要删除【' + form.model.name + '】标签？'"
-                cancelText="取消"
-                okText="确定"
-                @confirm="handleDeleteTag(form.model.id)"
-            >
-              <a-button class="float-right" type="danger">删除</a-button>
-            </a-popconfirm>
-          </a-form-model-item>
-        </a-form-model>
-      </a-card>
-    </a-col>
-    <a-col :lg="14" :md="14" :sm="24" :xl="14" :xs="24" class="pb-3">
-      <a-card :bodyStyle="{ padding: '16px' }" title="所有标签">
-        <a-spin :spinning="list.loading">
-          <a-empty v-if="list.data.length === 0"/>
-          <a-tooltip v-for="tag in list.data" v-else :key="tag.id" placement="topLeft">
-            <template slot="title">
-              <span>{{ tag.postCount }} 篇文章</span>
-            </template>
-            <post-tag :tag="tag" style="margin-bottom: 8px; cursor: pointer" @click.native="handleEdit(tag)"/>
-          </a-tooltip>
-        </a-spin>
-      </a-card>
-    </a-col>
-  </a-row>
+              <a-button-group v-else>
+                <ReactiveButton
+                    :errored="form.errored"
+                    :loading="form.saving"
+                    erroredText="更新失败"
+                    loadedText="更新成功"
+                    text="更新"
+                    type="primary"
+                    @callback="handleSavedCallback"
+                    @click="handleCreateOrUpdateTag"
+                ></ReactiveButton>
+                <a-button type="dashed" @click="form.model = {}">返回添加</a-button>
+              </a-button-group>
+              <a-popconfirm
+                  v-if="isUpdateMode"
+                  :title="'你确定要删除【' + form.model.name + '】标签？'"
+                  cancelText="取消"
+                  okText="确定"
+                  @confirm="handleDeleteTag(form.model.id)"
+              >
+                <a-button class="float-right" type="danger">删除</a-button>
+              </a-popconfirm>
+            </a-form-model-item>
+          </a-form-model>
+        </a-card>
+      </a-col>
+      <a-col :lg="14" :md="14" :sm="24" :xl="14" :xs="24" class="pb-3">
+        <a-card :bodyStyle="{ padding: '16px' }" title="所有标签">
+          <a-spin :spinning="list.loading">
+            <a-empty v-if="list.data.length === 0"/>
+            <a-tooltip v-for="tag in list.data" v-else :key="tag.id" placement="topLeft">
+              <template slot="title">
+                <span>{{ tag.postCount }} 篇文章</span>
+              </template>
+              <post-tag :tag="tag" style="margin-bottom: 8px; cursor: pointer" @click.native="handleEdit(tag)"/>
+            </a-tooltip>
+          </a-spin>
+        </a-card>
+      </a-col>
+    </a-row>
+  </div>
 </template>
 
 <script>
