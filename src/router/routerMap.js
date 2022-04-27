@@ -3,6 +3,16 @@ import BlankLayout from '@/components/layouts/global/BlankLayout'
 
 export const routerMap = [
     {
+        path: '/login',
+        name: 'Login',
+        component: (resolve) => require(['@/views/user/Login'], resolve),
+        meta: {
+            title: '仪表盘',
+            icon: 'meh',
+            hideHead: false
+        }
+    },
+    {
         path: '/',
         component: Layout,
         redirect: '/dashboard',
@@ -16,16 +26,6 @@ export const routerMap = [
                 component: (resolve) => require(['@/views/dashboard'], resolve),
                 meta: {
                     title: '仪表盘',
-                    icon: 'meh',
-                    hideHead: false
-                }
-            },
-            {
-                path: '/attachment',
-                name: 'Attachment',
-                component: (resolve) => require(['@/views/attachment/AttachmentList'], resolve),
-                meta: {
-                    title: '附件',
                     icon: 'meh',
                     hideHead: false
                 }
@@ -76,6 +76,39 @@ export const routerMap = [
                         component: (resolve) => require(['@/views/doc/TagList'], resolve),
                         meta: {
                             title: '标签',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    }
+                ]
+            },
+            {
+                path: '/attachment',
+                name: 'Attachment',
+                component: (resolve) => require(['@/views/attachment/AttachmentList'], resolve),
+                meta: {
+                    title: '附件',
+                    icon: 'meh',
+                    hideHead: false
+                }
+            },
+            {
+                path: '/user',
+                name: 'User',
+                component: BlankLayout,
+                redirect: '/user/profile',
+                meta: {
+                    title: '用户',
+                    icon: 'meh',
+                    hideHead: false
+                },
+                children: [
+                    {
+                        path: '/user/profile',
+                        name: 'Profile',
+                        component: (resolve) => require(['@/views/user/Profile'], resolve),
+                        meta: {
+                            title: '个人中心',
                             icon: 'meh',
                             hideHead: false
                         }

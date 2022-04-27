@@ -3,7 +3,8 @@ import router from '@/router/index'
 import {notification} from 'ant-design-vue'
 import store from '../store'
 import Config from '@/default-settings'
-import {getToken} from '@/utils/auth'
+import {getToken,removeToken} from '@/utils/auth'
+import { logout } from "@/api/login";
 import Cookies from 'js-cookie'
 
 // 创建axios实例
@@ -58,9 +59,10 @@ service.interceptors.response.use(
             }
             if (code) {
                 if (code === 401) {
-                    store.dispatch('LogOut').then(() => {
+                    logout().then(() => {
                         // 用户登录界面提示
                         Cookies.set('point', 401)
+                        removeToken()
                         location.reload()
                     })
                 } else if (code === 403) {
@@ -105,4 +107,4 @@ const transformGetData = function (data) {
     return params.lastIndexOf('&') === params.length - 1 ? params.substring(0, params.length - 1) : params
 }
 
-export { service, transformGetData }
+export {service, transformGetData}
