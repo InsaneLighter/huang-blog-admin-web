@@ -2,24 +2,10 @@
   <a-modal v-model="modalVisible" :afterClose="onAfterClose" :title="title" :width="1024" destroyOnClose>
     <div class="table-page-search-wrapper">
       <a-form layout="inline">
-        <a-row :gutter="24">
+        <a-row :gutter="48">
           <a-col :md="6" :sm="24">
             <a-form-item label="关键词：">
-              <a-input v-model="list.params.keyword" @keyup.enter="handleSearch()"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
-            <a-form-item label="存储位置：">
-              <a-select
-                  v-model="list.params.attachmentType"
-                  :loading="types.loading"
-                  allowClear
-                  @change="handleSearch()"
-              >
-                <a-select-option v-for="item in types.data" :key="item" :value="item">
-                  {{ item | typeText }}
-                </a-select-option>
-              </a-select>
+              <a-input v-model="list.params.keyword" @keyup.enter="handleListAttachments()"/>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
@@ -28,30 +14,25 @@
                   v-model="list.params.mediaType"
                   :loading="mediaTypes.loading"
                   allowClear
-                  @change="handleSearch()"
+                  @change="handleListAttachments()"
               >
-                <a-select-option v-for="(item, index) in mediaTypes.data" :key="index" :value="item">
-                  {{ item }}
+                <a-select-option v-for="(item, index) in mediaTypes.data" :key="index" :value="item"
+                >{{ item }}
                 </a-select-option>
               </a-select>
             </a-form-item>
           </a-col>
           <a-col :md="6" :sm="24">
-            <span class="table-page-search-submitButtons">
-              <a-space>
-                <a-button type="primary" @click="handleSearch()">查询</a-button>
-                <a-button @click="handleResetParam(), handleListAttachments()">重置</a-button>
-              </a-space>
-            </span>
+                  <span class="table-page-search-submitButtons">
+                    <a-space>
+                      <a-button type="primary" @click="handleListAttachments()">查询</a-button>
+                      <a-button @click="handleResetParam()">重置</a-button>
+                    </a-space>
+                  </span>
           </a-col>
         </a-row>
       </a-form>
     </div>
-
-    <div class="mb-0 table-operator">
-      <a-button icon="cloud-upload" type="primary" @click="upload.visible = true">上传</a-button>
-    </div>
-
     <a-divider/>
 
     <a-list
@@ -88,16 +69,16 @@
                 v-show="isItemSelect(item) && !item.hover"
                 type="check-circle"
                 theme="twoTone"
-                class="absolute top-1 right-2 font-bold cursor-pointer transition-all"
-                :style="{ fontSize: '18px', color: 'rgb(37 99 235)' }"
+                class="icon"
+                :style="{ fontSize: '18px', color: 'rgb(37 99 235)',right: '0.5rem' }"
             />
             <a-icon
                 v-show="item.hover"
                 type="profile"
                 theme="twoTone"
-                class="absolute top-1 right-2 font-bold cursor-pointer transition-all"
+                class="icon"
                 @click.stop="handleOpenDetail(item)"
-                :style="{ fontSize: '18px' }"
+                :style="{ fontSize: '18px',right: '0.5rem'}"
             />
           </div>
         </a-list-item>
@@ -148,9 +129,9 @@
       <a-button type="primary" :disabled="!list.selected.length" @click="handleConfirm">确定</a-button>
     </template>
 
-    <AttachmentUploadModal :visible.sync="upload.visible" @close="handleSearch"/>
+    <AttachmentUpload :visible.sync="upload.visible" @close="handleSearch"/>
 
-    <AttachmentDetailModal :attachment="list.current" :visible.sync="detailVisible" @delete="handleListAttachments()">
+    <AttachmentDetail :attachment="list.current" :visible.sync="detailVisible" @delete="handleListAttachments()">
       <template #extraFooter>
         <a-button :disabled="selectPreviousButtonDisabled" @click="handleSelectPrevious">上一项</a-button>
         <a-button :disabled="selectNextButtonDisabled" @click="handleSelectNext">下一项</a-button>
@@ -158,13 +139,19 @@
           {{ list.selected.findIndex(item => item.id === list.current.id) > -1 ? '取消选择' : '选择' }}
         </a-button>
       </template>
-    </AttachmentDetailModal>
+    </AttachmentDetail>
   </a-modal>
 </template>
 <script>
 import attachmentApi from '@/api/attachment/index'
+import AttachmentDetail from "./AttachmentDetail";
+import AttachmentUpload from "./AttachmentDetail";
 export default {
   name: 'AttachmentSelect',
+  components: {
+    AttachmentDetail,
+    AttachmentUpload
+  },
   props: {
     visible: {
       type: Boolean,
@@ -247,14 +234,14 @@ export default {
     },
     selectPreviousButtonDisabled() {
       if(this.list.data){
-        return this.list.data.findIndex(post => post.id === this.list.selected.id) === 0
+        return this.list.data.findIndex(attachment => attachment.id === this.list.current.id) === 0
       }else {
         return true
       }
     },
     selectNextButtonDisabled() {
       if(this.list.data){
-        return this.list.data.findIndex(post => post.id === this.list.selected.id) === this.list.data.length - 1
+        return this.list.data.findIndex(attachment => attachment.id === this.list.current.id) === this.list.data.length - 1
       }else {
         return true
       }
@@ -396,7 +383,6 @@ export default {
      * Handle page size change
      */
     handlePageSizeChange(current, size) {
-      this.$message.debug(`Current: ${current}, PageSize: ${size}`)
       this.list.params.page = 0
       this.list.params.size = size
       this.handleListAttachments()
@@ -485,3 +471,177 @@ export default {
   }
 }
 </script>
+<style lang="less">
+.table-page-search-wrapper {
+  .ant-form-inline {
+    .ant-form-item {
+      display: flex;
+      margin-bottom: 20px;
+      margin-right: 0;
+
+      .ant-form-item-control-wrapper {
+        flex: 1 1;
+        display: inline-block;
+        vertical-align: middle;
+      }
+
+      > .ant-form-item-label {
+        line-height: 32px;
+        padding-right: 8px;
+        width: auto;
+      }
+
+      .ant-form-item-control {
+        height: 32px;
+        line-height: 32px;
+      }
+    }
+  }
+
+  .table-page-search-submitButtons {
+    display: block;
+    margin-bottom: 24px;
+    white-space: nowrap;
+  }
+}
+
+.page-wrapper {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+
+  .ant-pagination-options-size-changer.ant-select {
+    margin: 0;
+  }
+
+  .pagination {
+    margin-top: 1rem;
+  }
+}
+
+// 附件图片样式
+.attachments-group,
+.photos-group {
+  padding: .25rem;
+
+  &-item {
+    padding: 0;
+    height: 130px;
+
+    &-img {
+      display: block;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .attachments-group &-type {
+      font-size: 38px;
+      text-transform: capitalize;
+    }
+  }
+}
+
+
+.table-operator button {
+  margin-right: 8px
+}
+
+button {
+  margin-right: 8px
+}
+
+.attachments-group-item, .photos-group-item {
+  padding: 0;
+  height: 130px
+}
+
+.attachments-group-item-img, .photos-group-item-img {
+  display: block;
+  height: 100%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50%
+}
+
+.attachments-group .attachments-group-item-type, .attachments-group .photos-group-item-type {
+  font-size: 38px;
+  text-transform: capitalize
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 16px;
+  padding: 5px;
+}
+
+.border {
+  border-width: 1px
+}
+
+.border-solid {
+  border-style: solid
+}
+
+.border-blue-600 {
+  --tw-border-opacity: 1;
+  //border-color: rgb(37 99 235/var(--tw-border-opacity))
+  border-color: #1890ff;
+}
+
+.border-slate-200 {
+  --tw-border-opacity: 1;
+  border-color: #9b9ea0;
+}
+
+.attach-thumb, .photo-thumb {
+  width: 100%;
+  padding-bottom: 56%
+}
+
+.attach-item, .attach-thumb, .photo-thumb {
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer
+}
+
+.attach-item img, .attach-item span, .attach-thumb img, .attach-thumb span, .photo-thumb img, .photo-thumb span {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0
+}
+
+.attach-item span, .attach-thumb span, .photo-thumb span {
+  display: flex;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+  color: #9b9ea0
+}
+
+.icon {
+  position: absolute;
+  top: .25rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition-property: all;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  transition-duration: .15s
+}
+</style>

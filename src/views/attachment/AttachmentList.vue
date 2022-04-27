@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <a-row :gutter="12" align="middle" type="flex" style="padding: 1rem">
+  <div style="padding: 1rem">
+    <a-row :gutter="12" align="middle" type="flex">
       <a-col :span="24" class="pb-3">
         <a-card :bodyStyle="{ padding: '16px' }" :bordered="false">
           <div class="table-page-search-wrapper">
@@ -237,14 +237,14 @@ export default {
     },
     selectPreviousButtonDisabled() {
       if (this.list.data) {
-        return this.list.data.findIndex(post => post.id === this.list.selected.id) === 0
+        return this.list.data.findIndex(attachment => attachment.id === this.list.current.id) === 0
       } else {
         return true
       }
     },
     selectNextButtonDisabled() {
       if (this.list.data) {
-        return this.list.data.findIndex(post => post.id === this.list.selected.id) === this.list.data.length - 1
+        return this.list.data.findIndex(attachment => attachment.id === this.list.current.id) === this.list.data.length - 1
       } else {
         return true
       }
@@ -423,7 +423,6 @@ export default {
      * Handle page size change
      */
     handlePageSizeChange(current, size) {
-      this.$message.success(`Current: ${current}, PageSize: ${size}`)
       this.list.params.page = 0
       this.list.params.size = size
       this.handleListAttachments()
