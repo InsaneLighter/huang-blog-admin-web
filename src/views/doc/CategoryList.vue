@@ -54,14 +54,12 @@
 
 <script>
 
-// import Category from '@components/category'
 import categoryApi from '@/api/category/index'
 import CategoryCreate from "@/components/category/CategoryCreate"
 
 export default {
   name: "CategoryList",
   components: {
-    // Category
     CategoryCreate
   },
   data() {

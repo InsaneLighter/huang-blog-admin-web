@@ -112,6 +112,26 @@ export const routerMap = [
                             icon: 'meh',
                             hideHead: false
                         }
+                    },
+                    {
+                        path: '/user/online',
+                        name: 'Online',
+                        component: (resolve) => require(['@/views/user/OnlineUserList'], resolve),
+                        meta: {
+                            title: '在线用户',
+                            icon: 'meh',
+                            hideHead: false
+                        }
+                    },
+                    {
+                        path: '/user/list',
+                        name: 'Users',
+                        component: (resolve) => require(['@/views/user/UserList'], resolve),
+                        meta: {
+                            title: '用户列表',
+                            icon: 'meh',
+                            hideHead: false
+                        }
                     }
                 ]
             },

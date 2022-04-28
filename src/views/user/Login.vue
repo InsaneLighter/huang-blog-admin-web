@@ -118,8 +118,6 @@ export default {
       }
     },
     handleLogin() {
-      console.log(this.$refs)
-      console.log(this.$refs.loginForm);
       this.$refs.loginForm.validate(valid => {
         const user = {
           username: this.loginForm.username,
@@ -165,7 +163,7 @@ export default {
     point() {
       const point = Cookies.get('point') !== undefined
       if (point) {
-        this.$notification.error({
+        this.$notification.warn({
           title: '提示',
           message: '当前登录状态已过期，请重新登录！',
           type: 'warning',

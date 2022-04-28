@@ -460,7 +460,7 @@ export default {
      * Handle page size change
      */
     handlePageSizeChange(current, size) {
-      this.list.params.page = 1
+      this.list.params.page = 0
       this.list.params.size = size
       this.handleListPosts()
 
