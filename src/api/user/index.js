@@ -1,5 +1,4 @@
 import {service, transformGetData} from '@/utils/request'
-import { encrypt } from '@/utils/rsaEncrypt'
 
 export function page(data) {
     let params = transformGetData(data);
@@ -57,10 +56,6 @@ export function getCurrentUser() {
 }
 
 export function updatePwd(data) {
-    debugger
-    data.oldPassword = encrypt(data.oldPassword)
-    data.newPassword = encrypt(data.newPassword)
-    data.confirmPassword = encrypt(data.confirmPassword)
     return service({
         url: 'api/user/updatePwd',
         method: 'put',
@@ -68,4 +63,24 @@ export function updatePwd(data) {
     })
 }
 
-export default {page, add, edit, del, uploadAction, getCurrentUser,updatePwd}
+export function queryAllOnlineUser(data) {
+    let params = transformGetData(data);
+    return service({
+        url: 'api/user/queryAllOnlineUser' + params,
+        method: 'get'
+    })
+}
+
+export function kickOut(ids) {
+    if (typeof ids === "string") {
+        ids = Array.of(ids);
+    }
+    return service({
+        url: 'api/user/kickOut',
+        method: 'delete',
+        data: ids
+    })
+}
+
+
+export default {page, add, edit, del, uploadAction, getCurrentUser, updatePwd, queryAllOnlineUser, kickOut}

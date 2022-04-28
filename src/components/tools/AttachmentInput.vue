@@ -16,6 +16,7 @@
     <AttachmentSelect
       :multiSelect="false"
       :visible.sync="attachmentModalVisible"
+      :type="'image'"
       @confirm="handleSelectAttachment"
     />
   </div>

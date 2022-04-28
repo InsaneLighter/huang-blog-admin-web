@@ -12,6 +12,9 @@
                   @click="handleOpenUpdateAvatarForm"
               />
             </a-tooltip>
+            <div id="name" style="color: rgba(0, 0, 0, 0.85)">
+              {{ userForm.model.username }}
+            </div>
             <div>{{ userForm.model.description }}</div>
           </div>
           <div>
@@ -25,14 +28,11 @@
             </p>
           </div>
           <a-divider/>
-          <div>
+          <div style="margin-top: 5.5rem">
             <a-list :loading="statistics.loading" itemLayout="horizontal">
               <a-list-item>累计发表了 {{ statistics.data.postCount || 0 }} 篇文章。</a-list-item>
               <a-list-item>累计创建了 {{ statistics.data.categoryCount || 0 }} 个分类。</a-list-item>
               <a-list-item>累计创建了 {{ statistics.data.tagCount || 0 }} 个标签。</a-list-item>
-              <a-list-item>累计获得了 {{ statistics.data.commentCount || 0 }} 条评论。</a-list-item>
-              <a-list-item>累计添加了 {{ statistics.data.linkCount || 0 }} 个友链。</a-list-item>
-              <a-list-item>文章总阅读 {{ statistics.data.visitCount || 0 }} 次。</a-list-item>
               <a-list-item></a-list-item>
             </a-list>
           </div>
@@ -141,6 +141,7 @@
 import ReactiveButton from "@/components/tools/ReactiveButton";
 import AttachmentInput from "@/components/tools/AttachmentInput";
 import userApi from '@/api/user/index'
+import {encrypt} from "@/utils/rsaEncrypt";
 
 export default {
   name: 'Profile',
@@ -241,7 +242,12 @@ export default {
       _this.$refs.passwordForm.validate(valid => {
         if (valid) {
           this.passwordForm.saving = true
-          userApi.updatePwd(this.passwordForm.model)
+          const pwdParam = {
+            id: this.passwordForm.model.id,
+            newPassword: encrypt(this.passwordForm.model.newPassword),
+            oldPassword: encrypt(this.passwordForm.model.oldPassword)
+          }
+          userApi.updatePwd(pwdParam)
               .then(response => {
                 if (response.code === 1) {
                   this.$message.success('密码修改成功！')
@@ -315,3 +321,12 @@ export default {
   }
 }
 </script>
+<style lang="less" scoped>
+#name {
+  margin-top: 1rem;
+  margin-bottom: .25rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 500;
+}
+</style>

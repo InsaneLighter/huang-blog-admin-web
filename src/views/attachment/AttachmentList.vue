@@ -474,12 +474,11 @@ export default {
                 _this.$message.success('删除成功')
                 _this.handleListAttachments()
               } else {
-                this.$message.error(response.msg)
+                _this.$message.error(response.msg)
               }
             })
           } catch (e) {
             _this.$message.error('Failed to delete selected attachments')
-          } finally {
           }
         }
       })

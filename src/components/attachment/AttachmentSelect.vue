@@ -8,7 +8,7 @@
               <a-input v-model="list.params.keyword" @keyup.enter="handleListAttachments()"/>
             </a-form-item>
           </a-col>
-          <a-col :md="6" :sm="24">
+          <a-col :md="6" :sm="24" v-if="!type">
             <a-form-item label="文件类型：">
               <a-select
                   v-model="list.params.mediaType"
@@ -164,6 +164,10 @@ export default {
     multiSelect: {
       type: Boolean,
       default: true
+    },
+    type: {
+      type: String,
+      default: ''
     }
   },
   data() {
@@ -292,6 +296,9 @@ export default {
     async handleListAttachments() {
       try {
         this.list.loading = true
+        if(this.type){
+          this.list.params.mediaType = this.type
+        }
         await attachmentApi.page(this.list.params).then(response => {
           if (response.code === 1) {
             this.list.data = response.data.list
@@ -315,7 +322,6 @@ export default {
     async handleListMediaTypes() {
       try {
         this.mediaTypes.loading = true
-
         await attachmentApi.listMediaTypes().then(response => {
           if (response.code === 1) {
             this.mediaTypes.data = response.data
