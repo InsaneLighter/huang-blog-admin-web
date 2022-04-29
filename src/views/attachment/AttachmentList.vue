@@ -66,7 +66,7 @@
               >
                 <div
                     :class="`${isItemSelect(item) ? 'border-blue-600' : 'border-slate-200'}`"
-                    class="border border-solid"
+                    class="border border-solid ant-card-hoverable"
                 >
                   <div class="attach-thumb attachments-group-item">
                     <span v-if="!isImage(item)" class="attachments-group-item-type">{{ item.suffix }}</span>
@@ -652,7 +652,7 @@ button {
 
 .border-slate-200 {
   --tw-border-opacity: 1;
-  border-color: #9b9ea0;
+  border-color: #dedcdc;
 }
 
 .attach-thumb, .photo-thumb {
@@ -680,7 +680,7 @@ button {
   font-size: 12px;
   align-items: center;
   justify-content: center;
-  color: #9b9ea0
+  color: #000
 }
 
 .icon {
