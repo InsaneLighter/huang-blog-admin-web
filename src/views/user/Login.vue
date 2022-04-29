@@ -1,22 +1,25 @@
 <template>
   <div class="login" :style="'background-image:url('+ Background +');'">
-    <a-form-model ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px" class="login-form">
+    <a-form-model ref="loginForm" :model="loginForm" :rules="loginRules" label-position="left" label-width="0px"
+                  class="login-form">
       <h3 class="title">
         Huang Blog
       </h3>
       <a-form-model-item prop="username">
         <a-input v-model="loginForm.username" type="text" auto-complete="off" placeholder="账号">
-          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" type="user" />
+          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" type="user"/>
         </a-input>
       </a-form-model-item>
       <a-form-model-item prop="password">
-        <a-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码" @keyup.enter.native="handleLogin">
-          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" type="lock" />
+        <a-input v-model="loginForm.password" type="password" auto-complete="off" placeholder="密码"
+                 @keyup.enter.native="handleLogin">
+          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" type="lock"/>
         </a-input>
       </a-form-model-item>
       <a-form-model-item prop="code">
-        <a-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%" @keyup.enter.native="handleLogin">
-          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" type="safety-certificate" />
+        <a-input v-model="loginForm.code" auto-complete="off" placeholder="验证码" style="width: 63%"
+                 @keyup.enter.native="handleLogin">
+          <a-icon slot="prefix" style="color: rgba(0, 0, 0, 0.25)" type="safety-certificate"/>
         </a-input>
         <div class="login-code">
           <img :src="codeUrl" @click="getCode">
@@ -33,22 +36,20 @@
       </a-form-model-item>
     </a-form-model>
     <!--  底部  -->
-<!--    <div v-if="$store.state.settings.showFooter" id="el-login-footer">
-      <span v-html="$store.state.settings.footerTxt" />
-      <span> ⋅ </span>
-      <a href="https://beian.miit.gov.cn/#/Integrated/index" target="_blank">{{ $store.state.settings.caseNumber }}</a>
-    </div>-->
+    <div class="footer" v-html="$store.state.settings.footerTxt">
+    </div>
   </div>
 </template>
 
 <script>
-import { encrypt } from '@/utils/rsaEncrypt'
+import {encrypt} from '@/utils/rsaEncrypt'
 import Config from '@/default-settings'
-import { login, getCodeImg } from '@/api/login'
-import { setToken } from '@/utils/auth'
+import {login, getCodeImg} from '@/api/login'
+import {setToken} from '@/utils/auth'
 import Cookies from 'js-cookie'
 import qs from 'qs'
 import Background from '@/assets/images/background.jpg'
+
 export default {
   name: 'Login',
   data() {
@@ -64,9 +65,9 @@ export default {
         uuid: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', message: '用户名不能为空' }],
-        password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
-        code: [{ required: true, trigger: 'change', message: '验证码不能为空' }]
+        username: [{required: true, trigger: 'blur', message: '用户名不能为空'}],
+        password: [{required: true, trigger: 'blur', message: '密码不能为空'}],
+        code: [{required: true, trigger: 'change', message: '验证码不能为空'}]
       },
       loading: false,
       redirect: undefined
@@ -74,13 +75,13 @@ export default {
   },
   watch: {
     $route: {
-      handler: function(route) {
+      handler: function (route) {
         const data = route.query
         if (data && data.redirect) {
           this.redirect = data.redirect
           delete data.redirect
           if (JSON.stringify(data) !== '{}') {
-            this.redirect = this.redirect + '&' + qs.stringify(data, { indices: false })
+            this.redirect = this.redirect + '&' + qs.stringify(data, {indices: false})
           }
         }
       },
@@ -132,9 +133,9 @@ export default {
         if (valid) {
           this.loading = true
           if (user.rememberMe) {
-            Cookies.set('username', user.username, { expires: Config.passCookieExpires })
-            Cookies.set('password', user.password, { expires: Config.passCookieExpires })
-            Cookies.set('rememberMe', user.rememberMe, { expires: Config.passCookieExpires })
+            Cookies.set('username', user.username, {expires: Config.passCookieExpires})
+            Cookies.set('password', user.password, {expires: Config.passCookieExpires})
+            Cookies.set('rememberMe', user.rememberMe, {expires: Config.passCookieExpires})
           } else {
             Cookies.remove('username')
             Cookies.remove('password')
@@ -142,16 +143,16 @@ export default {
           }
           login(user)
               .then(response => {
-            if(response.code === 1){
-              this.loading = false
-              setToken(response.token, user.rememberMe)
-              this.$router.push({ path: this.redirect || '/' })
-            }else {
-              this.loading = false
-              this.$message.error(response.msg)
-              this.getCode()
-            }
-          }).catch(() => {
+                if (response.code === 1) {
+                  this.loading = false
+                  setToken(response.token, user.rememberMe)
+                  this.$router.push({path: this.redirect || '/'})
+                } else {
+                  this.loading = false
+                  this.$message.error(response.msg)
+                  this.getCode()
+                }
+              }).catch(() => {
             this.loading = false
             this.getCode()
           })
@@ -177,47 +178,70 @@ export default {
 </script>
 
 <style lang="less" scoped>
-  .login {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-    background-size: cover;
-  }
-  .title {
-    margin: 0 auto 30px auto;
-    text-align: center;
-    color: #707070;
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  background-size: cover;
+}
+
+.title {
+  margin: 0 auto 30px auto;
+  font-size: 20px;
+  text-align: center;
+  color: #707070;
+}
+
+.login-form {
+  border-radius: 6px;
+  background: #ffffff;
+  width: 385px;
+  padding: 25px 25px 5px 25px;
+
+  .el-input {
+    height: 38px;
+
+    input {
+      height: 38px;
+    }
   }
 
-  .login-form {
-    border-radius: 6px;
-    background: #ffffff;
-    width: 385px;
-    padding: 25px 25px 5px 25px;
-    .el-input {
-      height: 38px;
-      input {
-        height: 38px;
-      }
-    }
-    .input-icon{
-      height: 39px;width: 14px;margin-left: 2px;
-    }
+  .input-icon {
+    height: 39px;
+    width: 14px;
+    margin-left: 2px;
   }
-  .login-tip {
-    font-size: 13px;
-    text-align: center;
-    color: #bfbfbf;
+}
+
+.login-tip {
+  font-size: 13px;
+  text-align: center;
+  color: #bfbfbf;
+}
+
+.login-code {
+  width: 33%;
+  display: inline-block;
+  height: 38px;
+  float: right;
+
+  img {
+    cursor: pointer;
+    vertical-align: middle
   }
-  .login-code {
-    width: 33%;
-    display: inline-block;
-    height: 38px;
-    float: right;
-    img{
-      cursor: pointer;
-      vertical-align:middle
-    }
+}
+.footer {
+  overflow: hidden;
+  height: 33px;
+  font-size: 0.7rem !important;
+  font-family: Arial, sans-serif !important;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  a {
+    color: white !important;
   }
+}
 </style>
