@@ -9,7 +9,6 @@ export function page(data) {
 }
 
 export function add(data) {
-    debugger
     return service({
         url: 'api/user/save',
         method: 'post',
@@ -29,7 +28,6 @@ export function del(ids) {
 }
 
 export function edit(data) {
-    debugger
     return service({
         url: 'api/user/update',
         method: 'put',
@@ -92,6 +90,13 @@ export function kickOutForUsername(data) {
     })
 }
 
+export function resetPwd(data) {
+    return service({
+        url: 'api/user/resetPwd',
+        method: 'put',
+        data
+    })
+}
 export default {
     page,
     add,
@@ -102,5 +107,6 @@ export default {
     updatePwd,
     queryAllOnlineUser,
     kickOut,
-    kickOutForUsername
+    kickOutForUsername,
+    resetPwd
 }

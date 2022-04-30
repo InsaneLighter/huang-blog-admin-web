@@ -62,6 +62,10 @@
           <a-popconfirm v-if="record.id !== '0'" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
             <a>删除</a>
           </a-popconfirm>
+          <a-divider v-if="record.id !== '0'" type="vertical"/>
+          <a-popconfirm v-if="record.id !== '0'" title="确定重置密码吗?" @confirm="() => handleResetPWD(record)">
+            <a>重置密码</a>
+          </a-popconfirm>
         </span>
       </a-table>
       <!--分页-->
@@ -282,7 +286,24 @@ export default {
           this.$message.error(response.msg)
         }
       }).then(res => {
-        if(record.status === 1){
+        if (record.status === 1) {
+          userApi.kickOutForUsername({username: record.username}).then(response => {
+            if (response.code !== 1) {
+              this.$message.error('用户强制退出失败！')
+            }
+          })
+        }
+      })
+    },
+    handleResetPWD(record) {
+      userApi.resetPwd({id: record.id}).then(response => {
+        if (response.code === 1) {
+          this.$message.success('重置密码成功！')
+        } else {
+          this.$message.error(response.msg)
+        }
+      }).then(res => {
+        if (record.status === 1) {
           userApi.kickOutForUsername({username: record.username}).then(response => {
             if (response.code !== 1) {
               this.$message.error('用户强制退出失败！')
