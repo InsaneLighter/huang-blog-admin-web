@@ -44,13 +44,18 @@
           :dataSource="list.data"
           :loading="list.loading"
           :pagination="false"
-          :rowKey="category => category.id"
+          :rowKey="user => user.id"
           :defaultExpandedRowKeys="defaultExpandedRowKeys"
           :rowSelection="{
             selectedRowKeys: selectedRowKeys,
             onChange: onSelectionChange,
             getCheckboxProps:onGetCheckboxProps
           }">
+        <template #status="text,record">
+          <a-switch v-model:checked="record.status === 0"
+                    checked-children="正常" un-checked-children="禁用"
+                    @click="handleStatusChange(record)"/>
+        </template>
         <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
           <a-divider v-if="record.id !== '0'" type="vertical"/>
@@ -78,14 +83,20 @@
         </a-pagination>
       </div>
     </div>
+
+    <user ref="modalForm" @ok="modalFormOk"></user>
   </a-card>
 </template>
 
 <script>
 import userApi from '@/api/user/index'
+import User from "@/views/user/User";
 
 export default {
   name: "UserList",
+  components: {
+    User
+  },
   data() {
     return {
       columns: [
@@ -100,7 +111,7 @@ export default {
           dataIndex: 'email'
         },
         {
-          title: '描述',
+          title: '个人签名',
           align: "center",
           dataIndex: 'description'
         },
@@ -112,7 +123,8 @@ export default {
         {
           title: '状态',
           align: "center",
-          dataIndex: 'status'
+          dataIndex: 'status',
+          scopedSlots: {customRender: 'status'}
         },
 
         {
@@ -174,7 +186,7 @@ export default {
       } catch (e) {
         this.$message.error('Failed to delete user', e)
       } finally {
-        await this.loadData()
+        this.loadData()
       }
     },
     async handleDeleteInBatch() {
@@ -206,16 +218,18 @@ export default {
         }
       })
     },
-    handleAdd() {
-      this.categoryCreateModalVisible = true
-      this.operate = false
-      this.categoryTitle = "新增分类"
+    handleEdit: function (record) {
+      this.$refs.modalForm.edit(record);
+      this.$refs.modalForm.title = "编辑";
+      this.$refs.modalForm.disableSubmit = false;
     },
-    handleEdit(record) {
-      this.categoryCreateModalVisible = true
-      this.operate = true
-      this.categoryTitle = "编辑分类"
-      this.record = record
+    handleAdd: function () {
+      this.$refs.modalForm.add();
+      this.$refs.modalForm.title = "新增";
+      this.$refs.modalForm.disableSubmit = false;
+    },
+    modalFormOk() {
+      this.handleQuery()
     },
     handleQuery() {
       this.selectedRowKeys = []
@@ -231,10 +245,10 @@ export default {
           this.list.loading = true
         }
         await userApi.page(this.list.params).then(response => {
-          if(response.code === 1){
+          if (response.code === 1) {
             this.list.data = response.data.list
             this.list.total = response.data.totalCount
-          }else {
+          } else {
             this.$message.error(response.msg)
           }
         });
@@ -255,6 +269,27 @@ export default {
       this.list.params.keyword = undefined
       this.selectedRowKeys = []
       this.handlePageChange(1)
+    },
+    handleStatusChange(record) {
+      userApi.edit({
+        id: record.id,
+        status: record.status === 0 ? 1 : 0
+      }).then(response => {
+        if (response.code === 1) {
+          this.$message.success('修改状态成功！')
+          record.status = (record.status === 0 ? 1 : 0)
+        } else {
+          this.$message.error(response.msg)
+        }
+      }).then(res => {
+        if(record.status === 1){
+          userApi.kickOutForUsername({username: record.username}).then(response => {
+            if (response.code !== 1) {
+              this.$message.error('用户强制退出失败！')
+            }
+          })
+        }
+      })
     }
   }
 }
