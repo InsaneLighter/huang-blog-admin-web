@@ -9,6 +9,7 @@ export function page(data) {
 }
 
 export function add(data) {
+    debugger
     return service({
         url: 'api/user/save',
         method: 'post',
@@ -28,6 +29,7 @@ export function del(ids) {
 }
 
 export function edit(data) {
+    debugger
     return service({
         url: 'api/user/update',
         method: 'put',
@@ -82,5 +84,23 @@ export function kickOut(ids) {
     })
 }
 
+export function kickOutForUsername(data) {
+    return service({
+        url: 'api/user/kickOutByUserName',
+        method: 'delete',
+        data
+    })
+}
 
-export default {page, add, edit, del, uploadAction, getCurrentUser, updatePwd, queryAllOnlineUser, kickOut}
+export default {
+    page,
+    add,
+    edit,
+    del,
+    uploadAction,
+    getCurrentUser,
+    updatePwd,
+    queryAllOnlineUser,
+    kickOut,
+    kickOutForUsername
+}
