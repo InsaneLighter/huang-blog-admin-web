@@ -145,7 +145,8 @@ export default {
               .then(response => {
                 if (response.code === 1) {
                   this.loading = false
-                  setToken(response.token, user.rememberMe)
+                  setToken(response.user.token, user.rememberMe)
+                  this.$store.dispatch('user/setUser',response.user);
                   this.$router.push({path: this.redirect || '/'})
                 } else {
                   this.loading = false

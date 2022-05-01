@@ -1,4 +1,5 @@
 import router from './index'
+import store from '@/store'
 import Config from '@/default-settings'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
@@ -18,6 +19,7 @@ router.beforeEach((to, from, next) => {
             next({path: '/'})
             NProgress.done()
         } else {
+            store.dispatch('user/GetInfo')
             next()
         }
     } else {

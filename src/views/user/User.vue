@@ -197,6 +197,9 @@ export default {
           obj.then((res) => {
             if (res.code === 1) {
               if (this.model.id) {
+                if (this.model.avatar) {
+                  this.$store.dispatch('user/setUser',this.model);
+                }
                 that.$message.success('修改成功！');
               } else {
                 that.$message.success('保存成功！');

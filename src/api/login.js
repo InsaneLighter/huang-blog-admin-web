@@ -8,13 +8,6 @@ export function login(user) {
   })
 }
 
-export function getInfo() {
-  return service({
-    url: 'api/admin/info',
-    method: 'get'
-  })
-}
-
 export function getCodeImg() {
   return service({
     url: 'api/admin/code',

@@ -3,7 +3,7 @@
     <header-comment class="action" />
     <a-dropdown>
       <span class="action ant-dropdown-link user-dropdown-menu">
-        <a-avatar src="/static/image/avatar.jpg" class="avatar" size="small"/>
+        <a-avatar :src="user.avatar? user.avatar : Avatar" class="avatar" size="small"/>
       </span>
       <a-menu slot="overlay" class="user-dropdown-menu-wrapper">
         <a-menu-item key="0">
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import Avatar from '@/assets/images/avatar.jpg'
 import HeaderComment from "./HeaderComment";
 import {logout} from "@/api/login";
 import {removeToken} from "@/utils/auth";
@@ -30,7 +32,16 @@ export default {
   components: {
     HeaderComment
   },
-  computed: {},
+  computed: {
+    ...mapGetters([
+      'user'
+    ]),
+  },
+  data(){
+    return {
+      Avatar: Avatar
+    }
+  },
   methods: {
     handleLogout() {
       logout().then(response => {
