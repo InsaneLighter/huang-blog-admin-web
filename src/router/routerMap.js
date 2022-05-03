@@ -217,6 +217,16 @@ export const routerMap = [
                         }
                     }
                 ]
+            },
+            {
+                path: '/mail',
+                name: 'Mail',
+                component: (resolve) => require(['@/views/mail/SendMail'], resolve),
+                meta: {
+                    title: '邮件',
+                    icon: 'meh',
+                    hideHead: false
+                }
             }
         ]
     },

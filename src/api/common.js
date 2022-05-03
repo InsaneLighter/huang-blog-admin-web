@@ -23,3 +23,12 @@ export function uploadAction(url,parameter){
         },
     })
 }
+
+export function sendEmail(data) {
+    return service({
+        url: 'api/mail/send',
+        method: 'post',
+        data
+    })
+}
+
