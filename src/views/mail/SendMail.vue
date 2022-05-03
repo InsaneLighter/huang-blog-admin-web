@@ -10,17 +10,19 @@
       <a-form-model-item
           label="收件人"
           name="tos"
+          prop="tos"
       >
         <a-input v-model:value="email.model.tos" placeholder="多个收件人邮箱以英文逗号分隔"/>
       </a-form-model-item>
       <a-form-model-item
           label="邮件主题"
           name="subject"
+          prop="subject"
       >
         <a-input v-model:value="email.model.subject" placeholder="请输入邮件主题"/>
       </a-form-model-item>
 
-      <html-editor style="margin-bottom: .5rem"></html-editor>
+      <html-editor @update="handleHtmlContent" style="margin-bottom: .5rem"></html-editor>
 
       <a-form-model-item label="发送时间" name="sendDate">
         <a-date-picker
@@ -61,10 +63,19 @@ export default {
         errored: false,
         rules: {
           tos: [
-            { required: true, message: '收件人不能为空！',trigger: ['blur']}
+            { required: true,
+              message: '收件人不能为空！',
+              trigger: ['blur']},
+            {
+              pattern: new RegExp(
+                  /^((([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6},))*(([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})))$/
+              ),
+              message: '邮件格式错误',
+              trigger: ['change']
+            }
           ],
           subject: [
-            {required: true, message: '邮件主题不能为空！', trigger: ['blur']}
+            {required: true,max: 100, message: '邮件主题不能为空！', trigger: ['blur']},
           ]
         }
       }
@@ -75,6 +86,10 @@ export default {
       const _this = this
       _this.$refs.formRef.validate(valid => {
         if (valid) {
+          if(!this.email.model.content || this.email.model.content.trim().length === 0){
+            this.$message.warn("邮件内容为空！")
+            return
+          }
           this.email.saving = true
           sendEmail(this.email.model)
               .then(response => {
@@ -101,6 +116,11 @@ export default {
         this.email.errored = false
       }
     },
+    handleHtmlContent(val){
+      if(val){
+        this.email.model.content = val
+      }
+    }
   }
 }
 </script>

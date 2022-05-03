@@ -20,7 +20,7 @@ export function uploadAction(url,parameter){
         method:'post' ,
         headers: {
             'Content-Type': 'multipart/form-data',  // 文件上传
-        },
+        }
     })
 }
 
@@ -28,7 +28,10 @@ export function sendEmail(data) {
     return service({
         url: 'api/mail/send',
         method: 'post',
-        data
+        data,
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
     })
 }
 

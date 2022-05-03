@@ -12,6 +12,8 @@
         :defaultConfig="editorConfig"
         :mode="mode"
         @onCreated="onCreated"
+        @onChange="transferData"
+        @onBlur="transferData"
     />
   </div>
 </template>
@@ -29,8 +31,7 @@ export default {
       html: '',
       toolbarConfig: { },
       editorConfig: {
-        placeholder: '请输入内容...',
-        maxLength: 1000
+        placeholder: '请输入内容...'
       },
       mode: 'default', // or 'simple'
     }
@@ -38,6 +39,9 @@ export default {
   methods: {
     onCreated(editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
+    },
+    transferData(editor){
+      this.$emit("update",this.html)
     }
   },
   beforeDestroy() {

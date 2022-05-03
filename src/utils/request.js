@@ -3,8 +3,8 @@ import router from '@/router/index'
 import {notification} from 'ant-design-vue'
 import store from '../store'
 import Config from '@/default-settings'
-import {getToken,removeToken} from '@/utils/auth'
-import { logout } from "@/api/login";
+import {getToken, removeToken} from '@/utils/auth'
+import {logout} from "@/api/login";
 import Cookies from 'js-cookie'
 
 // 创建axios实例
@@ -19,7 +19,10 @@ service.interceptors.request.use(
         if (getToken()) {
             config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
         }
-        config.headers['Content-Type'] = 'application/json'
+        let header = config.headers['Content-Type'];
+        if (header === undefined || header.indexOf('multipart/form-data') === -1) {
+            config.headers['Content-Type'] = 'application/json'
+        }
         return config
     },
     error => {
