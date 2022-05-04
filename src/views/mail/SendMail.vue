@@ -22,7 +22,7 @@
         <a-input v-model:value="email.model.subject" placeholder="请输入邮件主题"/>
       </a-form-model-item>
 
-      <html-editor @update="handleHtmlContent" style="margin-bottom: .5rem"></html-editor>
+      <html-editor @update="handleHtmlContent" :content="email.model.content" style="margin-bottom: .5rem"></html-editor>
 
       <a-form-model-item label="发送时间" name="sendDate">
         <a-date-picker
@@ -47,7 +47,7 @@
 
 <script>
 import HtmlEditor from "@/components/tools/Editor";
-import {sendEmail} from "@/api/common";
+import { sendEmail } from "@/api/email/index";
 import ReactiveButton from "@/components/tools/ReactiveButton";
 export default {
   name: "SendMail",
