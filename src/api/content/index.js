@@ -1,4 +1,4 @@
-import { service, transformGetData } from '@/utils/request'
+import {service, transformGetData} from '@/utils/request'
 
 export function page(data) {
     let params = transformGetData(data);
@@ -33,4 +33,17 @@ export function update(data) {
     })
 }
 
-export default {page, add, update, del}
+export function uploadAction(file) {
+    const formData = new FormData();
+    formData.append('files', file)
+    return service({
+        url: 'api/content/upload',
+        data: formData,
+        method: 'post',
+        headers: {
+            'Content-Type': 'multipart/form-data',  // 文件上传
+        },
+    })
+}
+
+export default {page, add, update, del, uploadAction}

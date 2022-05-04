@@ -263,15 +263,25 @@ export default {
     },
     handleUploadImage(event, insertImage, files) {
       console.log(files);
-      const file = files[0];
-      // 此处只做示例
-      insertImage({
-        url:
-            'https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=1269952892,3525182336&fm=26&gp=0.jpg',
-        desc: '七龙珠',
-        // width: 'auto',
-        // height: 'auto',
-      });
+      debugger
+      contentApi.uploadAction(files).then(response => {
+        if(response.code === 1){
+          let urls = response.urls;
+          if (urls.length > 0) {
+            urls.forEach(url => {
+              insertImage({
+                url: url,
+                desc: 'Huang-Blog',
+                width: 'auto',
+                height: 'auto'
+              });
+            })
+          }
+        }else {
+          this.$message.error(response.msg)
+        }
+      })
+
     }
   }
 }
