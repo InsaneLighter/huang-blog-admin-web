@@ -44,7 +44,7 @@ export default {
   name: 'ImageUpload',
   data() {
     return {
-      uploadAction: "/api/attachment/upload",
+      uploadAction: "/api/user/upload",
       uploadLoading: false,
       picUrl: false,
       headers: {},
@@ -115,7 +115,6 @@ export default {
       let fileList = [];
       let arr = paths.split(",")
       for (var a = 0; a < arr.length; a++) {
-        // let url = getFileAccessHttpUrl(arr[a]);
         let url = arr[a];
         fileList.push({
           uid: uidGenerator(),

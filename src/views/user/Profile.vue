@@ -281,9 +281,7 @@ export default {
           userApi.edit(this.userForm.model)
               .then(response => {
                 if (response.code === 1) {
-                  if (this.userForm.model.avatar) {
-                    this.$store.dispatch('user/setUser',this.userForm.model);
-                  }
+                  this.$store.dispatch('user/setUser', this.userForm.model);
                   this.$message.success('用户信息修改成功！')
                   this.handleLoadStatistics()
                 } else {
