@@ -7,7 +7,6 @@
     >
       <template #extra>
         <a-space>
-          <a-button :loading="previewSaving" @click="handlePreviewClick">预览</a-button>
           <a-button type="primary" @click="postSettingVisible = true">发布</a-button>
         </a-space>
       </template>
@@ -27,6 +26,7 @@
                        height="40rem"
                        mode="editable"
                        :disabled-menus="[]"
+                       left-toolbar="undo redo clear | h bold italic strikethrough quote | ul ol table hr | tip emoji todo-list | link image code | save"
                        @upload-image="handleUploadImage"
                        @change="onContentChange"
                        @save="handleSaveDraft">
@@ -215,36 +215,6 @@ export default {
         this.loading = false
       }
     },
-    async handlePreviewClick() {
-      this.previewSaving = true
-      if (this.postToStage.id) {
-        // Update the post content
-        /*const { data } = await apiClient.post.updateDraftById(
-            this.postToStage.id,
-            this.postToStage.originContent,
-            this.postToStage.content,
-            true
-        )
-        this.postToStage.inProgress = data.inProgress*/
-      } else {
-        // await this.handleCreatePost()
-      }
-      await this.handleOpenPreview()
-    },
-
-    async handleOpenPreview() {
-      try {
-        // const response = await apiClient.post.getPreviewLinkById(this.postToStage.id)
-        // window.open(response, '_blank')
-        this.handleRestoreSavedStatus()
-      } catch (e) {
-        this.$message.error('Failed to get preview link', e)
-      } finally {
-        setTimeout(() => {
-          this.previewSaving = false
-        }, 400)
-      }
-    },
 
     handleRestoreSavedStatus() {
       this.contentChanges = 0
@@ -262,20 +232,16 @@ export default {
       this.postToStage = post
     },
     handleUploadImage(event, insertImage, files) {
-      console.log(files);
-      debugger
       contentApi.uploadAction(files).then(response => {
         if(response.code === 1){
-          let urls = response.urls;
-          if (urls.length > 0) {
-            urls.forEach(url => {
-              insertImage({
-                url: url,
-                desc: 'Huang-Blog',
-                width: 'auto',
-                height: 'auto'
-              });
-            })
+          let url = response.url;
+          if (url) {
+            insertImage({
+              url: url,
+              desc: 'Huang-Blog',
+              width: 'auto',
+              height: 'auto'
+            });
           }
         }else {
           this.$message.error(response.msg)
