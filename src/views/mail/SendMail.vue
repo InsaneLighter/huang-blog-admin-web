@@ -4,7 +4,8 @@
         ref="formRef"
         :model="email.model"
         :rules="email.rules"
-        :label-col="{ span: 1 }"
+        :labelAlign="'left'"
+        :label-col="{ span: 2}"
         :wrapper-col="{ span: 10 }"
     >
       <a-form-model-item
@@ -22,11 +23,10 @@
         <a-input v-model:value="email.model.subject" placeholder="请输入邮件主题"/>
       </a-form-model-item>
 
-      <html-editor @update="handleHtmlContent" :content="email.model.content" style="margin-bottom: .5rem"></html-editor>
-
-      <a-form-model-item label="发送时间" name="sendDate">
+      <html-editor :htmlContent.sync="email.model.content" style="margin-bottom: .5rem"></html-editor>
+      <a-form-model-item label="发送时间" name="sentDate">
         <a-date-picker
-            v-model:value="email.model.sendDate"
+            v-model:value="email.model.sentDate"
             show-time
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
@@ -47,8 +47,9 @@
 
 <script>
 import HtmlEditor from "@/components/tools/Editor";
-import { sendEmail } from "@/api/email/index";
+import {sendEmail} from "@/api/email/index";
 import ReactiveButton from "@/components/tools/ReactiveButton";
+
 export default {
   name: "SendMail",
   components: {
@@ -63,9 +64,11 @@ export default {
         errored: false,
         rules: {
           tos: [
-            { required: true,
+            {
+              required: true,
               message: '收件人不能为空！',
-              trigger: ['blur']},
+              trigger: ['blur']
+            },
             {
               pattern: new RegExp(
                   /^((([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6},))*(([a-z0-9_.-]+)@([da-z.-]+).([a-z.]{2,6})))$/
@@ -75,7 +78,7 @@ export default {
             }
           ],
           subject: [
-            {required: true,max: 100, message: '邮件主题不能为空！', trigger: ['blur']},
+            {required: true, max: 100, message: '邮件主题不能为空！', trigger: ['blur']},
           ]
         }
       }
@@ -86,7 +89,7 @@ export default {
       const _this = this
       _this.$refs.formRef.validate(valid => {
         if (valid) {
-          if(!this.email.model.content || this.email.model.content.trim().length === 0){
+          if (!this.email.model.content || this.email.model.content.trim().length === 0) {
             this.$message.warn("邮件内容为空！")
             return
           }
@@ -115,16 +118,13 @@ export default {
       if (this.email.errored) {
         this.email.errored = false
       }
-    },
-    handleHtmlContent(val){
-      if(val){
-        this.email.model.content = val
-      }
     }
   }
 }
 </script>
 
 <style scoped>
-
+/deep/ .ant-form-item-label {
+  margin-right: -4rem !important;
+}
 </style>

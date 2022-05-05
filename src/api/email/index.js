@@ -12,7 +12,7 @@ export function uploadAction(file) {
     const formData = new FormData();
     formData.append('file', file)
     return service({
-        url: 'api/attachment/upload',
+        url: 'api/mail/upload',
         data: formData,
         method: 'post',
         headers: {

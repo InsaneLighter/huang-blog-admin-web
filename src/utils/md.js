@@ -28,11 +28,23 @@ import 'codemirror/addon/scroll/simplescrollbars';
 import 'codemirror/addon/scroll/simplescrollbars.css';
 // style
 import 'codemirror/lib/codemirror.css';
+//tip
+import createTipPlugin from '@kangc/v-md-editor/lib/plugins/tip/index';
+import '@kangc/v-md-editor/lib/plugins/tip/tip.css';
+//emoji
+import createEmojiPlugin from '@kangc/v-md-editor/lib/plugins/emoji/index';
+import '@kangc/v-md-editor/lib/plugins/emoji/emoji.css';
+//todolist
+import createTodoListPlugin from '@kangc/v-md-editor/lib/plugins/todo-list/index';
+import '@kangc/v-md-editor/lib/plugins/todo-list/todo-list.css';
 
 VMdEditor.Codemirror = Codemirror;
 
 VMdEditor.use(githubTheme, {
-    Hljs: hljs,
+    Hljs: hljs
 });
+VMdEditor.use(createTipPlugin())
+VMdEditor.use(createEmojiPlugin())
+VMdEditor.use(createTodoListPlugin())
 
 Vue.use(VMdEditor);

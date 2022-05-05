@@ -8,12 +8,10 @@
     />
     <Editor
         style="height: 30rem; overflow-y: hidden;"
-        v-model="content"
+        v-model="html"
         :defaultConfig="editorConfig"
         :mode="mode"
         @onCreated="onCreated"
-        @onChange="transferHtmlData"
-        @onBlur="transferHtmlData"
     />
   </div>
 </template>
@@ -21,7 +19,6 @@
 <script>
 import '@wangeditor/editor/dist/css/style.css'
 import {Editor, Toolbar} from '@wangeditor/editor-for-vue'
-import {uploadAction} from '@/api/email/index'
 import {getToken} from '@/utils/auth'
 
 export default {
@@ -30,7 +27,6 @@ export default {
   data() {
     return {
       editor: null,
-      html: '',
       toolbarConfig: {
         toolbarKeys: [
           "headerSelect",
@@ -135,17 +131,24 @@ export default {
     }
   },
   props: {
-    content: {
+    htmlContent: {
       type: String,
       default: ''
+    }
+  },
+  computed: {
+    html: {
+      get() {
+        return this.htmlContent
+      },
+      set(value) {
+        this.$emit('update:htmlContent', value)
+      }
     }
   },
   methods: {
     onCreated(editor) {
       this.editor = Object.seal(editor) // 一定要用 Object.seal() ，否则会报错
-    },
-    transferHtmlData(){
-      this.$emit('update',this.content)
     }
   },
   mounted() {
