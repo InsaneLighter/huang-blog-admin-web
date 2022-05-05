@@ -2,19 +2,19 @@
   <div style="padding: 1rem">
     <a-row :gutter="24">
       <a-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
-        <analysis-card :number="statisticsData.postCount" title="文章">
+        <analysis-card :number="statistics.postCount" title="文章">
           <template #action>
-            <router-link :to="{ name: 'Dashboard' }">
+            <router-link :to="{ name: 'DocEdit' }">
               <a-icon type="plus"/>
             </router-link>
           </template>
         </analysis-card>
       </a-col>
       <a-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
-        <analysis-card :number="statisticsData.visitCount" title="阅读量">
+        <analysis-card :number="statistics.visitCount" title="阅读量">
           <template #action>
             <a-tooltip>
-              <template #title>文章阅读共 {{ statisticsData.visitCount }} 次</template>
+              <template #title>文章阅读共 {{ statistics.visitCount }} 次</template>
               <span>
                 <a-icon type="info-circle-o"/>
               </span>
@@ -23,10 +23,10 @@
         </analysis-card>
       </a-col>
       <a-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
-        <analysis-card :number="statisticsData.establishDays" title="建立天数">
+        <analysis-card :number="statistics.establishDays" title="建立天数">
           <template #action>
             <a-tooltip>
-              <template #title>博客建立于 {{ statisticsData.birthday }}</template>
+              <template #title>博客建立于 {{ statistics.birthday }}</template>
               <span>
                 <a-icon type="info-circle-o"/>
               </span>
@@ -76,7 +76,7 @@
 import AnalysisCard from '@/components/tools/AnalysisCard'
 import LineChartMulti from '@/components/chart/LineChartMulti'
 import HeadInfo from '@/components/tools/HeadInfo'
-
+import statisticsApi from '@/api/statistics/index'
 export default {
   name: "Dashboard",
   components: {
@@ -88,11 +88,11 @@ export default {
     return {
       loading: true,
       center: null,
-      statisticsData: {
-        postCount: 7,
-        visitCount: 7,
-        establishDays: 7,
-        birthday: '2022-04-01 19:13'
+      statistics: {
+        postCount: 0,
+        visitCount: 0,
+        establishDays: 0,
+        birthday: '--'
       },
       logInfo: {
         todayIp: '1',
@@ -130,13 +130,30 @@ export default {
     }
   },
   created() {
-    setTimeout(() => {
-      this.loading = !this.loading
-    }, 1000)
-    this.initLogInfo();
+    this.loadData()
+    this.loadVisitData()
   },
   methods: {
-    initLogInfo() {
+    loadData() {
+      statisticsApi.statistics().then(response => {
+        if(response.code === 1){
+          this.statistics = response.data
+        }else {
+          this.$message.error(response.msg)
+        }
+      })
+    },
+    loadVisitData(){
+      this.loading = true
+      statisticsApi.visitStatistics().then(response => {
+        if(response.code === 1){
+          let data = response.data();
+          this.logInfo = data.logInfo
+          this.visitInfo = data.visitInfo
+        }else {
+          this.$message.error(response.msg)
+        }
+      })
     }
   }
 }
