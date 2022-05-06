@@ -28,11 +28,12 @@
             </p>
           </div>
           <a-divider/>
-          <div style="margin-top: 5.5rem">
+          <div style="margin-top: 2.5rem">
             <a-list :loading="statistics.loading" itemLayout="horizontal">
-              <a-list-item>累计发表了 {{ statistics.postCount || 0 }} 篇文章。</a-list-item>
-              <a-list-item>累计创建了 {{ statistics.categoryCount || 0 }} 个分类。</a-list-item>
-              <a-list-item>累计创建了 {{ statistics.tagCount || 0 }} 个标签。</a-list-item>
+              <a-list-item>累计发表了 {{ statistics.data.postCount || 0 }} 篇文章。</a-list-item>
+              <a-list-item>累计发表了 {{ statistics.data.journalCount || 0 }} 篇日志。</a-list-item>
+              <a-list-item>累计创建了 {{ statistics.data.categoryCount || 0 }} 个分类。</a-list-item>
+              <a-list-item>累计创建了 {{ statistics.data.tagCount || 0 }} 个标签。</a-list-item>
               <a-list-item></a-list-item>
             </a-list>
           </div>
@@ -222,9 +223,9 @@ export default {
       userApi.getCurrentUser()
           .then(response => {
             if (response.code === 1) {
-              this.userForm.model = response.user
-              this.passwordForm.model.id = response.user.id
-              this.statistics.data = response
+              this.userForm.model = response.data.user
+              this.passwordForm.model.id = response.data.user.id
+              this.statistics.data = response.data.statistics
             } else {
               this.$message.error(response.msg)
             }

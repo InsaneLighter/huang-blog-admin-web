@@ -17,7 +17,7 @@ const actions = {
   GetInfo({ commit }) {
     return new Promise((resolve, reject) => {
       getCurrentUser().then(res => {
-        commit('SET_USER', res.user)
+        commit('SET_USER', res.data.user)
         resolve(res)
       }).catch(error => {
         reject(error)

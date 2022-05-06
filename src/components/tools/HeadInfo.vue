@@ -15,7 +15,7 @@
         default: ''
       },
       content: {
-        type: String,
+        type: Number,
         default: ''
       },
       bordered: {

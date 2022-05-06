@@ -30,15 +30,13 @@ export default {
       toolbarConfig: {
         toolbarKeys: [
           "headerSelect",
-          "blockquote",
-          "|",
           "bold",
           "underline",
           "italic",
           {
             iconSvg: '<svg viewBox="0 0 1024 1024"><path d="M204.8 505.6m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z"></path><path d="M505.6 505.6m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z"></path><path d="M806.4 505.6m-76.8 0a76.8 76.8 0 1 0 153.6 0 76.8 76.8 0 1 0-153.6 0Z"></path></svg>',
             key: "group-more-style",
-            menuKeys: ['through', 'code', 'sup', 'sub', 'clearStyle'],
+            menuKeys: ['through', 'sup', 'sub', 'clearStyle'],
             title: "更多"
           },
           "color",
@@ -50,7 +48,6 @@ export default {
           "|",
           "bulletedList",
           "numberedList",
-          "todo",
           {
             key: 'group-justify',
             title: '对齐',
@@ -77,14 +74,11 @@ export default {
             menuKeys: ["insertImage",
               "uploadImage"]
           },
-          "insertTable",
           "codeBlock",
           "divider",
           "|",
           "undo",
-          "redo",
-          "|",
-          "fullScreen",
+          "redo"
         ],
         excludeKeys: ["uploadVideo", "insertVideo"]
       },
@@ -120,7 +114,7 @@ export default {
               // res 即服务端的返回结果
               if (res.code === 1) {
                 insertFn(res.url, '这就是图片咯', '')
-              }else {
+              } else {
                 this.$message.error(res.msg)
               }
             },
@@ -160,3 +154,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+/deep/ h1 {
+  font-size: 2em;
+}
+</style>

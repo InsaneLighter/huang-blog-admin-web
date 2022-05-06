@@ -1,7 +1,7 @@
 <template>
   <div style="padding: 1rem">
     <a-row :gutter="24">
-      <a-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
+      <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
         <analysis-card :number="statistics.postCount" title="文章">
           <template #action>
             <router-link :to="{ name: 'DocEdit' }">
@@ -10,7 +10,34 @@
           </template>
         </analysis-card>
       </a-col>
-      <a-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
+      <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
+        <analysis-card :number="statistics.journalCount" title="日志">
+          <template #action>
+            <router-link :to="{ name: 'DocEdit' }">
+              <a-icon type="dash"/>
+            </router-link>
+          </template>
+        </analysis-card>
+      </a-col>
+      <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
+        <analysis-card :number="statistics.categoryCount" title="分类">
+          <template #action>
+            <router-link :to="{ name: 'Category' }">
+              <a-icon type="dash"/>
+            </router-link>
+          </template>
+        </analysis-card>
+      </a-col>
+      <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
+        <analysis-card :number="statistics.tagCount" title="标签">
+          <template #action>
+            <router-link :to="{ name: 'Tag' }">
+              <a-icon type="dash"/>
+            </router-link>
+          </template>
+        </analysis-card>
+      </a-col>
+      <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
         <analysis-card :number="statistics.visitCount" title="阅读量">
           <template #action>
             <a-tooltip>
@@ -22,7 +49,7 @@
           </template>
         </analysis-card>
       </a-col>
-      <a-col :xs="12" :sm="12" :md="12" :lg="8" :xl="8">
+      <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
         <analysis-card :number="statistics.establishDays" title="建立天数">
           <template #action>
             <a-tooltip>
@@ -100,32 +127,7 @@ export default {
         totalVisitCount: '1126'
       },
       visitFields: ['visit'],
-      visitInfo: [
-        {
-          type: "04-10",
-          visit: 422
-        },
-        {
-          type: "04-11",
-          visit: 123
-        },
-        {
-          type: "04-12",
-          visit: 3213
-        },
-        {
-          type: "04-13",
-          visit: 3213
-        },
-        {
-          type: "04-14",
-          visit: 311
-        },
-        {
-          type: "04-15",
-          visit: 321
-        }
-        ],
+      visitInfo: [],
       indicator: <a-icon type="loading" style="font-size: 24px" spin/>
     }
   },
@@ -147,12 +149,14 @@ export default {
       this.loading = true
       statisticsApi.visitStatistics().then(response => {
         if(response.code === 1){
-          let data = response.data();
+          let data = response.data;
           this.logInfo = data.logInfo
           this.visitInfo = data.visitInfo
         }else {
           this.$message.error(response.msg)
         }
+      }).finally(()=>{
+        this.loading = false
       })
     }
   }
