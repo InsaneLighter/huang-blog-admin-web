@@ -14,6 +14,13 @@ export function queryByIds(ids) {
     })
 }
 
+export function queryByName(name) {
+    return service({
+        url: 'api/category/queryByName/' + name,
+        method: 'get'
+    })
+}
+
 export function page(data) {
     let params = transformGetData(data);
     return service({
@@ -50,4 +57,4 @@ export function edit(data) {
     })
 }
 
-export default {queryAll, queryByIds, page, add, edit, del}
+export default {queryAll, queryByIds,queryByName, page, add, edit, del}

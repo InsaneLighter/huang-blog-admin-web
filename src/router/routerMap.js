@@ -83,6 +83,16 @@ export const routerMap = [
                 ]
             },
             {
+                path: '/journal',
+                name: 'Journal',
+                component: (resolve) => require(['@/views/journal/Journal'], resolve),
+                meta: {
+                    title: '日记',
+                    icon: 'meh',
+                    hideHead: false
+                }
+            },
+            {
                 path: '/attachment',
                 name: 'Attachment',
                 component: (resolve) => require(['@/views/attachment/AttachmentList'], resolve),
@@ -148,7 +158,7 @@ export const routerMap = [
                     {
                         path: '/monitor/httpTrace',
                         name: 'HttpTrace',
-                        component: (resolve) => require(['@/views/monitor/HttpTrace'], resolve),
+                        component: (resolve) => require(['@/views/monitor/CustomizedHttpTrace'], resolve),
                         meta: {
                             title: '请求追踪',
                             icon: 'meh',
