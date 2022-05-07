@@ -126,11 +126,32 @@ export default {
       }
     },
     handleCreate() {
+      let flag = true
       this.$refs.categoryForm.validate(async valid => {
         if (valid) {
           try {
             this.form.saving = true
-            await categoryApi.add(this.form.model)
+            await categoryApi.queryByName(this.form.model.name).then(response => {
+              if (response.code === 1) {
+                if (response.category) {
+                  this.$message.warning("存在相同分类名称！")
+                  this.form.errored = true
+                  flag = false
+                }
+              }else {
+                this.$message.error(response.msg)
+              }
+            }).then(response => {
+              if(flag){
+                categoryApi.add(this.form.model).then(response => {
+                  if (response.code === 1) {
+                    this.$message.success('新增分类成功！')
+                  } else {
+                    this.$message.error(response.msg)
+                  }
+                })
+              }
+            })
           } catch (e) {
             this.form.errored = true
             this.$message.error('Failed to create category', e)

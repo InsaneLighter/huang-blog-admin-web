@@ -185,12 +185,11 @@ export default {
         cancelText: '取消',
         onOk: async () => {
           try {
-            const response = await categoryApi.queryByIds(this.selectedRowKeys).then(response => {
+            await categoryApi.queryByIds(this.selectedRowKeys).then(response => {
               if (response.code === 1) {
                 if (response.data.list.length > 0) {
                   this.$message.warning("存在文章使用到该分类！")
                   flag = false
-                  return
                 }
                 if (!response.hasChildren) {
                   this.$message.warning("选中分类含子节点！")
