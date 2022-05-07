@@ -11,9 +11,9 @@
         </analysis-card>
       </a-col>
       <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
-        <analysis-card :number="statistics.journalCount" title="日志">
+        <analysis-card :number="statistics.journalCount" title="日记">
           <template #action>
-            <router-link :to="{ name: 'DocEdit' }">
+            <router-link :to="{ name: 'Journal' }">
               <a-icon type="dash"/>
             </router-link>
           </template>
