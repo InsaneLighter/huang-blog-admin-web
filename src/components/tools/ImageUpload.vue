@@ -147,7 +147,7 @@ export default {
           this.picUrl = true;
           fileList = fileList.map((file) => {
             if (file.response) {
-              file.url = file.response.data.path;
+              file.url = file.response.url
             }
             return file;
           });
@@ -182,11 +182,11 @@ export default {
       }
       let arr = [];
       if (!this.isMultiple && uploadFiles.length > 0) {
-        arr.push(uploadFiles[uploadFiles.length - 1].response.data.path)
+        arr.push(uploadFiles[uploadFiles.length - 1].response.url)
       } else {
         for (let a = 0; a < uploadFiles.length; a++) {
           if (uploadFiles[a].status === 'done') {
-            arr.push(uploadFiles[a].response.data.path)
+            arr.push(uploadFiles[a].response.url)
           } else {
             return;
           }

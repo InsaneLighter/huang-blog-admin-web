@@ -31,7 +31,7 @@
           <div style="margin-top: 2.5rem">
             <a-list :loading="statistics.loading" itemLayout="horizontal">
               <a-list-item>累计发表了 {{ statistics.data.postCount || 0 }} 篇文章。</a-list-item>
-              <a-list-item>累计发表了 {{ statistics.data.journalCount || 0 }} 篇日志。</a-list-item>
+              <a-list-item>累计发表了 {{ statistics.data.journalCount || 0 }} 篇日记。</a-list-item>
               <a-list-item>累计创建了 {{ statistics.data.categoryCount || 0 }} 个分类。</a-list-item>
               <a-list-item>累计创建了 {{ statistics.data.tagCount || 0 }} 个标签。</a-list-item>
               <a-list-item></a-list-item>

@@ -393,12 +393,13 @@ export default {
                 onOk: async () => {
                   attachmentApi.del(item.id).then(response => {
                     if (response.code === 1) {
-                      this.handleListAttachments()
-                      this.handleUnselect(item)
                       this.$message.success('删除成功！')
                     } else {
                       this.$message.error(response.msg)
                     }
+                  }).finally(() => {
+                    this.handleListAttachments()
+                    this.handleUnselect(item)
                   })
                 }
               })
@@ -476,6 +477,9 @@ export default {
               } else {
                 _this.$message.error(response.msg)
               }
+            }).finally(() => {
+              _this.list.selected = []
+              _this.handleListAttachments()
             })
           } catch (e) {
             _this.$message.error('Failed to delete selected attachments')
@@ -566,7 +570,7 @@ export default {
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
-  padding-bottom: 2rem;
+
 
   .ant-pagination-options-size-changer.ant-select {
     margin: 0;

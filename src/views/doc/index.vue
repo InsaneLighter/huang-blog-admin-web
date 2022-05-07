@@ -553,11 +553,11 @@ export default {
           }else {
             this.$message.error(response.msg)
           }
+        }).finally(() => {
+          this.handleListPosts()
         })
       } catch (e) {
         this.$message.error('Failed to delete post', e)
-      } finally {
-        await this.handleListPosts()
       }
     },
 
@@ -581,11 +581,11 @@ export default {
               }else {
                 this.$message.error(response.msg)
               }
+            }).finally(() => {
+              this.handleListPosts()
             })
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
-          } finally {
-            await this.handleListPosts()
           }
         }
       })
@@ -731,7 +731,7 @@ export default {
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
-  padding-bottom: 2rem;
+
 
   .ant-pagination-options-size-changer.ant-select {
     margin: 0;
