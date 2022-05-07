@@ -1,32 +1,32 @@
 <template>
-  <a-card :bordered="false">
+  <div style="padding: 1rem">
+    <a-card :bordered="false">
+      <!-- 操作按钮区域 -->
+      <div class="table-operator">
+        <a-button @click="handleAdd" style="margin-bottom: 1rem" type="primary" icon="plus">新增</a-button>
+        <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-menu slot="overlay">
+            <a-menu-item key="1" @click="handleDeleteInBatch">
+              <a-icon type="delete"/>
+              删除
+            </a-menu-item>
+          </a-menu>
+          <a-button style="margin-left: 8px"> 批量操作
+            <a-icon type="down"/>
+          </a-button>
+        </a-dropdown>
+      </div>
 
-    <!-- 操作按钮区域 -->
-    <div class="table-operator">
-      <a-button @click="handleAdd" style="margin-bottom: 1rem" type="primary" icon="plus">新增</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="handleDeleteInBatch">
-            <a-icon type="delete"/>
-            删除
-          </a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作
-          <a-icon type="down"/>
-        </a-button>
-      </a-dropdown>
-    </div>
-
-    <!-- table区域-begin -->
-    <div style="margin-bottom: 2rem">
-      <a-table
-          :columns="columns"
-          :dataSource="list.data"
-          :loading="list.loading"
-          :pagination="false"
-          :rowKey="category => category.id"
-          :defaultExpandedRowKeys="defaultExpandedRowKeys"
-          :rowSelection="{
+      <!-- table区域-begin -->
+      <div style="margin-bottom: 2rem">
+        <a-table
+            :columns="columns"
+            :dataSource="list.data"
+            :loading="list.loading"
+            :pagination="false"
+            :rowKey="category => category.id"
+            :defaultExpandedRowKeys="defaultExpandedRowKeys"
+            :rowSelection="{
             selectedRowKeys: selectedRowKeys,
             onChange: onSelectionChange,
             getCheckboxProps:onGetCheckboxProps
@@ -40,16 +40,17 @@
           <a-divider type="vertical"/>
           <a @click="handleAddSub(record)">添加下级</a>
         </span>
-      </a-table>
-    </div>
+        </a-table>
+      </div>
 
-    <!--    <category ref="modalForm" @ok="modalFormOk"></category>-->
-    <CategoryCreate :operate="operate"
-                    :record="record"
-                    :title="categoryTitle"
-                    :visible.sync="categoryCreateModalVisible"
-                    @close="onCategoryCreateModalClose"/>
-  </a-card>
+      <!--    <category ref="modalForm" @ok="modalFormOk"></category>-->
+      <CategoryCreate :operate="operate"
+                      :record="record"
+                      :title="categoryTitle"
+                      :visible.sync="categoryCreateModalVisible"
+                      @close="onCategoryCreateModalClose"/>
+    </a-card>
+  </div>
 </template>
 
 <script>
@@ -161,13 +162,13 @@ export default {
               } else {
                 this.$message.error(response.msg)
               }
+            }).finally(() => {
+              this.loadData()
             })
           }
         })
       } catch (e) {
         this.$message.error('Failed to delete post', e)
-      } finally {
-        await this.loadData()
       }
     },
     async handleDeleteInBatch() {
@@ -206,13 +207,13 @@ export default {
                   } else {
                     this.$message.error(response.msg)
                   }
+                }).finally(() => {
+                  this.loadData()
                 })
               }
             })
           } catch (e) {
             this.$message.error('Failed to delete posts in batch', e)
-          } finally {
-            await this.loadData()
           }
         }
       })
@@ -226,7 +227,8 @@ export default {
       this.categoryCreateModalVisible = true
       this.operate = true
       this.categoryTitle = "编辑分类"
-      this.record = record
+      const tempRecord = record;
+      this.record = tempRecord
     },
     handleAddSub(record) {
       this.categoryCreateModalVisible = true

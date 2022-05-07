@@ -1,62 +1,63 @@
 <template>
-  <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="6" :sm="24">
-            <a-form-item label="关键字：">
-              <a-input v-model="list.params.keyword"
-                       placeholder="请输入关键字"
-                       @keyup.enter="handleQuery()"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
+  <div style="padding: 1rem">
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="关键字：">
+                <a-input v-model="list.params.keyword"
+                         placeholder="请输入关键字"
+                         @keyup.enter="handleQuery()"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
               <span class="table-page-search-submitButtons">
                 <a-space>
                   <a-button type="primary" @click="handleQuery()">查询</a-button>
                   <a-button @click="handleResetParam()">重置</a-button>
                 </a-space>
               </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
-    <!-- 操作按钮区域 -->
-    <div class="table-operator">
-      <a-button @click="handleAdd" style="margin-bottom: 1rem" type="primary" icon="plus">新增</a-button>
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="handleDeleteInBatch">
-            <a-icon type="delete"/>
-            删除
-          </a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作
-          <a-icon type="down"/>
-        </a-button>
-      </a-dropdown>
-    </div>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
+      <!-- 操作按钮区域 -->
+      <div class="table-operator">
+        <a-button @click="handleAdd" style="margin-bottom: 1rem" type="primary" icon="plus">新增</a-button>
+        <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-menu slot="overlay">
+            <a-menu-item key="1" @click="handleDeleteInBatch">
+              <a-icon type="delete"/>
+              删除
+            </a-menu-item>
+          </a-menu>
+          <a-button style="margin-left: 8px"> 批量操作
+            <a-icon type="down"/>
+          </a-button>
+        </a-dropdown>
+      </div>
 
-    <!-- table区域-begin -->
-    <div style="margin-bottom: 2rem">
-      <a-table
-          :columns="columns"
-          :dataSource="list.data"
-          :loading="list.loading"
-          :pagination="false"
-          :rowKey="user => user.id"
-          :defaultExpandedRowKeys="defaultExpandedRowKeys"
-          :rowSelection="{
+      <!-- table区域-begin -->
+      <div style="margin-bottom: 2rem">
+        <a-table
+            :columns="columns"
+            :dataSource="list.data"
+            :loading="list.loading"
+            :pagination="false"
+            :rowKey="user => user.id"
+            :defaultExpandedRowKeys="defaultExpandedRowKeys"
+            :rowSelection="{
             selectedRowKeys: selectedRowKeys,
             onChange: onSelectionChange,
             getCheckboxProps:onGetCheckboxProps
           }">
-        <template #status="text,record">
-          <a-switch v-model:checked="record.status === 0"
-                    checked-children="正常" un-checked-children="禁用"
-                    @click="handleStatusChange(record)"/>
-        </template>
-        <span slot="action" slot-scope="text, record">
+          <template #status="text,record">
+            <a-switch v-model:checked="record.status === 0"
+                      checked-children="正常" un-checked-children="禁用"
+                      @click="handleStatusChange(record)"/>
+          </template>
+          <span slot="action" slot-scope="text, record">
           <a @click="handleEdit(record)">编辑</a>
           <a-divider v-if="record.id !== '0'" type="vertical"/>
           <a-popconfirm v-if="record.id !== '0'" title="确定删除吗?" @confirm="() => handleDelete(record.id)">
@@ -67,29 +68,30 @@
             <a>重置密码</a>
           </a-popconfirm>
         </span>
-      </a-table>
-      <!--分页-->
-      <div class="page-wrapper">
-        <a-pagination
-            :current="pagination.page"
-            :defaultPageSize="pagination.size"
-            :page-size-options="['5', '10', '20', '50', '100']"
-            :total="pagination.total"
-            class="pagination"
-            showLessItems
-            show-size-changer
-            @change="handlePageChange"
-            @showSizeChange="handlePageSizeChange"
-        >
-          <template slot="buildOptionText" slot-scope="props">
-            <span>{{ props.value }}条/页</span>
-          </template>
-        </a-pagination>
+        </a-table>
+        <!--分页-->
+        <div class="page-wrapper">
+          <a-pagination
+              :current="pagination.page"
+              :defaultPageSize="pagination.size"
+              :page-size-options="['5', '10', '20', '50', '100']"
+              :total="pagination.total"
+              class="pagination"
+              showLessItems
+              show-size-changer
+              @change="handlePageChange"
+              @showSizeChange="handlePageSizeChange"
+          >
+            <template slot="buildOptionText" slot-scope="props">
+              <span>{{ props.value }}条/页</span>
+            </template>
+          </a-pagination>
+        </div>
       </div>
-    </div>
 
-    <user ref="modalForm" @ok="modalFormOk"></user>
-  </a-card>
+      <user ref="modalForm" @ok="modalFormOk"></user>
+    </a-card>
+  </div>
 </template>
 
 <script>
@@ -175,9 +177,6 @@ export default {
     onGetCheckboxProps(record) {
       return {props: {disabled: record.id === '0'}}
     },
-    onCategoryCreateModalClose() {
-      this.loadData()
-    },
     async handleDelete(userId) {
       try {
         userApi.del(userId).then(response => {
@@ -186,11 +185,11 @@ export default {
           } else {
             this.$message.error(response.msg)
           }
+        }).then(res => {
+          this.handleListUsers()
         })
       } catch (e) {
         this.$message.error('Failed to delete user', e)
-      } finally {
-        this.loadData()
       }
     },
     async handleDeleteInBatch() {
@@ -213,11 +212,11 @@ export default {
               } else {
                 this.$message.error(response.msg)
               }
+            }).then(res => {
+              this.handleListUsers()
             })
           } catch (e) {
             this.$message.error('Failed to delete user in batch', e)
-          } finally {
-            await this.loadData()
           }
         }
       })
@@ -364,7 +363,7 @@ export default {
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
-  padding-bottom: 2rem;
+
 
   .ant-pagination-options-size-changer.ant-select {
     margin: 0;

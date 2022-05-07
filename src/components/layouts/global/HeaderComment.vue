@@ -5,7 +5,7 @@
       :overlayStyle="{ width: '400px', top: '50px' }"
       overlayClassName='header-comment-popover'
       placement='bottomRight'
-      title='工作日志'
+      title='工作日记'
       trigger='hover'
   >
     <template #content>
@@ -23,7 +23,7 @@
       </div>
     </template>
     <span class='inline-block transition-all'>
-      <a-badge v-if='comments.post.length || comments.sheet.length || comments.journal.length' dot>
+      <a-badge v-if='comments.post.length || comments.journal.length' dot>
         <a-icon type='bell' />
       </a-badge>
       <a-badge v-else>
@@ -41,14 +41,9 @@ const targets = [
     label: '文章'
   },
   {
-    key: 'sheets',
-    dataKey: 'sheet',
-    label: '页面'
-  },
-  {
     key: 'journals',
     dataKey: 'journal',
-    label: '日志'
+    label: '日记'
   }
 ]
 
@@ -61,7 +56,6 @@ export default {
       activeKey: 'posts',
       comments: {
         post: [],
-        sheet: [],
         journal: [],
         loading: false
       }

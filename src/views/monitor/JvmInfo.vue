@@ -1,41 +1,44 @@
 <template>
-  <a-skeleton active :loading="loading" :paragraph="{rows: 17}">
-    <a-card :bordered="false">
-      <a-alert type="info" :showIcon="true">
-        <div slot="message">
-          上次更新时间：{{ this.time }}
-          <a-divider type="vertical"/>
-          <a @click="handleClickUpdate">立即更新</a>
-        </div>
-      </a-alert>
-      <a-table
-          rowKey="id"
-          size="middle"
-          :columns="columns"
-          :dataSource="dataSource"
-          :pagination="false"
-          :loading="tableLoading"
-          style="margin-top: 20px;">
+  <div style="padding: 1rem">
+    <a-skeleton active :loading="loading" :paragraph="{rows: 17}">
+      <a-card :bordered="false">
+        <a-alert type="info" :showIcon="true">
+          <div slot="message">
+            上次更新时间：{{ this.time }}
+            <a-divider type="vertical"/>
+            <a @click="handleClickUpdate">立即更新</a>
+          </div>
+        </a-alert>
+        <a-table
+            rowKey="id"
+            size="middle"
+            :columns="columns"
+            :dataSource="dataSource"
+            :pagination="false"
+            :loading="tableLoading"
+            style="margin-top: 20px;">
 
-        <template slot="param" slot-scope="text, record">
-          <a-tag :color="textInfo[record.param].color">{{ text }}</a-tag>
-        </template>
+          <template slot="param" slot-scope="text, record">
+            <a-tag :color="textInfo[record.param].color">{{ text }}</a-tag>
+          </template>
 
-        <template slot="text" slot-scope="text, record">
-          {{ textInfo[record.param].text }}
-        </template>
+          <template slot="text" slot-scope="text, record">
+            {{ textInfo[record.param].text }}
+          </template>
 
-        <template slot="value" slot-scope="text, record">
-          {{ text }} {{ textInfo[record.param].unit }}
-        </template>
+          <template slot="value" slot-scope="text, record">
+            {{ text }} {{ textInfo[record.param].unit }}
+          </template>
 
-      </a-table>
-    </a-card>
-  </a-skeleton>
+        </a-table>
+      </a-card>
+    </a-skeleton>
+  </div>
 </template>
 <script>
 import moment from 'moment'
-import { getAction } from '@/api/common'
+import {getAction} from '@/api/common'
+
 moment.locale('zh-cn')
 
 export default {

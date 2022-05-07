@@ -1,34 +1,36 @@
 <template>
-  <a-card :bordered="false">
-    <a-alert type="info" :showIcon="true">
-      <div slot="message">
-        上次更新时间：{{ this.time }}
-        <a-divider type="vertical"/>
-        <a @click="handleClickUpdate">立即更新</a>
-      </div>
-    </a-alert>
-    <a-skeleton active :loading="loading" :paragraph="{rows: 17}">
-      <a-card>
-        <!-- Redis 信息实时监控 -->
-        <a-row :gutter="8">
-          <a-col :sm="24" :xl="12">
-            <area-chart-ty v-bind="memory"/>
-          </a-col>
-          <a-col :sm="24" :xl="12">
-            <area-chart-ty v-bind="key"/>
-          </a-col>
-        </a-row>
+  <div style="padding: 1rem">
+    <a-card :bordered="false">
+      <a-alert type="info" :showIcon="true">
+        <div slot="message">
+          上次更新时间：{{ this.time }}
+          <a-divider type="vertical"/>
+          <a @click="handleClickUpdate">立即更新</a>
+        </div>
+      </a-alert>
+      <a-skeleton active :loading="loading" :paragraph="{rows: 17}">
+        <a-card>
+          <!-- Redis 信息实时监控 -->
+          <a-row :gutter="8">
+            <a-col :sm="24" :xl="12">
+              <area-chart-ty v-bind="memory"/>
+            </a-col>
+            <a-col :sm="24" :xl="12">
+              <area-chart-ty v-bind="key"/>
+            </a-col>
+          </a-row>
 
-        <h3>Redis 详细信息</h3>
-        <a-table
-            :loading="tableLoading"
-            :columns="columns"
-            :dataSource="redisInfo"
-            :pagination="false"/>
+          <h3>Redis 详细信息</h3>
+          <a-table
+              :loading="tableLoading"
+              :columns="columns"
+              :dataSource="redisInfo"
+              :pagination="false"/>
 
-      </a-card>
-    </a-skeleton>
-  </a-card>
+        </a-card>
+      </a-skeleton>
+    </a-card>
+  </div>
 </template>
 <script>
 import moment from 'moment'

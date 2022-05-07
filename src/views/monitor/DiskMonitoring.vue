@@ -1,21 +1,23 @@
 <template>
-  <a-card :bordered="false">
-    <a-alert type="info" :showIcon="true">
-      <div slot="message">
-        上次更新时间：{{ this.time }}
-        <a-divider type="vertical"/>
-        <a @click="handleClickUpdate">立即更新</a>
-      </div>
-    </a-alert>
-    <a-skeleton v-if="loading" active/>
-    <a-row v-else>
-      <template v-if="diskInfo && diskInfo.length>0">
-        <a-col :span="8" v-for="(item,index) in diskInfo" :key=" 'diskInfo'+index ">
-          <dash-chart :title="item.name" :datasource="item.restPPT"></dash-chart>
-        </a-col>
-      </template>
-    </a-row>
-  </a-card>
+  <div style="padding: 1rem">
+    <a-card :bordered="false">
+      <a-alert type="info" :showIcon="true">
+        <div slot="message">
+          上次更新时间：{{ this.time }}
+          <a-divider type="vertical"/>
+          <a @click="handleClickUpdate">立即更新</a>
+        </div>
+      </a-alert>
+      <a-skeleton v-if="loading" active/>
+      <a-row v-else>
+        <template v-if="diskInfo && diskInfo.length>0">
+          <a-col :span="8" v-for="(item,index) in diskInfo" :key=" 'diskInfo'+index ">
+            <dash-chart :title="item.name" :datasource="item.restPPT"></dash-chart>
+          </a-col>
+        </template>
+      </a-row>
+    </a-card>
+  </div>
 </template>
 
 <script>

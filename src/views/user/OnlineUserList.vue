@@ -286,7 +286,7 @@ export default {
   -webkit-box-direction: normal;
   -ms-flex-flow: row wrap;
   flex-flow: row wrap;
-  padding-bottom: 2rem;
+
 
   .ant-pagination-options-size-changer.ant-select {
     margin: 0;
