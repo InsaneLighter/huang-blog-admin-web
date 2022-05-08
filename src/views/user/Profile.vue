@@ -327,4 +327,32 @@ export default {
   line-height: 1.75rem;
   font-weight: 500;
 }
+/deep/ .card-container {
+  background: #fafafa
+}
+
+/deep/ .card-container > .ant-tabs-card > .ant-tabs-content {
+  margin-top: -16px
+}
+
+/deep/ .card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
+  background: #fff;
+  padding: 16px
+}
+
+/deep/ .card-container > .ant-tabs-card > .ant-tabs-bar {
+  border-color: #fff
+}
+
+/deep/ .card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+  border: none !important;
+  margin-right: 0 !important;
+  background: #fafafa !important;
+}
+
+/deep/.card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
+  border-color: #fff !important;
+  background: #fff !important;
+}
+
 </style>

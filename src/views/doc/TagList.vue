@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import { hexRegExp } from '@/utils/colorUtil'
+import {hexRegExp} from '@/utils/colorUtil'
 import tagApi from '@/api/tag/index'
 import Verte from 'verte'
 import 'verte/dist/verte.css'
@@ -126,9 +126,9 @@ export default {
       this.list.loading = true
       tagApi.queryAll()
           .then(response => {
-            if(response.code === 1){
+            if (response.code === 1) {
               this.list.data = response.data.list
-            }else {
+            } else {
               this.$message.error(response.msg)
             }
           })
@@ -154,11 +154,11 @@ export default {
           this.$message.error(response.msg)
         }
       }).then(res => {
-        if(flag){
+        if (flag) {
           tagApi.del(tagId).then(response => {
-            if(response.code === 1){
+            if (response.code === 1) {
               this.$message.success('删除成功！')
-            }else {
+            } else {
               this.$message.error(response.msg)
             }
           }).finally(() => {
@@ -171,43 +171,62 @@ export default {
       })
     },
     handleCreateOrUpdateTag() {
+      let flag = true
       const _this = this
       _this.$refs.tagForm.validate(valid => {
         if (valid) {
           this.form.saving = true
-          if (_this.isUpdateMode) {
-            tagApi
-                .edit(_this.form.model)
-                .then(response => {
-                  if(response.code === 1){
-                    this.$message.success("修改成功！")
-                  }else {
-                    this.$message.error(response.msg)
-                  }
-                })
-                .catch(() => {
-                  this.form.errored = true
-                })
-                .finally(() => {
-                    _this.form.saving = false
-                })
-          } else {
-            tagApi
-                .add(_this.form.model)
-                .then(response => {
-                  if(response.code === 1){
-                    this.$message.success("添加标签成功！")
-                  }else {
-                    this.$message.error(response.msg)
-                  }
-                })
-                .catch(() => {
-                  this.form.errored = true
-                })
-                .finally(() => {
-                    _this.form.saving = false
-                })
-          }
+          tagApi.queryByName(this.form.model.name).then(response => {
+            if (response.code === 1) {
+              if (response.tag) {
+                this.$message.warning("存在相同标签名称！")
+                this.form.errored = true
+                flag = false
+              }
+            } else {
+              this.$message.error(response.msg)
+            }
+          }).then(response => {
+            if (flag) {
+              if (_this.isUpdateMode) {
+                tagApi
+                    .edit(_this.form.model)
+                    .then(response => {
+                      if (response.code === 1) {
+                        this.$message.success("修改成功！")
+                      } else {
+                        this.$message.error(response.msg)
+                      }
+                    })
+                    .catch(() => {
+                      this.form.errored = true
+                    })
+                    .finally(() => {
+                      _this.form.saving = false
+                    })
+              } else {
+                tagApi
+                    .add(_this.form.model)
+                    .then(response => {
+                      if (response.code === 1) {
+                        this.$message.success("添加标签成功！")
+                      } else {
+                        this.$message.error(response.msg)
+                      }
+                    })
+                    .catch(() => {
+                      this.form.errored = true
+                    })
+                    .finally(() => {
+                      _this.form.saving = false
+                    })
+              }
+            }
+          }).finally(()=>{
+            setTimeout(() => {
+              this.form.saving = false
+            }, 400)
+          })
         }
       })
     },
@@ -226,7 +245,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-  .float-right {
-    float: right;
-  }
+.float-right {
+  float: right;
+}
 </style>

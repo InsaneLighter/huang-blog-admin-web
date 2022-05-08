@@ -138,7 +138,7 @@
           </template>
           <!--分类-->
           <template #categories="categories">
-            <a-tag v-for="(category, index) in categories" :key="index" color="blue" style="margin-left: 1vh">
+            <a-tag v-for="(category, index) in categories" :key="index" color="blue" style="margin-left: 1vh;margin-bottom: 1vh">
               {{ category.name }}
             </a-tag>
           </template>

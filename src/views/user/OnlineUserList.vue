@@ -1,51 +1,52 @@
 <template>
-  <a-card :bordered="false">
-    <div class="table-page-search-wrapper">
-      <a-form layout="inline">
-        <a-row :gutter="48">
-          <a-col :md="6" :sm="24">
-            <a-form-item label="关键字：">
-              <a-input v-model="list.params.keyword"
-                       placeholder="请输入关键字"
-                       @keyup.enter="handleQuery()"/>
-            </a-form-item>
-          </a-col>
-          <a-col :md="6" :sm="24">
+  <div style="padding: 1rem">
+    <a-card :bordered="false">
+      <div class="table-page-search-wrapper">
+        <a-form layout="inline">
+          <a-row :gutter="48">
+            <a-col :md="6" :sm="24">
+              <a-form-item label="关键字：">
+                <a-input v-model="list.params.keyword"
+                         placeholder="请输入关键字"
+                         @keyup.enter="handleQuery()"/>
+              </a-form-item>
+            </a-col>
+            <a-col :md="6" :sm="24">
               <span class="table-page-search-submitButtons">
                 <a-space>
                   <a-button type="primary" @click="handleQuery()">查询</a-button>
                   <a-button @click="handleResetParam()">重置</a-button>
                 </a-space>
               </span>
-          </a-col>
-        </a-row>
-      </a-form>
-    </div>
+            </a-col>
+          </a-row>
+        </a-form>
+      </div>
 
-    <!-- 操作按钮区域 -->
-    <div class="table-operator" style="margin-bottom: 1rem">
-      <a-dropdown v-if="selectedRowKeys.length > 0">
-        <a-menu slot="overlay">
-          <a-menu-item key="1" @click="handleKickOutInBatch">
-            <a-icon type="delete"/>
-            强退
-          </a-menu-item>
-        </a-menu>
-        <a-button style="margin-left: 8px"> 批量操作
-          <a-icon type="down"/>
-        </a-button>
-      </a-dropdown>
-    </div>
+      <!-- 操作按钮区域 -->
+      <div class="table-operator" style="margin-bottom: 1rem">
+        <a-dropdown v-if="selectedRowKeys.length > 0">
+          <a-menu slot="overlay">
+            <a-menu-item key="1" @click="handleKickOutInBatch">
+              <a-icon type="delete"/>
+              强退
+            </a-menu-item>
+          </a-menu>
+          <a-button style="margin-left: 8px"> 批量操作
+            <a-icon type="down"/>
+          </a-button>
+        </a-dropdown>
+      </div>
 
-    <!-- table区域-begin -->
-    <div style="margin-bottom: 2rem">
-      <a-table
-          :columns="columns"
-          :dataSource="list.data"
-          :loading="list.loading"
-          :pagination="false"
-          :rowKey="onlineUser => onlineUser.token"
-          :rowSelection="{
+      <!-- table区域-begin -->
+      <div style="margin-bottom: 2rem">
+        <a-table
+            :columns="columns"
+            :dataSource="list.data"
+            :loading="list.loading"
+            :pagination="false"
+            :rowKey="onlineUser => onlineUser.token"
+            :rowSelection="{
             selectedRowKeys: selectedRowKeys,
             onChange: onSelectionChange
           }">
@@ -54,31 +55,33 @@
             <a>强退</a>
           </a-popconfirm>
         </span>
-      </a-table>
-      <!--分页-->
-      <div class="page-wrapper">
-        <a-pagination
-            :current="pagination.page"
-            :defaultPageSize="pagination.size"
-            :page-size-options="['5', '10', '20', '50', '100']"
-            :total="pagination.total"
-            class="pagination"
-            showLessItems
-            show-size-changer
-            @change="handlePageChange"
-            @showSizeChange="handlePageSizeChange"
-        >
-          <template slot="buildOptionText" slot-scope="props">
-            <span>{{ props.value }}条/页</span>
-          </template>
-        </a-pagination>
+        </a-table>
+        <!--分页-->
+        <div class="page-wrapper">
+          <a-pagination
+              :current="pagination.page"
+              :defaultPageSize="pagination.size"
+              :page-size-options="['5', '10', '20', '50', '100']"
+              :total="pagination.total"
+              class="pagination"
+              showLessItems
+              show-size-changer
+              @change="handlePageChange"
+              @showSizeChange="handlePageSizeChange"
+          >
+            <template slot="buildOptionText" slot-scope="props">
+              <span>{{ props.value }}条/页</span>
+            </template>
+          </a-pagination>
+        </div>
       </div>
-    </div>
-  </a-card>
+    </a-card>
+  </div>
 </template>
 
 <script>
 import userApi from '@/api/user/index'
+
 export default {
   name: "OnlineUserList",
   data() {
@@ -180,11 +183,11 @@ export default {
         })
       } catch (e) {
         this.$message.error('强制退出用户失败 ', e)
-      }finally {
+      } finally {
         const _this = this
         setTimeout(function () {
           _this.loadData()
-        },1000)
+        }, 1000)
       }
     },
     async handleKickOutInBatch() {
@@ -208,11 +211,11 @@ export default {
             })
           } catch (e) {
             this.$message.error('强制退出用户失败 ', e)
-          }finally {
+          } finally {
             const _this = this
             setTimeout(function () {
               _this.loadData()
-            },1000)
+            }, 1000)
           }
         }
       })
