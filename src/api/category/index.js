@@ -7,6 +7,13 @@ export function queryAll() {
     })
 }
 
+export function queryAllTree() {
+    return service({
+        url: 'api/category/queryAllTree',
+        method: 'get'
+    })
+}
+
 export function queryByIds(ids) {
     return service({
         url: 'api/category/queryByIds?ids=' + ids,
@@ -39,7 +46,7 @@ export function add(data) {
 }
 
 export function del(ids) {
-    if(typeof ids === "string"){
+    if (typeof ids === "string") {
         ids = Array.of(ids);
     }
     return service({
@@ -57,4 +64,4 @@ export function edit(data) {
     })
 }
 
-export default {queryAll, queryByIds,queryByName, page, add, edit, del}
+export default {queryAll, queryAllTree, queryByIds, queryByName, page, add, edit, del}

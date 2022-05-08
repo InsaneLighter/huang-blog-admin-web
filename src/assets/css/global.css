@@ -77,33 +77,6 @@
 .mr-2 {
     margin-right: .5rem
 }
-.card-container {
-    background: #f1f0f0
-}
-
-.card-container > .ant-tabs-card > .ant-tabs-content {
-    margin-top: -16px
-}
-
-.card-container > .ant-tabs-card > .ant-tabs-content > .ant-tabs-tabpane {
-    background: #fff;
-    padding: 16px
-}
-
-.card-container > .ant-tabs-card > .ant-tabs-bar {
-    border-color: #fff
-}
-
-.card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
-    border: none !important;
-    margin-right: 0 !important;
-    background: #f1f0f0 !important;
-}
-
-.card-container > .ant-tabs-card > .ant-tabs-bar .ant-tabs-tab-active {
-    border-color: #fff !important;
-    background: #fff !important;
-}
 
 .analysis-card-container, .analysis-card-container .meta {
     position: relative;
