@@ -117,7 +117,7 @@ export default {
     async handleListCategories() {
       try {
         this.list.loading = true
-        const response = await categoryApi.queryAll()
+        const response = await categoryApi.queryAllTree()
         this.list.data = response.data.list
       } catch (e) {
         this.$message.error('Failed to get categories', e)

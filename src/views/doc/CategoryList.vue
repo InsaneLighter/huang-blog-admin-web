@@ -113,7 +113,7 @@ export default {
         if (enableLoading) {
           this.list.loading = true
         }
-        await categoryApi.queryAll(this.list.params).then(response => {
+        await categoryApi.queryAllTree(this.list.params).then(response => {
           if (response.code === 1) {
             this.list.total = response.data.totalCount
             this.list.data = response.data.list

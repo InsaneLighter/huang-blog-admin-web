@@ -45,7 +45,7 @@ export default {
     async handleListCategories() {
       try {
         this.categories.loading = true
-        const response = await categoryApi.queryAll()
+        const response = await categoryApi.queryAllTree()
         const treeData = []
         this.setExtraData(treeData, (response.data.list)[0])
         this.categories.data = treeData
