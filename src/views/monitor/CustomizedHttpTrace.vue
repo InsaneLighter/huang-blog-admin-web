@@ -81,6 +81,21 @@
             <a-tag v-else-if="text === 'DELETE'" color="#f50">{{ text }}</a-tag>
             <span v-else>{{ text }} ms</span>
           </template>
+
+
+          <template slot="requesParams"
+                    slot-scope="text, record">
+            <div :title="text"
+                 :style="{maxWidth: '200px',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            wordWrap: 'break-word',
+            wordBreak: 'break-all' }"
+            >{{ text }}
+            </div>
+          </template>
+
         </a-table>
         <!--分页-->
         <div class="page-wrapper">
@@ -148,7 +163,7 @@ export default {
           title: '请求参数',
           align: "center",
           dataIndex: 'params',
-          scopedSlots: {customRender: 'responseStatus'}
+          scopedSlots: {customRender: 'requesParams'}
         },
         {
           title: '请求IP',
