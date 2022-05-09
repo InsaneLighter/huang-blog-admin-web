@@ -66,7 +66,7 @@
 
               <a-list-item-meta>
                 <template #description>
-                  <div class="journal-list-content" v-html="item.content"></div>
+                  <div class="journal-list-content" v-html="item.mood"></div>
                 </template>
                 <template #title>
                   <span>{{ item.weather || item.createTime }}</span>
@@ -75,6 +75,7 @@
                   <a-avatar :src="item.avatar? user.avatar : Avatar" size="large"/>
                 </template>
               </a-list-item-meta>
+              <div v-html="item.content"></div>
             </a-list-item>
           </template>
           <!--分页-->
@@ -99,35 +100,15 @@
       </div>
     </a-card>
 
-    <a-modal v-model="form.visible" :title="formTitle" :width="820">
-      <template #footer>
-        <ReactiveButton
-            :errored="form.saveErrored"
-            :loading="form.saving"
-            erroredText="发布失败"
-            loadedText="发布成功"
-            text="发布"
-            type="primary"
-            @callback="handleSaveOrUpdateCallback"
-            @click="handleSaveOrUpdate"
-        ></ReactiveButton>
-      </template>
-      <a-form-model ref="journalForm" :model="form.model" :rules="form.rules" layout="vertical">
-        <a-form-model-item prop="content">
-          <div id="editor" style="height: 520px">
-            <html-editor
-                v-if="form.visible"
-                :htmlContent.sync="form.model.content"/>
-          </div>
-        </a-form-model-item>
-      </a-form-model>
-    </a-modal>
+    <journal-create :record="record"
+                    :title="journalTitle"
+                    :visible.sync="journalCreateModalVisible"
+                    @close="onJournalCreateModalClose"></journal-create>
   </div>
 </template>
 
 <script>
-import ReactiveButton from "@/components/tools/ReactiveButton";
-import HtmlEditor from "@/components/tools/Editor";
+import JournalCreate from "@/components/journal/JournalCreate";
 import journalApi from '@/api/journal/index'
 import Avatar from '@/assets/images/avatar.jpg'
 import {datetimeFormat} from '@/utils/datetime'
@@ -136,40 +117,11 @@ import {mapGetters} from "vuex";
 export default {
   name: "Journal",
   components: {
-    HtmlEditor,
-    ReactiveButton
+    JournalCreate
   },
   data() {
     return {
       Avatar: Avatar,
-      columns: [
-        {
-          title: '天气',
-          align: "center",
-          dataIndex: 'weather'
-        },
-        {
-          title: '心情',
-          align: "center",
-          dataIndex: 'mood'
-        },
-        {
-          title: '日记内容',
-          align: "center",
-          dataIndex: 'content'
-        },
-        {
-          title: '创建时间',
-          align: "center",
-          dataIndex: 'createTime'
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          align: "center",
-          scopedSlots: {customRender: 'action'},
-        }
-      ],
       list: {
         data: [],
         loading: false,
@@ -183,15 +135,34 @@ export default {
         },
         selected: {}
       },
-      form: {
-        model: {},
-        rules: {
-          content: [{ required: true, message: '* 内容不能为空', trigger: [] }]
+      moodList: [
+        {
+          mood: 'Sunny',
+          description: '开心哦'
         },
-        visible: false,
-        saving: false,
-        saveErrored: false,
-      },
+        {
+          mood: 'Headset',
+          description: '听音乐中'
+        },
+        {
+          mood: 'ForkSpoon',
+          description: '吃饭中'
+        },
+        {
+          mood: 'CoffeeCup',
+          description: '喝咖啡哦'
+        },
+        {
+          mood: 'ShoppingCart',
+          description: '买买买'
+        },
+        {
+          mood: 'Moon',
+          description: '晚安'
+        }
+      ],
+      journalCreateModalVisible: false,
+      journalTitle: '',
       selectedRowKeys: [],
       record: {},
       defaultPageSize: 10
@@ -235,16 +206,14 @@ export default {
         this.$message.error('Failed to delete journal', e)
       }
     },
-    handleEdit: function (record) {
-      debugger
-      this.form.model = record
-      this.form.visible = true
+    handleAdd() {
+      this.journalCreateModalVisible = true
+      this.journalTitle = "新增日记"
     },
-    handleAdd: function () {
-      this.form.visible = true
-      this.form.model = {
-        content: ''
-      }
+    handleEdit(record) {
+      this.journalCreateModalVisible = true
+      this.journalTitle = "编辑日记"
+      this.record = JSON.stringify(record)
     },
     handleQuery() {
       this.selectedRowKeys = []
@@ -259,15 +228,16 @@ export default {
         if (enableLoading) {
           this.list.loading = true
         }
-        if(this.list.params.startDate){
-          this.list.params.startDate = datetimeFormat(this.list.params.startDate,'YYYY-MM-DD')
+        if (this.list.params.startDate) {
+          this.list.params.startDate = datetimeFormat(this.list.params.startDate, 'YYYY-MM-DD')
         }
-        if(this.list.params.endDate){
-          this.list.params.endDate = datetimeFormat(this.list.params.endDate,'YYYY-MM-DD')
+        if (this.list.params.endDate) {
+          this.list.params.endDate = datetimeFormat(this.list.params.endDate, 'YYYY-MM-DD')
         }
         await journalApi.page(this.list.params).then(response => {
           if (response.code === 1) {
             this.list.data = response.data.list
+            this.showMoodDesc(this.list.data)
             this.list.total = response.data.totalCount
           } else {
             this.$message.error(response.msg)
@@ -298,59 +268,20 @@ export default {
         this.list.params.startDate = this.list.params.endDate
       }
     },
-    handleOpenEditModal() {
-
+    onJournalCreateModalClose() {
+      this.handleListJournals()
     },
-    handleSaveOrUpdate(){
-      const _this = this
-      _this.$refs.journalForm.validate(valid => {
-        if (valid) {
-          _this.form.saving = true
-          if (_this.form.model.id) {
-            journalApi.edit(_this.form.model)
-                .then(response => {
-                  if(response.code === 1){
-                    _this.$message.success('修改成功！')
-                  }else {
-                    _this.$message.error(response.msg)
-                  }
-                })
-                .catch(() => {
-                  _this.form.saveErrored = true
-                })
-                .finally(() => {
-                  setTimeout(() => {
-                    _this.form.saving = false
-                  }, 400)
-                })
-          } else {
-            journalApi.add(_this.form.model)
-                .then(response => {
-                  if(response.code === 1){
-                    _this.$message.success('新增日记成功！')
-                  }else {
-                    _this.$message.error(response.msg)
-                  }
-                })
-                .catch(() => {
-                  _this.form.saveErrored = true
-                })
-                .finally(() => {
-                  setTimeout(() => {
-                    _this.form.saving = false
-                  }, 400)
-                })
-          }
-        }
-      })
-    },
-    handleSaveOrUpdateCallback(){
-      if (this.form.saveErrored) {
-        this.form.saveErrored = false
-      } else {
-        this.form.visible = false
-        this.handleListJournals()
+    showMoodDesc(data){
+      if (data != null && data.length > 0) {
+        data.forEach(i => {
+          this.moodList.forEach(item => {
+            if(item.mood === i.mood){
+              i.mood = item.description
+            }
+          })
+        })
       }
+
     }
   }
 }
@@ -422,11 +353,13 @@ export default {
 .ant-calendar-picker {
   width: 100% !important;
 }
+
 .journal-list-content {
   img {
     width: 50% !important;
   }
 }
+
 /deep/ .ant-modal-body {
   background-color: #f0f2f5 !important;
 }

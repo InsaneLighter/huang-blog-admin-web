@@ -1,6 +1,6 @@
 <template>
   <div style="padding: 1rem">
-    <a-card :bodyStyle="{ padding: '16px' }" :bordered="false">
+    <a-card :bordered="false">
       <div class="table-page-search-wrapper">
         <a-form layout="inline">
           <a-row :gutter="48">
