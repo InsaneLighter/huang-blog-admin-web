@@ -43,7 +43,6 @@
         </a-table>
       </div>
 
-      <!--    <category ref="modalForm" @ok="modalFormOk"></category>-->
       <CategoryCreate :operate="operate"
                       :record="record"
                       :title="categoryTitle"
@@ -226,8 +225,7 @@ export default {
       this.categoryCreateModalVisible = true
       this.operate = true
       this.categoryTitle = "编辑分类"
-      const tempRecord = record;
-      this.record = tempRecord
+      this.record = JSON.stringify(record)
     },
     handleAddSub(record) {
       this.categoryCreateModalVisible = true

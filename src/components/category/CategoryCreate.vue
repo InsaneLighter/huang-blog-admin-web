@@ -59,7 +59,6 @@ export default {
       default: false
     },
     record: {
-      type: Object,
       default: undefined
     }
   },
@@ -105,11 +104,10 @@ export default {
         this.$nextTick(() => {
           this.$refs.nameInput.focus()
         })
-      }
-    },
-    record(value){
-      if (this.title === '编辑分类') {
-        this.form.model = this.record
+
+        if (this.title === '编辑分类') {
+          this.form.model = JSON.parse(this.record)
+        }
       }
     }
   },
