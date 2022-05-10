@@ -16,6 +16,7 @@
                 <a-date-picker
                     v-model:value="list.params.startDate"
                     :disabled-date="disabledDate"
+                    @change="startDateChange"
                     placeholder="开始日期"
                     valueFormat=""
                 />
@@ -66,7 +67,7 @@
 
               <a-list-item-meta>
                 <template #description>
-                  <div class="journal-list-content" v-html="item.mood"></div>
+                  <div class="journal-list-content" v-html="item.mood +'&nbsp;&nbsp;&nbsp;创建于'+item.createTime"></div>
                 </template>
                 <template #title>
                   <span>{{ item.weather || item.createTime }}</span>
@@ -228,12 +229,6 @@ export default {
         if (enableLoading) {
           this.list.loading = true
         }
-        if (this.list.params.startDate) {
-          this.list.params.startDate = datetimeFormat(this.list.params.startDate, 'YYYY-MM-DD')
-        }
-        if (this.list.params.endDate) {
-          this.list.params.endDate = datetimeFormat(this.list.params.endDate, 'YYYY-MM-DD')
-        }
         await journalApi.page(this.list.params).then(response => {
           if (response.code === 1) {
             this.list.data = response.data.list
@@ -257,14 +252,24 @@ export default {
     },
     handleResetParam() {
       this.list.params.keyword = undefined
+      this.list.params.startDate = undefined
+      this.list.params.endDate = undefined
       this.selectedRowKeys = []
       this.handlePageChange(1)
     },
     disabledDate(currentDate) {
       return this.list.params.endDate ? currentDate > this.list.params.endDate : false
     },
-    endDateChange() {
-      if (this.list.params.endDate < this.list.params.startDate) {
+    startDateChange(date, dateString) {
+      if (dateString === '') {
+        this.list.params.startDate = ''
+      }
+    },
+    endDateChange(date, dateString) {
+      if (dateString === '') {
+        this.list.params.endDate = ''
+      }
+      if (this.list.params.endDate && this.list.params.endDate < this.list.params.startDate) {
         this.list.params.startDate = this.list.params.endDate
       }
     },
@@ -281,7 +286,6 @@ export default {
           })
         })
       }
-
     }
   }
 }

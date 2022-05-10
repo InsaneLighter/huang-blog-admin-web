@@ -152,7 +152,7 @@ export default {
             journalApi.add(_this.form.model)
                 .then(response => {
                   if(response.code === 1){
-                    _this.$message.success('新增日记成功！')
+                    _this.$message.success('发表成功！')
                   }else {
                     _this.$message.error(response.msg)
                   }
