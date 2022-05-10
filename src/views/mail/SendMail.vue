@@ -28,6 +28,7 @@
         <a-date-picker
             v-model:value="email.model.sentDate"
             show-time
+            placeholder="发送时间"
             format="YYYY-MM-DD HH:mm:ss"
             value-format="YYYY-MM-DD HH:mm:ss"
         />
