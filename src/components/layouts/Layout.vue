@@ -9,7 +9,6 @@
         </transition>
       </a-layout-content>
     </a-layout>
-    <global-footer></global-footer>
   </a-layout>
 </template>
 

@@ -2,7 +2,7 @@
   <div style="padding: 1rem">
     <a-row :gutter="12" align="middle" type="flex">
       <a-col :span="24" class="pb-3">
-        <a-card :bodyStyle="{ padding: '16px' }" :bordered="false">
+        <a-card :bodyStyle="{ padding: '14px' }" :bordered="false">
           <div class="table-page-search-wrapper">
             <a-form layout="inline">
               <a-row :gutter="48">
@@ -616,7 +616,7 @@ button {
 
 .attachments-group-item, .photos-group-item {
   padding: 0;
-  height: 130px
+  height: 100px
 }
 
 .attachments-group-item-img, .photos-group-item-img {
@@ -650,7 +650,6 @@ button {
 
 .border-blue-600 {
   --tw-border-opacity: 1;
-  //border-color: rgb(37 99 235/var(--tw-border-opacity))
   border-color: #1890ff;
 }
 
@@ -695,5 +694,9 @@ button {
   transition-property: all;
   transition-timing-function: cubic-bezier(.4, 0, .2, 1);
   transition-duration: .15s
+}
+
+/deep/ .ant-list-grid .ant-col > .ant-list-item {
+  margin-bottom: 10px !important;
 }
 </style>

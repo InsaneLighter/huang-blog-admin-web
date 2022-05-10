@@ -16,7 +16,9 @@
                 <a-date-picker
                     v-model:value="list.params.startDate"
                     :disabled-date="disabledDate"
+                    @change="startDateChange"
                     placeholder="开始日期"
+                    valueFormat=""
                 />
               </a-form-item>
             </a-col>
@@ -295,11 +297,19 @@ export default {
     disabledDate(currentDate) {
       return this.list.params.endDate ? currentDate > this.list.params.endDate : false
     },
-    endDateChange() {
-      if (this.list.params.endDate < this.list.params.startDate) {
+    startDateChange(date, dateString) {
+      if (dateString === '') {
+        this.list.params.startDate = ''
+      }
+    },
+    endDateChange(date, dateString) {
+      if (dateString === '') {
+        this.list.params.endDate = ''
+      }
+      if (this.list.params.endDate && this.list.params.endDate < this.list.params.startDate) {
         this.list.params.startDate = this.list.params.endDate
       }
-    }
+    },
   }
 }
 </script>
