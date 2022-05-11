@@ -2,28 +2,28 @@ import {service, transformGetData} from '@/utils/request'
 
 export function queryAll() {
     return service({
-        url: 'api/category/queryAll',
+        url: 'api/admin/category/queryAll',
         method: 'get'
     })
 }
 
 export function queryAllTree() {
     return service({
-        url: 'api/category/queryAllTree',
+        url: 'api/admin/category/queryAllTree',
         method: 'get'
     })
 }
 
 export function queryByIds(ids) {
     return service({
-        url: 'api/category/queryByIds?ids=' + ids,
+        url: 'api/admin/category/queryByIds?ids=' + ids,
         method: 'get'
     })
 }
 
 export function queryByName(name) {
     return service({
-        url: 'api/category/queryByName/' + name,
+        url: 'api/admin/category/queryByName/' + name,
         method: 'get'
     })
 }
@@ -31,7 +31,7 @@ export function queryByName(name) {
 export function page(data) {
     let params = transformGetData(data);
     return service({
-        url: 'api/category/list' + params,
+        url: 'api/admin/category' + params,
         method: 'get'
     })
 }
@@ -39,7 +39,7 @@ export function page(data) {
 
 export function add(data) {
     return service({
-        url: 'api/category/save',
+        url: 'api/admin/category',
         method: 'post',
         data
     })
@@ -50,7 +50,7 @@ export function del(ids) {
         ids = Array.of(ids);
     }
     return service({
-        url: 'api/category/delete',
+        url: 'api/admin/category',
         method: 'delete',
         data: ids
     })
@@ -58,7 +58,7 @@ export function del(ids) {
 
 export function edit(data) {
     return service({
-        url: 'api/category/update',
+        url: 'api/admin/category',
         method: 'put',
         data
     })

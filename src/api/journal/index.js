@@ -3,14 +3,14 @@ import {service, transformGetData} from '@/utils/request'
 export function page(data) {
     let params = transformGetData(data);
     return service({
-        url: 'api/journal/list' + params,
+        url: 'api/admin/journal' + params,
         method: 'get'
     })
 }
 
 export function add(data) {
     return service({
-        url: 'api/journal/save',
+        url: 'api/admin/journal',
         method: 'post',
         data
     })
@@ -21,7 +21,7 @@ export function del(ids) {
         ids = Array.of(ids);
     }
     return service({
-        url: 'api/journal/delete',
+        url: 'api/admin/journal',
         method: 'delete',
         data: ids
     })
@@ -29,7 +29,7 @@ export function del(ids) {
 
 export function edit(data) {
     return service({
-        url: 'api/journal/update',
+        url: 'api/admin/journal',
         method: 'put',
         data
     })
@@ -39,7 +39,7 @@ export function uploadAction(file) {
     const formData = new FormData();
     formData.append('file', file)
     return service({
-        url: 'api/journal/upload',
+        url: 'api/admin/journal/upload',
         data: formData,
         method: 'post',
         headers: {

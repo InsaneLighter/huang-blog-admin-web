@@ -2,49 +2,49 @@ import {service} from '@/utils/request'
 
 export function getRedisInfo() {
     return service({
-        url: 'api/redis/info',
+        url: 'api/admin/redis/info',
         method: 'get'
     })
 }
 
 export function getKeysSize() {
     return service({
-        url: 'api/redis/keysSize',
+        url: 'api/admin/redis/keysSize',
         method: 'get'
     })
 }
 
 export function getKeysSizeReport() {
     return service({
-        url: 'api/redis/keysSizeForReport',
+        url: 'api/admin/redis/keysSizeForReport',
         method: 'get'
     })
 }
 
 export function memoryForReport() {
     return service({
-        url: 'api/redis/memoryForReport',
+        url: 'api/admin/redis/memoryForReport',
         method: 'get'
     })
 }
 
 export function infoForReport() {
     return service({
-        url: 'api/redis/infoForReport',
+        url: 'api/admin/redis/infoForReport',
         method: 'get'
     })
 }
 
 export function memoryInfo() {
     return service({
-        url: 'api/redis/memoryInfo',
+        url: 'api/admin/redis/memoryInfo',
         method: 'get'
     })
 }
 
 export function queryDiskInfo() {
     return service({
-        url: 'api/redis/queryDiskInfo',
+        url: 'api/admin/redis/queryDiskInfo',
         method: 'get'
     })
 }

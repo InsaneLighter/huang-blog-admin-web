@@ -134,7 +134,7 @@ export const routerMap = [
                         }
                     },
                     {
-                        path: '/user/list',
+                        path: '/user',
                         name: 'Users',
                         component: (resolve) => require(['@/views/user/UserList'], resolve),
                         meta: {

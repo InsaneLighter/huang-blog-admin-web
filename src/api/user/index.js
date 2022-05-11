@@ -3,14 +3,14 @@ import {service, transformGetData} from '@/utils/request'
 export function page(data) {
     let params = transformGetData(data);
     return service({
-        url: 'api/user/list' + params,
+        url: 'api/admin/user' + params,
         method: 'get'
     })
 }
 
 export function add(data) {
     return service({
-        url: 'api/user/save',
+        url: 'api/admin/user',
         method: 'post',
         data
     })
@@ -21,7 +21,7 @@ export function del(ids) {
         ids = Array.of(ids);
     }
     return service({
-        url: 'api/user/delete',
+        url: 'api/admin/user',
         method: 'delete',
         data: ids
     })
@@ -29,7 +29,7 @@ export function del(ids) {
 
 export function edit(data) {
     return service({
-        url: 'api/user/update',
+        url: 'api/admin/user',
         method: 'put',
         data
     })
@@ -39,7 +39,7 @@ export function uploadAction(file) {
     const formData = new FormData();
     formData.append('file', file)
     return service({
-        url: 'api/user/upload',
+        url: 'api/admin/user/upload',
         data: formData,
         method: 'post',
         headers: {
@@ -50,14 +50,14 @@ export function uploadAction(file) {
 
 export function getCurrentUser() {
     return service({
-        url: 'api/user/getCurrentUser',
+        url: 'api/admin/user/getCurrentUser',
         method: 'get'
     })
 }
 
 export function updatePwd(data) {
     return service({
-        url: 'api/user/updatePwd',
+        url: 'api/admin/user/updatePwd',
         method: 'put',
         data
     })
@@ -66,7 +66,7 @@ export function updatePwd(data) {
 export function queryAllOnlineUser(data) {
     let params = transformGetData(data);
     return service({
-        url: 'api/user/queryAllOnlineUser' + params,
+        url: 'api/admin/user/queryAllOnlineUser' + params,
         method: 'get'
     })
 }
@@ -76,7 +76,7 @@ export function kickOut(ids) {
         ids = Array.of(ids);
     }
     return service({
-        url: 'api/user/kickOut',
+        url: 'api/admin/user/kickOut',
         method: 'delete',
         data: ids
     })
@@ -84,7 +84,7 @@ export function kickOut(ids) {
 
 export function kickOutForUsername(data) {
     return service({
-        url: 'api/user/kickOutByUserName',
+        url: 'api/admin/user/kickOutByUserName',
         method: 'delete',
         data
     })
@@ -92,7 +92,7 @@ export function kickOutForUsername(data) {
 
 export function resetPwd(data) {
     return service({
-        url: 'api/user/resetPwd',
+        url: 'api/admin/user/resetPwd',
         method: 'put',
         data
     })

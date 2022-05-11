@@ -2,21 +2,21 @@ import {service, transformGetData} from '@/utils/request'
 
 export function queryAll() {
     return service({
-        url: 'api/tag/queryAll',
+        url: 'api/admin/tag/queryAll',
         method: 'get'
     })
 }
 
 export function queryByIds(ids) {
     return service({
-        url: 'api/tag/queryByIds?ids=' + ids,
+        url: 'api/admin/tag/queryByIds?ids=' + ids,
         method: 'get'
     })
 }
 
 export function queryByName(name) {
     return service({
-        url: 'api/tag/queryByName/' + name,
+        url: 'api/admin/tag/queryByName/' + name,
         method: 'get'
     })
 }
@@ -24,7 +24,7 @@ export function queryByName(name) {
 export function page(data) {
     let params = transformGetData(data);
     return service({
-        url: 'api/tag/list' + params,
+        url: 'api/admin/tag' + params,
         method: 'get'
     })
 }
@@ -32,7 +32,7 @@ export function page(data) {
 
 export function add(data) {
     return service({
-        url: 'api/tag/save',
+        url: 'api/admin/tag',
         method: 'post',
         data
     })
@@ -43,7 +43,7 @@ export function del(ids) {
         ids = Array.of(ids);
     }
     return service({
-        url: 'api/tag/delete',
+        url: 'api/admin/tag',
         method: 'delete',
         data: ids
     })
@@ -51,7 +51,7 @@ export function del(ids) {
 
 export function edit(data) {
     return service({
-        url: 'api/tag/update',
+        url: 'api/admin/tag',
         method: 'put',
         data
     })

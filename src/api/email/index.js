@@ -2,7 +2,7 @@ import { service } from '@/utils/request'
 
 export function sendEmail(data) {
     return service({
-        url: 'api/mail/send',
+        url: 'api/admin/mail/send',
         method: 'post',
         data
     })
@@ -12,7 +12,7 @@ export function uploadAction(file) {
     const formData = new FormData();
     formData.append('file', file)
     return service({
-        url: 'api/mail/upload',
+        url: 'api/admin/mail/upload',
         data: formData,
         method: 'post',
         headers: {

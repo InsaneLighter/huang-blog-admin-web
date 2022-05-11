@@ -3,7 +3,7 @@ import {service, transformGetData} from '@/utils/request'
 export function page(data) {
     let params = transformGetData(data);
     return service({
-        url: 'api/log/list' + params,
+        url: 'api/admin/log' + params,
         method: 'get'
     })
 }
@@ -13,7 +13,7 @@ export function del(ids) {
         ids = Array.of(ids);
     }
     return service({
-        url: 'api/log/delete',
+        url: 'api/admin/log',
         method: 'delete',
         data: ids
     })
