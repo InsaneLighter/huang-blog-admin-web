@@ -62,10 +62,17 @@
         </analysis-card>
       </a-col>
     </a-row>
-
+    <a-row :gutter="24">
+      <a-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24" class="mb-3">
+        <TodoListCard :style="{ marginTop: '24px' }"/>
+      </a-col>
+      <a-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24" class="mb-3">
+        <JournalPublishCard :style="{ marginTop: '24px' }"/>
+      </a-col>
+    </a-row>
     <a-row>
       <a-col :span="24">
-        <a-card :loading="loading" :bordered="false" title="最近一周访问量统计" :style="{ marginTop: '24px' }">
+        <a-card :loading="loading" :bordered="false" title="最近一周访问量统计" :style="{ marginTop: '12px' }">
           <a-row>
             <a-col :span="6">
               <head-info title="今日IP" :content="logInfo.todayIp"></head-info>
@@ -104,12 +111,16 @@ import AnalysisCard from '@/components/tools/AnalysisCard'
 import LineChartMulti from '@/components/chart/LineChartMulti'
 import HeadInfo from '@/components/tools/HeadInfo'
 import statisticsApi from '@/api/statistics/index'
+import JournalPublishCard from "@/components/tools/JournalPublishCard";
+import TodoListCard from "@/components/tools/TodoListCard";
 export default {
   name: "Dashboard",
   components: {
     AnalysisCard,
     LineChartMulti,
-    HeadInfo
+    HeadInfo,
+    JournalPublishCard,
+    TodoListCard
   },
   data() {
     return {
