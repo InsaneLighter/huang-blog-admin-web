@@ -15,5 +15,7 @@ module.exports = {
   /**
    * @description 记住密码状态下的密码在Cookie中存储的天数，默认1天s
    */
-  passCookieExpires: 1
+  passCookieExpires: 1,
+
+  blogFrontedUrl: "https://huanghong.top"
 }

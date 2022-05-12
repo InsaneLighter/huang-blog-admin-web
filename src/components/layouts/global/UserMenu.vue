@@ -1,5 +1,12 @@
 <template>
   <div class="user-wrapper">
+    <a :href="url" target="_blank">
+      <a-tooltip placement="bottom" title="点击跳转到首页">
+        <span class="action">
+          <a-icon type="link" />
+        </span>
+      </a-tooltip>
+    </a>
     <header-comment class="action" />
     <a-dropdown>
       <span class="action ant-dropdown-link user-dropdown-menu">
@@ -27,6 +34,8 @@ import Avatar from '@/assets/images/avatar.jpg'
 import HeaderComment from "./HeaderComment";
 import {logout} from "@/api/login";
 import {removeToken} from "@/utils/auth";
+import Config from '@/default-settings'
+
 export default {
   name: "UserMenu",
   components: {
@@ -39,7 +48,8 @@ export default {
   },
   data(){
     return {
-      Avatar: Avatar
+      Avatar: Avatar,
+      url: Config.blogFrontedUrl
     }
   },
   methods: {
