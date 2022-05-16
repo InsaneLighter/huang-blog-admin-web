@@ -93,6 +93,16 @@ export const routerMap = [
                 }
             },
             {
+                path: '/message',
+                name: 'Message',
+                component: (resolve) => require(['@/views/message/Message'], resolve),
+                meta: {
+                    title: '留言板',
+                    icon: 'meh',
+                    hideHead: false
+                }
+            },
+            {
                 path: '/attachment',
                 name: 'Attachment',
                 component: (resolve) => require(['@/views/attachment/AttachmentList'], resolve),
@@ -134,7 +144,7 @@ export const routerMap = [
                         }
                     },
                     {
-                        path: '/user',
+                        path: '/user/list',
                         name: 'Users',
                         component: (resolve) => require(['@/views/user/UserList'], resolve),
                         meta: {

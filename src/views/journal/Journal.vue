@@ -112,7 +112,6 @@
 import JournalCreate from "@/components/journal/JournalCreate";
 import journalApi from '@/api/journal/index'
 import Avatar from '@/assets/images/avatar.jpg'
-import {datetimeFormat} from '@/utils/datetime'
 import {mapGetters} from "vuex";
 
 export default {

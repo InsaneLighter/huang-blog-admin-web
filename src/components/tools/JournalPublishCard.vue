@@ -2,7 +2,7 @@
   <a-card :bodyStyle="{ padding: '16px' }" :bordered="false">
     <template #title>
       速记
-      <a-tooltip title="内容将保存到日志中">
+      <a-tooltip title="内容将保存到日记中">
         <router-link :to="{ name: 'Journal' }" style="color: inherit">
           <a-icon class="cursor-pointer hover:text-blue-400 transition-all" type="info-circle-o" />
         </router-link>
