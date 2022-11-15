@@ -69,6 +69,9 @@
       <a-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24" class="mb-3">
         <JournalPublishCard :style="{ marginTop: '24px' }"/>
       </a-col>
+      <a-col :lg="8" :md="12" :sm="24" :xl="8" :xs="24" class="mb-3">
+        <Commemoration :style="{ marginTop: '24px' }"/>
+      </a-col>
     </a-row>
     <a-row>
       <a-col :span="24">
@@ -113,6 +116,7 @@ import HeadInfo from '@/components/tools/HeadInfo'
 import statisticsApi from '@/api/statistics/index'
 import JournalPublishCard from "@/components/tools/JournalPublishCard";
 import TodoListCard from "@/components/tools/TodoListCard";
+import Commemoration from "@/components/tools/Commemoration";
 export default {
   name: "Dashboard",
   components: {
@@ -120,7 +124,8 @@ export default {
     LineChartMulti,
     HeadInfo,
     JournalPublishCard,
-    TodoListCard
+    TodoListCard,
+    Commemoration
   },
   data() {
     return {
