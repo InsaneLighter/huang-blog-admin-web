@@ -44,7 +44,7 @@ export default {
   name: 'ImageUpload',
   data() {
     return {
-      uploadAction: "/api/user/upload",
+      uploadAction: "/api/admin/user/upload",
       uploadLoading: false,
       picUrl: false,
       headers: {},

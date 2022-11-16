@@ -43,6 +43,7 @@
               placeholder="请选择生日"
               v-model="model.birthday"
               :format="dateFormat"
+              value-format="YYYY-MM-DD"
               :getCalendarContainer="node => node.parentNode"/>
         </a-form-model-item>
 
