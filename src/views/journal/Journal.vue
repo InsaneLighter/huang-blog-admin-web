@@ -76,7 +76,7 @@
                   <a-avatar :src="item.avatar? user.avatar : Avatar" size="large"/>
                 </template>
               </a-list-item-meta>
-              <div v-html="item.content"></div>
+              <div v-html="item.content" class="content"></div>
             </a-list-item>
           </template>
           <!--分页-->
@@ -365,5 +365,11 @@ export default {
 
 /deep/ .ant-modal-body {
   background-color: #f0f2f5 !important;
+}
+
+.content {
+  word-break: break-all;
+  overflow-y: auto;
+  height: 150px;
 }
 </style>

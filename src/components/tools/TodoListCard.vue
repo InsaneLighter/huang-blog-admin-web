@@ -10,12 +10,13 @@
       <div class="addItem">
 
         <a-input-group compact>
-          <a-select v-model="type" style="width: 20%">
-            <a-select-option v-for="(item,index) in typeList" :key="index" :value="item.status">{{item.name}}</a-select-option>
+          <a-select v-model="status" style="width: 20%">
+            <a-select-option v-for="(item,index) in statusList" :key="index" :value="item.status">{{item.name}}</a-select-option>
           </a-select>
           <a-input-search
               style="width: 80%"
               v-model="value"
+              maxlength="50"
               allowClear
               placeholder="想要干点什么呢"
               size="default"
@@ -34,8 +35,16 @@
           <li v-for="(item,index) in todoList" :key="index">
             <span class="todoContent"
                   :style="{textDecoration: item.status === 1? 'line-through':'none'}"
-                  @click="completeTodoItem(item)">{{ item.content }}</span>
-            <a-icon type="delete" class="deleteBtn" @click="deleteTodoItem(item,index)"></a-icon>
+                  @click="completeTodoItem(item)">{{ item.content.length > 20 ? item.content.substr(0,20)+"...":item.content }}</span>
+            <a-icon type="delete" class="deleteBtn" @click="deleteTodoItem(item)" v-if="item.status === 0"></a-icon>
+            <a-icon type="redo" class="toolIcon" @click="redoTodoItem(item)" v-if="item.status === 1"></a-icon>
+            <a-icon type="undo" class="toolIcon" @click="revokeTodoItem(item)" v-if="item.status === -1"></a-icon>
+            <a-tooltip placement="top" v-if="item.content.length > 20">
+              <template #title>
+                <span>{{ item.content }}</span>
+              </template>
+              <a-icon type="ellipsis" class="toolIcon"></a-icon>
+            </a-tooltip>
           </li>
           <a-empty :description="false" v-if="todoList.length === 0" style="margin-top: 5vh"/>
         </ul>
@@ -45,27 +54,30 @@
 </template>
 
 <script>
+import todoApi from '@/api/todo/index'
+import attachmentApi from "@/api/attachment";
 export default {
   name: "TodoListCard",
   data() {
     return {
-      typeList: [
-        {name: "已删除", status: -1},
+      statusList: [
+        {name: "全部", status: ''},
         {name: "待完成", status: 0},
-        {name: "已完成", status: 1}
+        {name: "已完成", status: 1},
+        {name: "回收站", status: -1}
       ],
-      type: 0,
+      status: 0,
       value: '',
       todoList: [
         {
           id: 1,
-          content: '我最喜欢张蝶啦！',
-          status: 0
+          content: '每天呢，起床的第一件事情就是需要去对张蝶说我爱你，然后我就会非常的开心，我相信张蝶也是开开心心的哦~~~~~',
+          status: 1
         },
         {
           id: 2,
           content: '我最喜欢张蝶啦！',
-          status: 0
+          status: -1
         },
         {
           id: 3,
@@ -85,20 +97,128 @@ export default {
       ]
     }
   },
+  watch: {
+    status(value) {
+      if (value) {
+        this.loadData(value)
+      }
+    }
+  },
   methods: {
+    loadData(){
+      try {
+        todoApi.queryAll({status: this.status}).then(response => {
+          if (response.code !== 1) {
+            this.$message.error(response.msg)
+          }
+        })
+      } catch (e) {
+        this.$message.error('Failed to load list', e)
+      }
+    },
     addItem() {
       if (!this.value) {
         this.$message.error('输入内容为空！')
         return
       }
-      this.todoList.push({content: this.value, status: 0})
-      this.value = ''
+      try {
+        todoApi.add(this.value).then(response => {
+          if (response.code === 1) {
+            this.$message.success('添加待办任务成功！')
+          } else {
+            this.$message.error(response.msg)
+          }
+        }).then(res => {
+          this.loadData()
+          this.value = ''
+        })
+      } catch (e) {
+        this.$message.error('Failed to add task', e)
+      }
     },
     completeTodoItem(item) {
-      item.status = 1
+      try {
+        item.status = 1
+        todoApi.edit(item).then(response => {
+          if (response.code === 1) {
+            this.$message.success('完成任务！')
+          } else {
+            this.$message.error(response.msg)
+          }
+        }).then(res => {
+          this.loadData()
+        })
+      } catch (e) {
+        this.$message.error('Failed to complete task', e)
+      }
     },
-    deleteTodoItem(item, index) {
-      this.todoList.splice(index, 1)
+    deleteTodoItem(item) {
+      try {
+        if(item.status === -1){
+          this.$confirm({
+            title: '提示',
+            content: '确定删除该任务？',
+            okText: '确定',
+            cancelText: '取消',
+            onOk: async () => {
+              todoApi.del(item.id).then(response => {
+                if (response.code === 1) {
+                  this.$message.success('删除任务成功！')
+                } else {
+                  this.$message.error(response.msg)
+                }
+              }).then(res => {
+                this.loadData()
+              })
+            }
+          })
+        }else {
+          item.status = -1
+          todoApi.edit(item).then(response => {
+            if (response.code === 1) {
+              this.$message.success('加入回收站成功！')
+            } else {
+              this.$message.error(response.msg)
+            }
+          }).then(res => {
+            this.loadData()
+          })
+        }
+      } catch (e) {
+        this.$message.error('Failed to complete task', e)
+      }
+    },
+    redoTodoItem(item){
+      try {
+        item.status = 0
+        todoApi.edit(item).then(response => {
+          if (response.code === 1) {
+            this.$message.success('重新添加任务成功！')
+          } else {
+            this.$message.error(response.msg)
+          }
+        }).then(res => {
+          this.loadData()
+        })
+      } catch (e) {
+        this.$message.error('Failed to complete task', e)
+      }
+    },
+    revokeTodoItem(item){
+      try {
+        item.status = -1
+        todoApi.edit(item).then(response => {
+          if (response.code === 1) {
+            this.$message.success('重新添加任务成功！')
+          } else {
+            this.$message.error(response.msg)
+          }
+        }).then(res => {
+          this.loadData()
+        })
+      } catch (e) {
+        this.$message.error('Failed to complete task', e)
+      }
     }
   }
 }
@@ -120,15 +240,15 @@ export default {
 ul {
   margin: 0;
   padding: 0;
-  height: 24.7vh;
+  height: 230px;
   overflow-y: auto;
 }
 
 li {
   list-style: none;
   width: 98%;
-  height: 4vh;
-  line-height: 3.9vh;
+  height: 40px;
+  line-height: 40px;
   border: 1px solid #9b9ea0;
   margin-bottom: 20px;
   border-radius: 25px;
@@ -162,7 +282,7 @@ li:hover > span {
 
 .deleteBtn {
   float: right;
-  line-height: 4.4vh;
+  line-height: 43px;
   margin-right: 16px;
 }
 
@@ -171,10 +291,13 @@ li:hover > span {
   color: #ff6565;
 }
 
-.dash {
+.toolIcon {
   float: right;
-  line-height: 4.4vh;
+  line-height: 43px;
   margin-right: 15px;
+}
+.toolIcon:hover {
+  color: #ff8e65;
 }
 
 ::-webkit-scrollbar {

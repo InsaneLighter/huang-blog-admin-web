@@ -8,11 +8,14 @@
         </router-link>
       </a-tooltip>
     </template>
-    <a-form-model ref="journalForm" :model="form.model" :rules="form.rules" layout="vertical">
-      <a-form-model-item prop="sourceContent">
+    <a-form-model ref="journalForm"
+                  :model="form.model"
+                  :rules="form.rules"
+                  layout="vertical">
+      <a-form-model-item prop="content">
         <a-input
           v-model="form.model.content"
-          :autoSize="{ minRows: 8 }"
+          :autoSize="{ minRows: 8,maxRows: 8 }"
           placeholder="写点什么吧..."
           type="textarea"
         />
@@ -49,7 +52,9 @@ export default {
       form: {
         model: {},
         rules: {
-          content: [{ required: true, message: '* 内容不能为空', trigger: ['change'] }]
+          content: [
+            { required: true, message: '* 内容不能为空', trigger: ['change'] },
+            { max: 255, message: '* 内容的字符长度不能超过 255', trigger: ['change'] }]
         },
         saving: false,
         errored: false
@@ -59,7 +64,7 @@ export default {
   methods: {
     handleCreateJournalClick() {
       const _this = this
-      _this.$refs.journalForm.validate(valid => {
+      this.$refs.journalForm.validate(valid => {
         if (valid) {
           _this.form.saving = true
           _this.form.model.mood = 'Sunny'

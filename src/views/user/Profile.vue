@@ -3,7 +3,7 @@
     <a-row :gutter="12">
       <a-col :lg="10" :md="24" class="pb-3">
         <a-card :bodyStyle="{ padding: '16px' }" :bordered="false">
-          <div class="mb-6 text-center">
+          <div class="mb-6 text-center"  style="min-height: 176px">
             <a-tooltip :trigger="['hover']" placement="right" title="点击可修改头像">
               <a-avatar
                   :size="104"
@@ -20,7 +20,7 @@
           <div>
             <p class="mb-3">
               <a-icon class="mr-3" type="mail"/>
-              {{ userForm.model.email }}
+              {{ userForm.model.email || '--'}}
             </p>
             <p class="mb-3">
               <a-icon class="mr-3" type="calendar"/>
@@ -92,6 +92,7 @@
                     sm: { span: 15 },
                     xs: { span: 24 }
                   }"
+                    style="min-height: 430px;"
                     layout="vertical"
                 >
                   <a-form-model-item label="原密码：" prop="oldPassword">

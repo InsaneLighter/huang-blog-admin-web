@@ -7,7 +7,7 @@
     >
       <template #extra>
         <a-space>
-          <a-button type="primary" @click="postSettingVisible = true">发布</a-button>
+          <a-button type="primary" @click="toPublish">发布</a-button>
         </a-space>
       </template>
     </page-view>
@@ -123,6 +123,13 @@ export default {
     document.removeEventListener('keydown', this.onRegisterSaveShortcut)
   },
   methods: {
+    toPublish(){
+      if (this.postToStage.content.length === 0) {
+        this.$message.error("当前文章内容为空！")
+        return
+      }
+      this.postSettingVisible = true
+    },
     handleSaveDraft: debounce(async function () {
       if (this.postToStage.id) {
         try {
@@ -259,7 +266,7 @@ export default {
 }
 
 .page-head {
-  margin-top: 0px !important;
+  margin-top: 0 !important;
 }
 
 .row {
