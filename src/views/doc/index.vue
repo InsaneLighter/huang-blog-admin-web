@@ -115,8 +115,8 @@
                 :title="'点击访问【' + text + '】'"
                 placement="top"
             >
-              <a :href="record.fullPath" class="no-underline" target="_blank">
-                {{ text }}
+              <a class="no-underline" href="javascript:void(0);" @click="handleEditClick(record)">
+              {{ text }}
               </a>
             </a-tooltip>
             <a-tooltip
@@ -124,7 +124,7 @@
                 :title="'点击预览【' + text + '】'"
                 placement="top"
             >
-              <a class="no-underline" href="javascript:void(0);" @click="handlePreview(record.id)">
+              <a class="no-underline" href="javascript:void(0);" @click="handleEditClick(record)">
                 {{ text }}
               </a>
             </a-tooltip>

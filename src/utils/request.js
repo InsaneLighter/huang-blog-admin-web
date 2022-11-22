@@ -1,7 +1,6 @@
 import axios from 'axios'
 import router from '@/router/index'
 import {notification} from 'ant-design-vue'
-import store from '../store'
 import Config from '@/default-settings'
 import {getToken,removeToken} from '@/utils/auth'
 import { logout } from "@/api/login";
