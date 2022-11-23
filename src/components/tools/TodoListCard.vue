@@ -16,7 +16,7 @@
           <a-input-search
               style="width: 80%"
               v-model="value"
-              maxlength="50"
+              :max-length="parseInt('50')"
               allowClear
               placeholder="想要干点什么呢"
               size="default"
@@ -31,14 +31,13 @@
 
       <div class="todoList">
         <ul>
-          <!--TODO 长度26  超过... 查看详情-->
           <li v-for="(item,index) in todoList" :key="index">
             <span class="todoContent"
                   :style="{textDecoration: item.status === 1? 'line-through':'none'}"
                   @click="completeTodoItem(item)">{{ item.content.length > 20 ? item.content.substr(0,20)+"...":item.content }}</span>
-            <a-icon type="delete" class="deleteBtn" @click="deleteTodoItem(item)" v-if="item.status === 0"></a-icon>
+            <a-icon type="delete" class="deleteBtn" @click="deleteTodoItem(item)" v-if="item.status === 0 || item.status === -1"></a-icon>
             <a-icon type="redo" class="toolIcon" @click="redoTodoItem(item)" v-if="item.status === 1"></a-icon>
-            <a-icon type="undo" class="toolIcon" @click="revokeTodoItem(item)" v-if="item.status === -1"></a-icon>
+            <a-icon type="undo" class="toolIcon" @click="redoTodoItem(item)" v-if="item.status === -1"></a-icon>
             <a-tooltip placement="top" v-if="item.content.length > 20">
               <template #title>
                 <span>{{ item.content }}</span>
@@ -55,7 +54,6 @@
 
 <script>
 import todoApi from '@/api/todo/index'
-import attachmentApi from "@/api/attachment";
 export default {
   name: "TodoListCard",
   data() {
@@ -69,46 +67,24 @@ export default {
       status: 0,
       value: '',
       todoList: [
-        {
-          id: 1,
-          content: '每天呢，起床的第一件事情就是需要去对张蝶说我爱你，然后我就会非常的开心，我相信张蝶也是开开心心的哦~~~~~',
-          status: 1
-        },
-        {
-          id: 2,
-          content: '我最喜欢张蝶啦！',
-          status: -1
-        },
-        {
-          id: 3,
-          content: '我最喜欢张蝶啦！',
-          status: 1
-        },
-        {
-          id: 4,
-          content: '我最喜欢张蝶啦！',
-          status: 0
-        },
-        {
-          id: 5,
-          content: '我最喜欢张蝶啦！',
-          status: 0
-        }
       ]
     }
   },
   watch: {
     status(value) {
-      if (value) {
-        this.loadData(value)
-      }
+        this.loadData()
     }
+  },
+  mounted() {
+    this.loadData()
   },
   methods: {
     loadData(){
       try {
         todoApi.queryAll({status: this.status}).then(response => {
-          if (response.code !== 1) {
+          if (response.code === 1) {
+            this.todoList = response.data
+          }else {
             this.$message.error(response.msg)
           }
         })
@@ -122,7 +98,7 @@ export default {
         return
       }
       try {
-        todoApi.add(this.value).then(response => {
+        todoApi.add({content:this.value,status: 0}).then(response => {
           if (response.code === 1) {
             this.$message.success('添加待办任务成功！')
           } else {
@@ -138,8 +114,7 @@ export default {
     },
     completeTodoItem(item) {
       try {
-        item.status = 1
-        todoApi.edit(item).then(response => {
+        todoApi.edit({id:item.id,status:1}).then(response => {
           if (response.code === 1) {
             this.$message.success('完成任务！')
           } else {
@@ -173,8 +148,7 @@ export default {
             }
           })
         }else {
-          item.status = -1
-          todoApi.edit(item).then(response => {
+          todoApi.edit({id:item.id,status:-1}).then(response => {
             if (response.code === 1) {
               this.$message.success('加入回收站成功！')
             } else {
@@ -190,24 +164,7 @@ export default {
     },
     redoTodoItem(item){
       try {
-        item.status = 0
-        todoApi.edit(item).then(response => {
-          if (response.code === 1) {
-            this.$message.success('重新添加任务成功！')
-          } else {
-            this.$message.error(response.msg)
-          }
-        }).then(res => {
-          this.loadData()
-        })
-      } catch (e) {
-        this.$message.error('Failed to complete task', e)
-      }
-    },
-    revokeTodoItem(item){
-      try {
-        item.status = -1
-        todoApi.edit(item).then(response => {
+        todoApi.edit({id:item.id,status:0}).then(response => {
           if (response.code === 1) {
             this.$message.success('重新添加任务成功！')
           } else {
