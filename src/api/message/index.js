@@ -2,7 +2,7 @@ import {service} from '@/utils/request'
 
 export function page(data) {
     return service({
-        url: 'api/admin/message',
+        url: 'api/admin/message/list',
         method: 'post',
         data
     })

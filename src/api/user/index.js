@@ -2,7 +2,7 @@ import {service, transformGetData} from '@/utils/request'
 
 export function page(data) {
     return service({
-        url: 'api/admin/user',
+        url: 'api/admin/user/list',
         method: 'post',
         data
     })

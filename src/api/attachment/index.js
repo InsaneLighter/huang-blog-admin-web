@@ -2,7 +2,7 @@ import {service} from '@/utils/request'
 
 export function page(data) {
     return service({
-        url: 'api/admin/attachment',
+        url: 'api/admin/attachment/list',
         method: 'post',
         data
     })

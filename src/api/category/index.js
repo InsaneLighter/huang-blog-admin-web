@@ -33,7 +33,7 @@ export function queryByName(name) {
 
 export function page(data) {
     return service({
-        url: 'api/admin/category',
+        url: 'api/admin/category/list',
         method: 'post',
         data
     })

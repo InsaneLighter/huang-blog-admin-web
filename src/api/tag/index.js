@@ -24,7 +24,7 @@ export function queryByName(name) {
 
 export function page(data) {
     return service({
-        url: 'api/admin/tag',
+        url: 'api/admin/tag/list',
         method: 'post',
         data
     })
