@@ -1,4 +1,4 @@
-import {service, transformGetData} from '@/utils/request'
+import {service} from '@/utils/request'
 
 export function queryAll() {
     return service({
@@ -9,8 +9,9 @@ export function queryAll() {
 
 export function queryByIds(ids) {
     return service({
-        url: 'api/admin/tag/queryByIds?ids=' + ids,
-        method: 'get'
+        url: 'api/admin/tag/queryByIds',
+        method: 'post',
+        data: {ids: ids}
     })
 }
 
@@ -22,10 +23,10 @@ export function queryByName(name) {
 }
 
 export function page(data) {
-    let params = transformGetData(data);
     return service({
-        url: 'api/admin/tag' + params,
-        method: 'get'
+        url: 'api/admin/tag',
+        method: 'post',
+        data
     })
 }
 

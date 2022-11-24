@@ -1,10 +1,10 @@
-import {service, transformGetData} from '@/utils/request'
+import {service} from '@/utils/request'
 
 export function page(data) {
-    let params = transformGetData(data);
     return service({
-        url: 'api/admin/message' + params,
-        method: 'get'
+        url: 'api/admin/message',
+        method: 'post',
+        data
     })
 }
 

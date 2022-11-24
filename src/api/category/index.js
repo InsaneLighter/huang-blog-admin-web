@@ -1,4 +1,4 @@
-import {service, transformGetData} from '@/utils/request'
+import {service} from '@/utils/request'
 
 export function queryAll() {
     return service({
@@ -16,8 +16,11 @@ export function queryAllTree() {
 
 export function queryByIds(ids) {
     return service({
-        url: 'api/admin/category/queryByIds?ids=' + ids,
-        method: 'get'
+        url: 'api/admin/category/queryByIds',
+        method: 'post',
+        data: {
+            ids:ids
+        }
     })
 }
 
@@ -29,10 +32,10 @@ export function queryByName(name) {
 }
 
 export function page(data) {
-    let params = transformGetData(data);
     return service({
-        url: 'api/admin/category' + params,
-        method: 'get'
+        url: 'api/admin/category',
+        method: 'post',
+        data
     })
 }
 

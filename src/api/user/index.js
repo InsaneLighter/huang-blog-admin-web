@@ -1,10 +1,10 @@
 import {service, transformGetData} from '@/utils/request'
 
 export function page(data) {
-    let params = transformGetData(data);
     return service({
-        url: 'api/admin/user' + params,
-        method: 'get'
+        url: 'api/admin/user',
+        method: 'post',
+        data
     })
 }
 

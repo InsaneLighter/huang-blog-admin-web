@@ -1,10 +1,10 @@
-import {service, transformGetData} from '@/utils/request'
+import {service} from '@/utils/request'
 
 export function queryAll(data) {
-    let params = transformGetData(data);
     return service({
-        url: 'api/admin/todo/queryAll' + params,
-        method: 'get'
+        url: 'api/admin/todo/queryAll',
+        method: 'post',
+        data
     })
 }
 
