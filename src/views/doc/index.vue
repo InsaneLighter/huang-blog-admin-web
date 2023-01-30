@@ -359,7 +359,7 @@ export default {
           size: 10,
           title: undefined,
           categoryId: undefined,
-          status: []
+          status: undefined
         },
         selected: {}
       },

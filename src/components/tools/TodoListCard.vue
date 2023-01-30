@@ -8,7 +8,6 @@
     </template>
     <div class="todoContainer">
       <div class="addItem">
-
         <a-input-group compact>
           <a-select v-model="status" style="width: 20%">
             <a-select-option v-for="(item,index) in statusList" :key="index" :value="item.status">{{item.name}}</a-select-option>
@@ -59,7 +58,7 @@ export default {
   data() {
     return {
       statusList: [
-        {name: "全部", status: ''},
+        {name: "全部", status: 9},
         {name: "待完成", status: 0},
         {name: "已完成", status: 1},
         {name: "回收站", status: -1}
