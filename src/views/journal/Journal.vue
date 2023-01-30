@@ -18,7 +18,7 @@
                     :disabled-date="disabledDate"
                     @change="startDateChange"
                     placeholder="开始日期"
-                    valueFormat=""
+                    valueFormat="YYYY-MM-DD"
                 />
               </a-form-item>
             </a-col>
@@ -28,6 +28,7 @@
                     v-model:value="list.params.endDate"
                     @change="endDateChange"
                     placeholder="结束日期"
+                    valueFormat="YYYY-MM-DD"
                 />
               </a-form-item>
             </a-col>

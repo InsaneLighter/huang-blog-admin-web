@@ -123,6 +123,15 @@ export default {
           this.form.model.mood = 'Sunny'
         }
       }
+    },
+    visible(value){
+      if (value) {
+        if (this.title === '编辑日记') {
+          this.form.model = JSON.parse(this.record)
+        }else {
+          this.form.model.mood = 'Sunny'
+        }
+      }
     }
   },
   methods: {

@@ -93,11 +93,11 @@ export const routerMap = [
                 }
             },
             {
-                path: '/message',
-                name: 'Message',
-                component: (resolve) => require(['@/views/message/Message'], resolve),
+                path: '/comment',
+                name: 'Comment',
+                component: (resolve) => require(['@/views/comment/Comment'], resolve),
                 meta: {
-                    title: '留言板',
+                    title: '评论',
                     icon: 'meh',
                     hideHead: false
                 }
