@@ -118,6 +118,7 @@ export default {
     modalVisible(value) {
       if (value) {
         if (this.title === '编辑日记') {
+          debugger
           this.form.model = JSON.parse(this.record)
         }else {
           this.form.model.mood = 'Sunny'
@@ -127,6 +128,7 @@ export default {
     visible(value){
       if (value) {
         if (this.title === '编辑日记') {
+          debugger
           this.form.model = JSON.parse(this.record)
         }else {
           this.form.model.mood = 'Sunny'

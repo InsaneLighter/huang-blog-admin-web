@@ -13,17 +13,7 @@ const mutations = {
 const actions = {
   setUser({ commit },user) {
     commit('SET_USER',user)
-  },
-  GetInfo({ commit }) {
-    return new Promise((resolve, reject) => {
-      getCurrentUser().then(res => {
-        commit('SET_USER', res.data.user)
-        resolve(res)
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
+  }
 }
 
 export default {

@@ -212,9 +212,11 @@ export default {
       this.journalTitle = "新增日记"
     },
     handleEdit(record) {
+      console.log(record)
       this.journalCreateModalVisible = true
       this.journalTitle = "编辑日记"
       this.record = JSON.stringify(record)
+      console.log(this.record)
     },
     handleQuery() {
       this.selectedRowKeys = []

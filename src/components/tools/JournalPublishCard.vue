@@ -68,6 +68,7 @@ export default {
         if (valid) {
           _this.form.saving = true
           _this.form.model.mood = 'Sunny'
+          _this.form.model.content = '<p>'+_this.form.model.content+'</p>'
           journalApi.add(_this.form.model)
               .then(response => {
                 if(response.code === 1){
