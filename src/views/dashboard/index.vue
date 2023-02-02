@@ -38,10 +38,10 @@
         </analysis-card>
       </a-col>
       <a-col :xs="6" :sm="6" :md="6" :lg="4" :xl="4">
-        <analysis-card :number="statistics.visitCount" title="阅读量">
+        <analysis-card :number="statistics.viewPostCount" title="阅读量">
           <template #action>
             <a-tooltip>
-              <template #title>文章阅读共 {{ statistics.visitCount }} 次</template>
+              <template #title>文章阅读共 {{ statistics.viewPostCount }} 次</template>
               <span>
                 <a-icon type="info-circle-o"/>
               </span>
@@ -133,7 +133,9 @@ export default {
       center: null,
       statistics: {
         postCount: 0,
-        visitCount: 0,
+        viewPostCount: 0,
+        categoryCount: 0,
+        tagCount: 0,
         establishDays: 0,
         birthday: '--'
       },

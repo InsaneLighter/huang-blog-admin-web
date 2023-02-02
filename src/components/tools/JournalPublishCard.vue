@@ -68,7 +68,8 @@ export default {
         if (valid) {
           _this.form.saving = true
           _this.form.model.mood = 'Sunny'
-          _this.form.model.content = '<p>'+_this.form.model.content+'</p>'
+          const tempObj = JSON.parse(JSON.stringify(_this.form.model))
+          tempObj.content = '<p>'+tempObj.content+'</p>'
           journalApi.add(_this.form.model)
               .then(response => {
                 if(response.code === 1){
@@ -87,9 +88,6 @@ export default {
               })
         }
       })
-    },
-    test111(){
-
     }
   }
 }

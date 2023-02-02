@@ -39,6 +39,25 @@
               type="textarea"
           />
         </a-form-item>
+        <a-form-item label="封面">
+          <a-upload
+              :customRequest="handleUpload"
+              list-type="picture-card"
+              :autoSize="{ minRows: 5 }"
+              :file-list="fileList"
+              :remove="deleteFileItem"
+              @change="handleChange"
+              @preview="handlePreview"
+          >
+            <div v-if="fileList.length < 1">
+              <a-icon type="plus"/>
+              <div class="ant-upload-text">上传</div>
+            </div>
+          </a-upload>
+          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+            <img alt="example" style="width: 100%" :src="previewImage"/>
+          </a-modal>
+        </a-form-item>
         <a-form-item label="是否置顶">
           <a-switch v-model="topPriority"/>
         </a-form-item>
@@ -105,6 +124,7 @@ import CategoryCreate from '@/components/category/CategoryCreate'
 import {datetimeFormat} from '@/utils/datetime'
 
 import contentApi from '@/api/content/index'
+import attachmentApi from '@/api/attachment/index'
 
 export default {
   name: 'PostSetting',
@@ -165,7 +185,10 @@ export default {
       },
       templates: [],
       attachmentSelectVisible: false,
-      categoryCreateModalVisible: false
+      categoryCreateModalVisible: false,
+      previewVisible: false,
+      previewImage: '',
+      fileList: []
     }
   },
   computed: {
@@ -221,13 +244,26 @@ export default {
       deep: true,
       handler(value) {
         this.form.model = Object.assign({}, value)
+        if (this.form.model.cover) {
+          this.fileList = [{
+            name: "temp.jpg",
+            status: "done",
+            uid: "2022-02-12",
+            url: this.form.model.cover
+          }]
+        }
       }
     }
   },
-  created() {
-    this.handleListCustomTemplates()
-  },
   methods: {
+    getBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+      });
+    },
     /**
      * Creates or updates a post
      */
@@ -315,19 +351,6 @@ export default {
     },
 
     /**
-     * Handle list custom templates
-     */
-    async handleListCustomTemplates() {
-      try {
-        // const response = await apiClient.theme.listCustomPostTemplates()
-
-        // this.templates = response.data
-      } catch (error) {
-        this.$message.error(error)
-      }
-    },
-
-    /**
      * Handle create time selected event
      */
     onCreateTimeSelect(value) {
@@ -355,7 +378,44 @@ export default {
 
     onCategoryCreateModalClose() {
       this.$refs.categoryTree.handleListCategories()
-    }
+    },
+    handleCancel() {
+      this.previewVisible = false;
+    },
+    async handlePreview(file) {
+      if (!file.url && !file.preview) {
+        file.preview = (await this.getBase64(file.originFileObj));
+      }
+      this.previewImage = file.url || file.preview;
+      this.previewVisible = true;
+    },
+    handleChange(newFileList) {
+      this.fileList = newFileList.fileList;
+      console.log(this.fileList)
+    },
+    handleUpload(info) {
+      attachmentApi.uploadAction(info.file).then(res => {
+            if (res.code === 1) {
+              this.fileList[0].status = "done"
+              this.form.model.cover = res.data.path
+              console.log(this.fileList)
+              this.$message.success("封面上传成功!")
+            } else {
+              this.fileList[0].status = "error"
+              this.$message.error("封面上传失败!")
+            }
+          }
+      ).catch(error => {
+        this.$message.error(error)
+      })
+    },
+    deleteFileItem(file) {
+      //找到当前文件所在列表的索引
+      let index = this.fileList.indexOf(file);
+      //从列表中移除该文件
+      this.fileList.splice(index, 1);
+      return true;
+    },
   }
 }
 </script>
