@@ -15,11 +15,21 @@ export default {
     visible: {
       type: Boolean,
       default: false
+    },
+    type: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
-      uploadHandler: (file, options) => attachmentApi.uploadAction(file)
+      uploadHandler: (file, options) => {
+        if(this.type){
+          attachmentApi.uploadPicWallAction(file)
+        }else {
+          attachmentApi.uploadAction(file)
+        }
+      }
     }
   },
   computed: {

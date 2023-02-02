@@ -156,6 +156,16 @@ export const routerMap = [
                 ]
             },
             {
+                path: '/settings',
+                name: 'Settings',
+                component: (resolve) => require(['@/views/settings/Settings.vue'], resolve),
+                meta: {
+                    title: '内容设置',
+                    icon: 'meh',
+                    hideHead: false
+                }
+            },
+            {
                 path: '/monitor',
                 name: 'Monitor',
                 component: BlankLayout,

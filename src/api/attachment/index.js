@@ -61,5 +61,23 @@ export function uploadAction(file) {
         },
     })
 }
+export function uploadPicWallAction(file) {
+    const formData = new FormData();
+    formData.append('file', file)
+    return service({
+        url: 'api/admin/attachment/picWall/upload',
+        data: formData,
+        method: 'post',
+        headers: {
+            'Content-Type': 'multipart/form-data',  // 文件上传
+        },
+    })
+}
+export function listPicWall() {
+    return service({
+        url: 'api/admin/attachment/picWall/list',
+        method: 'get'
+    })
+}
 
-export default {page, add, edit, del, listMediaTypes, listTypes, uploadAction}
+export default {page, add, edit, del, listMediaTypes, listTypes, uploadAction,uploadPicWallAction,listPicWall}
