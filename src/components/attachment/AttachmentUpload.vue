@@ -1,6 +1,6 @@
 <template>
   <a-modal v-model="modalVisible" :afterClose="onClose" :footer="null" destroyOnClose title="上传附件">
-    <FilePondUpload ref="upload" :uploadHandler="uploadHandler"></FilePondUpload>
+    <FilePondUpload ref="upload" :uploadHandler="type?uploadPicWallHandler:uploadHandler"></FilePondUpload>
   </a-modal>
 </template>
 <script>
@@ -23,13 +23,8 @@ export default {
   },
   data() {
     return {
-      uploadHandler: (file, options) => {
-        if(this.type){
-          attachmentApi.uploadPicWallAction(file)
-        }else {
-          attachmentApi.uploadAction(file)
-        }
-      }
+      uploadHandler: (file, options) => attachmentApi.uploadAction(file),
+      uploadPicWallHandler: (file, options) => attachmentApi.uploadPicWallAction(file)
     }
   },
   computed: {

@@ -52,38 +52,6 @@ export default {
         visible: false
       },
       allImgData: [
-        {
-          id: '001',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        },
-        {
-          id: '002',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        },
-        {
-          id: '003',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        },
-        {
-          id: '004',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        },
-        {
-          id: '005',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        },
-        {
-          id: '006',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        },
-        {
-          id: '007',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        },
-        {
-          id: '008',
-          url: "http://browser9.qhimg.com/bdm/480_296_0/t01bbd94b90e850d1d3.jpg"
-        }
       ]
     }
   },
