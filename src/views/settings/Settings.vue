@@ -28,7 +28,12 @@
       </div>
       <div class="daily-article" style="margin-top: 20px">
         <div class="settings-title">日常文案</div>
-        <div class="daily-article-container"></div>
+        <div class="daily-article-container" style="width: 80%;margin: 20px 0">
+          <a-textarea placeholder="今天想说点什么呢"
+                      :rows="6"
+                      allowClear
+                      @pressEnter="addDailyArticle"/>
+        </div>
       </div>
     </a-card>
     <AttachmentUpload :type="'pic-wall'" :visible.sync="upload.visible" @close="onUploadClose"/>
@@ -51,8 +56,8 @@ export default {
       upload: {
         visible: false
       },
-      allImgData: [
-      ]
+      allImgData: [],
+      content: ''
     }
   },
   computed:{
@@ -64,6 +69,14 @@ export default {
     this.handleListPicWalls()
   },
   methods: {
+    addDailyArticle(){
+      console.log(this.content)
+      if(this.content){
+        this.$message.success('添加日常文案成功')
+      }
+      this.content = ''
+      this.$message.warn('请输入内容！')
+    },
     handleSelectAll(){
       this.allImgData.forEach(item => {
         item.clickOn = true

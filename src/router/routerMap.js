@@ -223,7 +223,7 @@ export const routerMap = [
                             title: 'SQL监控',
                             icon: 'meh',
                             hideHead: false,
-                            url: 'api/druid/behind/'
+                            url: 'https://huanghong.top/api/druid/behind/'
                         }
                     },
                     {

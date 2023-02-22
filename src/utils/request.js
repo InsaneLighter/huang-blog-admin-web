@@ -8,7 +8,8 @@ import Cookies from 'js-cookie'
 
 // 创建axios实例
 const service = axios.create({
-    baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/',
+    // baseURL: process.env.NODE_ENV === 'production' ? process.env.VUE_APP_BASE_API : '/',
+    baseURL: 'https://huanghong.top/',
     timeout: Config.timeout // 请求超时时间(2分钟)
 })
 

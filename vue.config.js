@@ -1,25 +1,15 @@
 const path = require('path')
-const port = 17777
+const port = 17778
 
-function resolve(dir) {
+function resolve (dir) {
     return path.join(__dirname, dir)
 }
 
 module.exports = {
     runtimeCompiler: true,
-    publicPath: process.env.PUBLIC_PATH,
-    //css配置
-    css: {
-        loaderOptions: {
-            less: {
-                modifyVars: {},
-                javascriptEnabled: true
-            }
-        }
-    },
-    //开发服务器配置
+    publicPath: '/blog-admin/',
     devServer: {
-        host: "localhost",
+        host: 'localhost',
         //端口号
         port: port,
         //自动启动浏览器
@@ -34,15 +24,21 @@ module.exports = {
             }
         }
     },
-    configureWebpack: {
-        resolve: {
-            alias: {
-                // 包别名设置
-                '@': resolve('src')
-            }
-        }
+    configureWebpack: config => {
+        // 生产环境相关配置
+        config.module.rules.push({
+            test: /\.mjs$/,
+            include: /node_modules/,
+            type: 'javascript/auto'
+        })
     },
     chainWebpack: config => {
+        config.resolve.alias
+            .set('@', resolve('src'))
+            .set('assets', resolve('src/assets'))
+            .set('css', resolve('src/assets/css'))
+            .set('img', resolve('src/assets/image'))
+            .set('js', resolve('src/assets/js'))
         //网站初始化标题设置
         config.plugin('html').tap((args) => {
             args[0].title = 'Huang'
