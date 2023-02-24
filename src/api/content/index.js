@@ -35,7 +35,7 @@ export function update(data) {
 
 export function uploadAction(file) {
     const formData = new FormData();
-    formData.append('file', file[0])
+    formData.append('file', file)
     return service({
         url: 'api/admin/content/upload',
         data: formData,

@@ -124,7 +124,6 @@ import CategoryCreate from '@/components/category/CategoryCreate'
 import {datetimeFormat} from '@/utils/datetime'
 
 import contentApi from '@/api/content/index'
-import attachmentApi from '@/api/attachment/index'
 
 export default {
   name: 'PostSetting',
@@ -391,14 +390,12 @@ export default {
     },
     handleChange(newFileList) {
       this.fileList = newFileList.fileList;
-      console.log(this.fileList)
     },
     handleUpload(info) {
-      attachmentApi.uploadAction(info.file).then(res => {
+      contentApi.uploadAction(info.file).then(res => {
             if (res.code === 1) {
               this.fileList[0].status = "done"
-              this.form.model.cover = res.data.path
-              console.log(this.fileList)
+              this.form.model.cover = res.url
               this.$message.success("封面上传成功!")
             } else {
               this.fileList[0].status = "error"

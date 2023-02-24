@@ -215,7 +215,7 @@ export const routerMap = [
                             hideHead: false
                         }
                     },
-                    {
+                    /*{
                         path: '/monitor/sql',
                         name: 'SQL',
                         component: (resolve) => require(['@/components/layouts/global/IframePageView'], resolve),
@@ -225,7 +225,7 @@ export const routerMap = [
                             hideHead: false,
                             url: 'https://huanghong.top/api/druid/behind/'
                         }
-                    },
+                    },*/
                     {
                         path: '/monitor/redis',
                         name: 'Redis',
