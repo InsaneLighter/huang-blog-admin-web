@@ -40,30 +40,22 @@
           />
         </a-form-item>
         <a-form-item label="封面">
-          <a-upload
-              :customRequest="handleUpload"
-              list-type="picture-card"
-              :autoSize="{ minRows: 5 }"
-              :file-list="fileList"
-              :remove="deleteFileItem"
-              @change="handleChange"
-              @preview="handlePreview"
-          >
-            <div v-if="fileList.length < 1">
-              <a-icon type="plus"/>
-              <div class="ant-upload-text">上传</div>
-            </div>
-          </a-upload>
-          <a-modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
-            <img alt="example" style="width: 100%" :src="previewImage"/>
-          </a-modal>
+          <a-tooltip :trigger="['hover']" placement="right" title="点击可修改封面">
+            <img
+                class="cursor-pointer"
+                :width="272"
+                :height="168"
+                :src="form.model.cover? form.model.cover : '//cn.gravatar.com/avatar/?s=256&d=mm'"
+                @click="handleOpenUpdateCover"
+            />
+          </a-tooltip>
         </a-form-item>
         <a-form-item label="是否置顶">
           <a-switch v-model="topPriority"/>
         </a-form-item>
         <a-form-item label="发表时间：">
           <a-date-picker
-              :defaultValue="createTimeDefaultValue"
+              :value="createTimeDefaultValue"
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="选择文章发表时间"
               showTime
@@ -111,6 +103,17 @@
     <CategoryCreate :visible.sync="categoryCreateModalVisible"
                     :title="'新增分类'"
                     @close="onCategoryCreateModalClose"/>
+    <a-modal v-model="updateAvatarForm.visible" title="修改头像">
+      <a-form layout="vertical">
+        <a-form-item label="头像链接：">
+          <AttachmentInput ref="avatarInput" v-model="updateAvatarForm.avatar"/>
+        </a-form-item>
+      </a-form>
+      <template #footer>
+        <a-button type="primary" @click="handleUpdateAvatar">确定</a-button>
+        <a-button @click="updateAvatarForm.visible = false">关闭</a-button>
+      </template>
+    </a-modal>
   </a-modal>
 </template>
 <script>
@@ -119,6 +122,7 @@ import ReactiveButton from '@/components/tools/ReactiveButton'
 import TagSelect from '@/components/tools/TagSelect'
 import CategoryTree from '@/components/category/CategoryTree'
 import CategoryCreate from '@/components/category/CategoryCreate'
+import AttachmentInput from "@/components/tools/AttachmentInput";
 
 // libs
 import {datetimeFormat} from '@/utils/datetime'
@@ -131,7 +135,8 @@ export default {
     ReactiveButton,
     TagSelect,
     CategoryTree,
-    CategoryCreate
+    CategoryCreate,
+    AttachmentInput
   },
   props: {
     visible: {
@@ -153,6 +158,12 @@ export default {
   },
   data() {
     return {
+      updateAvatarForm: {
+        avatar: undefined,
+        visible: false,
+        saving: false,
+        saveErrored: false
+      },
       postStatuses: {
         PUBLISHED: {
           value: 'PUBLISHED',
@@ -207,8 +218,7 @@ export default {
         const date = new Date(this.form.model.createTime)
         return datetimeFormat(date, 'YYYY-MM-DD HH:mm:ss')
       }
-      this.form.model.createTime = datetimeFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
-      return this.form.model.createTime
+      return datetimeFormat(new Date(), 'YYYY-MM-DD HH:mm:ss')
     },
     topPriority: {
       get() {
@@ -255,6 +265,17 @@ export default {
     }
   },
   methods: {
+    handleUpdateAvatar() {
+      this.form.model.cover = this.updateAvatarForm.avatar
+      this.updateAvatarForm.visible = false
+    },
+    handleOpenUpdateCover() {
+      this.updateAvatarForm.avatar = this.form.model.cover
+      this.updateAvatarForm.visible = true
+      this.$nextTick(() => {
+        this.$refs.avatarInput.focus()
+      })
+    },
     getBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();

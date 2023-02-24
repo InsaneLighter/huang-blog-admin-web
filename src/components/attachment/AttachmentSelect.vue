@@ -145,7 +145,7 @@
 <script>
 import attachmentApi from '@/api/attachment/index'
 import AttachmentDetail from "./AttachmentDetail";
-import AttachmentUpload from "./AttachmentDetail";
+import AttachmentUpload from "./AttachmentUpload";
 export default {
   name: 'AttachmentSelect',
   components: {
